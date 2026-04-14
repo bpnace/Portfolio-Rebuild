@@ -213,6 +213,36 @@
     white-space: pre;
   }
 
+  .profile-name {
+    color: transparent;
+  }
+
+  .profile-name-word {
+    display: inline-block;
+  }
+
+  .profile-name-char {
+    position: relative;
+    display: inline-grid;
+    place-items: start;
+    vertical-align: baseline;
+  }
+
+  .profile-name-char > span {
+    grid-area: 1 / 1;
+  }
+
+  .profile-name-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.2px rgba(247, 243, 239, 0.42);
+  }
+
+  .profile-name-fill {
+    color: var(--text);
+    clip-path: inset(100% 0 0 0);
+    will-change: clip-path;
+  }
+
   .mdx-body {
     @apply space-y-6 text-[length:var(--body)] leading-8 text-foreground/88;
   }
