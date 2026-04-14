@@ -179,16 +179,18 @@ export function Hero() {
           <div className="hero-copy text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
             Für Webdesign · Für Entwicklung · Für Relaunch · Für SEO · Für Automatisierung
           </div>
-          <div className="hero-copy">
-            <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
-          </div>
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <Link href="/#kontakt" className="hero-action link-arrow rounded-full border border-foreground px-6 py-4">
-              Jetzt Erstgespräch buchen <span aria-hidden>↘</span>
-            </Link>
-            <Link href="/#leistungen" className="hero-action link-arrow rounded-full border border-border px-6 py-4 text-muted hover:text-foreground">
-              Leistungen ansehen <span aria-hidden>↘</span>
-            </Link>
+          <div className="hero-copy grid gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-end lg:justify-between">
+            <div className="w-fit">
+              <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
+            </div>
+            <div className="grid w-full max-w-[360px] grid-cols-1 gap-3 justify-self-end">
+              <Link href="/#kontakt" className="hero-action link-arrow px-6 py-4">
+                Jetzt Erstgespräch buchen <span aria-hidden>↘</span>
+              </Link>
+              <Link href="/#leistungen" className="hero-action link-arrow px-6 py-4 text-muted hover:text-foreground">
+                Leistungen ansehen <span aria-hidden>↘</span>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
