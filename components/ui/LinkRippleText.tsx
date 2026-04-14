@@ -89,13 +89,13 @@ export function LinkRippleText({
       };
 
       const getStagger = (origin: number) => (index: number) =>
-        Math.abs(index - origin) * (persistentActive ? 0.05 : 0.018);
+        Math.abs(index - origin) * (persistentActive ? 0.065 : 0.018);
 
       const animateTo = (opacity: number, origin: number) => {
         activeTimeline.current?.kill();
         activeTimeline.current = gsap.timeline({
           defaults: {
-            duration: shouldReduceMotion() ? 0 : persistentActive ? 0.42 : 0.22,
+            duration: shouldReduceMotion() ? 0 : persistentActive ? 0.5 : 0.22,
             ease: "power2.out",
           },
         });

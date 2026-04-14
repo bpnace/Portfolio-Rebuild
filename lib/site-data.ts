@@ -1,10 +1,10 @@
 export const tickerItems = [
-  "Präzise",
-  "Strukturiert",
-  "Fokussiert",
-  "Visuell stark",
-  "SEO-stark",
-  "DSGVO-bewusst",
+  "Technisches SEO",
+  "Informationsarchitektur",
+  "AEO-fähig",
+  "Semantische Inhalte",
+  "Crawlbare Struktur",
+  "Schnelle Ladezeiten",
 ];
 
 export const services = [

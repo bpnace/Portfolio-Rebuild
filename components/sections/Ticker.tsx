@@ -35,7 +35,7 @@ export function Ticker() {
           {items.map((item, index) => (
             <span
               key={`${item}-${index}`}
-              className="text-[length:var(--label)] uppercase tracking-[0.4em]"
+              className="text-[length:var(--label)] font-medium uppercase tracking-[0.32em]"
             >
               {item}
             </span>
