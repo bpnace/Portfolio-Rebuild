@@ -8,6 +8,7 @@ type LinkRippleTextProps = {
   text: string;
   baseWeight?: number;
   activeWeight?: number;
+  persistentActive?: boolean;
 };
 
 type Glyph =
@@ -18,6 +19,7 @@ export function LinkRippleText({
   text,
   baseWeight = 520,
   activeWeight = 900,
+  persistentActive = false,
 }: LinkRippleTextProps) {
   const scope = useRef<HTMLSpanElement | null>(null);
   const lastOriginIndex = useRef(0);
@@ -87,13 +89,13 @@ export function LinkRippleText({
       };
 
       const getStagger = (origin: number) => (index: number) =>
-        Math.abs(index - origin) * 0.018;
+        Math.abs(index - origin) * (persistentActive ? 0.05 : 0.018);
 
       const animateTo = (opacity: number, origin: number) => {
         activeTimeline.current?.kill();
         activeTimeline.current = gsap.timeline({
           defaults: {
-            duration: shouldReduceMotion() ? 0 : 0.22,
+            duration: shouldReduceMotion() ? 0 : persistentActive ? 0.42 : 0.22,
             ease: "power2.out",
           },
         });
@@ -106,6 +108,25 @@ export function LinkRippleText({
       };
 
       setInk(0);
+
+      if (persistentActive) {
+        const origin = Math.floor(chars.length / 2);
+        lastOriginIndex.current = origin;
+
+        if (shouldReduceMotion()) {
+          gsap.set(inks, { autoAlpha: 1 });
+          return;
+        }
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            animateTo(1, origin);
+          });
+        });
+        return () => {
+          activeTimeline.current?.kill();
+        };
+      }
 
       const onPointerEnter = safe((event: PointerEvent) => {
         animateTo(1, getClosestCharIndex(event.clientX));
@@ -140,7 +161,7 @@ export function LinkRippleText({
         host?.removeEventListener("blur", onBlur);
       };
     },
-    { scope },
+    { scope, dependencies: [persistentActive], revertOnUpdate: true },
   );
 
   return (

@@ -19,6 +19,26 @@ function renderAnimatedNavLabel(text: string) {
   );
 }
 
+function renderDesktopNavLabel(
+  text: string,
+  options?: {
+    useRipple?: boolean;
+    persistentRipple?: boolean;
+  },
+) {
+  if (options?.useRipple) {
+    return (
+      <LinkRippleText
+        text={text}
+        baseWeight={520}
+        persistentActive={Boolean(options.persistentRipple)}
+      />
+    );
+  }
+
+  return renderAnimatedNavLabel(text);
+}
+
 export function Nav() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -145,13 +165,22 @@ export function Nav() {
         return;
       }
 
-      const letters = Array.from(navRoot.querySelectorAll<HTMLElement>(".nav-letter"));
-      if (!letters.length) {
+      const letters = Array.from(
+        navRoot.querySelectorAll<HTMLElement>(".nav-letter"),
+      );
+      const contactBaseLetters = Array.from(
+        navRoot.querySelectorAll<HTMLElement>(
+          ".nav-contact-link .link-ripple-base",
+        ),
+      );
+      const targets = [...letters, ...contactBaseLetters];
+
+      if (!targets.length) {
         return;
       }
 
       if (introNavAnimated.current) {
-        gsap.set(letters, {
+        gsap.set(targets, {
           autoAlpha: 1,
           filter: "blur(0px)",
           visibility: "visible",
@@ -160,7 +189,7 @@ export function Nav() {
       }
 
       if (shouldReduceMotion()) {
-        gsap.set(letters, {
+        gsap.set(targets, {
           autoAlpha: 1,
           filter: "blur(0px)",
           visibility: "visible",
@@ -169,14 +198,14 @@ export function Nav() {
         return;
       }
 
-      gsap.set(letters, {
+      gsap.set(targets, {
         autoAlpha: 0,
         filter: "blur(8px)",
         visibility: "visible",
       });
 
       const startAnimation = () => {
-        gsap.to(letters, {
+        gsap.to(targets, {
           autoAlpha: 1,
           filter: "blur(0px)",
           duration: 0.44,
@@ -243,9 +272,21 @@ export function Nav() {
             <Link
               key={item.href}
               href={item.href}
-              className="hover-weight-link hover:text-foreground"
+              className={`hover-weight-link hover:text-foreground ${
+                item.label === "Kontakt"
+                  ? `nav-contact-link ${introCovered ? "text-foreground" : ""}`
+                  : ""
+              }`}
             >
-              {renderAnimatedNavLabel(item.label)}
+              {renderDesktopNavLabel(
+                item.label,
+                item.label === "Kontakt"
+                  ? {
+                      useRipple: true,
+                      persistentRipple: introCovered,
+                    }
+                  : undefined,
+              )}
             </Link>
           ))}
         </nav>

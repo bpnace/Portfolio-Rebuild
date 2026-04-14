@@ -165,6 +165,12 @@
     filter: none;
   }
 
+  [data-nav-ready="false"] .nav-contact-link .link-ripple-base {
+    visibility: hidden;
+    opacity: 0;
+    filter: none;
+  }
+
   .link-ripple-text {
     display: inline-flex;
     align-items: baseline;
