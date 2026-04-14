@@ -7,7 +7,7 @@ export function Profile() {
     <section className="section-space">
       <div className="section-shell grid gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
-          <SectionHeader label="Profil" marker="(SKWKHS® — 05)" />
+          <SectionHeader label="Profil" marker="(SKWKHS® — 04)" />
           <div className="space-y-6">
             <div className="display-md">{siteConfig.founder}</div>
             <p className="max-w-2xl text-lg leading-8 text-muted">

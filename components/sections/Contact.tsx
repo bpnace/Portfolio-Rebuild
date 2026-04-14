@@ -63,7 +63,7 @@ export function Contact() {
     <section id="kontakt" className="section-space">
       <div className="section-shell grid gap-12 lg:grid-cols-[1fr_1fr]">
         <div>
-          <SectionHeader label="Kontakt" marker="(SKWKHS® — 11)" />
+          <SectionHeader label="Kontakt" marker="(SKWKHS® — 10)" />
           <div className="space-y-6">
             <h2 className="display-lg">Gib uns 30 Minuten, um dein Projekt zu verstehen.</h2>
             <p className="max-w-2xl text-lg leading-8 text-muted">

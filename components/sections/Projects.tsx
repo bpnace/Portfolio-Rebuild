@@ -10,7 +10,7 @@ export function Projects({ projects }: ProjectsProps) {
   return (
     <section id="projekte" className="section-space">
       <div className="section-shell">
-        <SectionHeader label="vorgestellte Projekte" marker="(SKWKHS® — 03)" />
+        <SectionHeader label="Projekte" marker="(SKWKHS® — 02)" />
         <div className="mb-10 max-w-3xl space-y-4 md:mb-16">
           <h2 className="display-lg">Digitale Systeme mit klarer Angebotslogik.</h2>
           <p className="text-lg leading-8 text-muted">

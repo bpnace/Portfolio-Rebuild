@@ -3,7 +3,8 @@ import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum und Anbieterkennzeichnung von STACKWERKHAUS in Berlin.",
+  description:
+    "Impressum und Anbieterkennzeichnung von STACKWERKHAUS in Berlin.",
   alternates: {
     canonical: "/impressum",
   },
@@ -31,7 +32,7 @@ export default function ImpressumPage() {
               Angaben gemäß § 5 DDG
             </h2>
             <p className="mt-3">
-              Tarik Marshall
+              Arthur Marshall
               <br />
               Codariq
               <br />
@@ -51,7 +52,10 @@ export default function ImpressumPage() {
             </h2>
             <p className="mt-3">
               <strong className="text-foreground">Telefon:</strong>{" "}
-              <a href="tel:017631378294" className="hover-weight-link hover:text-foreground">
+              <a
+                href="tel:017631378294"
+                className="hover-weight-link hover:text-foreground"
+              >
                 <LinkRippleText text="0176 31378294" />
               </a>
               <br />
@@ -78,7 +82,7 @@ export default function ImpressumPage() {
               Verantwortlich i. S. d. § 18 Abs. 2 MStV
             </h2>
             <p className="mt-3">
-              Tarik Marshall
+              Arthur Marshall
               <br />
               Sigmaringer Str. 27
               <br />
@@ -93,15 +97,18 @@ export default function ImpressumPage() {
               Steuerliche Angaben
             </h2>
             <p className="mt-3">
-              <strong className="text-foreground">Kleinunternehmer gemäß § 19 UStG</strong>
+              <strong className="text-foreground">
+                Kleinunternehmer gemäß § 19 UStG
+              </strong>
               <br />
               Aufgrund der Anwendung der Kleinunternehmerregelung gemäß § 19
               UStG wird keine Umsatzsteuer berechnet.
               <br />
-              <strong className="text-foreground">Finanzamt:</strong> Finanzamt Berlin
-              Wilmersdorf
+              <strong className="text-foreground">Finanzamt:</strong> Finanzamt
+              Berlin Wilmersdorf
               <br />
-              <strong className="text-foreground">USt-IdNr.:</strong> Keine vorhanden.
+              <strong className="text-foreground">USt-IdNr.:</strong> Keine
+              vorhanden.
             </p>
           </div>
 

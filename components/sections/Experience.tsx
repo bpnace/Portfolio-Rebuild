@@ -5,7 +5,7 @@ export function Experience() {
   return (
     <section className="section-space">
       <div className="section-shell">
-        <SectionHeader label="Erfahrung" marker="(SKWKHS® — 06)" />
+        <SectionHeader label="Erfahrung" marker="(SKWKHS® — 05)" />
         <div className="space-y-4">
           {experience.map((entry) => (
             <article

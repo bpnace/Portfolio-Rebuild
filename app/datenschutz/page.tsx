@@ -38,10 +38,12 @@ export default function DatenschutzPage() {
               1. Verantwortlicher
             </h2>
             <p className="mt-3">
-              <strong className="text-foreground">Verantwortlich für die Datenverarbeitung:</strong>
+              <strong className="text-foreground">
+                Verantwortlich für die Datenverarbeitung:
+              </strong>
             </p>
             <p className="mt-2">
-              Tarik Marshall
+              Arthur Marshall
               <br />
               STACKWERKHAUS
               <br />
@@ -71,16 +73,16 @@ export default function DatenschutzPage() {
               2. Hosting und Server-Log-Dateien
             </h2>
             <p className="mt-3">
-              Die Website wird bei der STRATO AG, Otto-Ostrowski-Straße 7,
-              10249 Berlin, Deutschland gehostet. Beim Zugriff auf die Website
+              Die Website wird bei der STRATO AG, Otto-Ostrowski-Straße 7, 10249
+              Berlin, Deutschland gehostet. Beim Zugriff auf die Website
               verarbeitet der Hosting-Provider Server-Log-Daten (z. B.
               IP-Adresse, Datum und Uhrzeit, angefragte Seite, Statuscode,
               User-Agent), um die Stabilität und Sicherheit der Website zu
               gewährleisten.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Rechtsgrundlage:</strong> Art. 6
-              Abs. 1 lit. f DSGVO
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. f DSGVO
               <br />
               <strong className="text-foreground">Zweck:</strong> Sicherstellung
               eines störungsfreien Betriebs und Abwehr von Missbrauch
@@ -100,15 +102,15 @@ export default function DatenschutzPage() {
               Telefonnummer und Nachricht), um deine Anfrage zu beantworten.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Rechtsgrundlage:</strong> Art. 6
-              Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) oder Art. 6 Abs. 1
-              lit. f DSGVO (allgemeine Anfragen)
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) oder Art. 6 Abs.
+              1 lit. f DSGVO (allgemeine Anfragen)
               <br />
               <strong className="text-foreground">Zweck:</strong> Bearbeitung
               deiner Anfrage
               <br />
-              <strong className="text-foreground">Speicherdauer:</strong> Bis zum
-              Abschluss der Bearbeitung und im Rahmen gesetzlicher
+              <strong className="text-foreground">Speicherdauer:</strong> Bis
+              zum Abschluss der Bearbeitung und im Rahmen gesetzlicher
               Aufbewahrungspflichten
             </p>
           </div>
@@ -124,20 +126,20 @@ export default function DatenschutzPage() {
               anzupassen.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Anbieter:</strong> Papoo Software
-              &amp; Media GmbH, Auguststr. 4, 53229 Bonn, Deutschland.
+              <strong className="text-foreground">Anbieter:</strong> Papoo
+              Software &amp; Media GmbH, Auguststr. 4, 53229 Bonn, Deutschland.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Rechtsgrundlage:</strong> Art. 6
-              Abs. 1 lit. c DSGVO (Erfüllung rechtlicher Verpflichtungen) und
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. c DSGVO (Erfüllung rechtlicher Verpflichtungen) und
               Art. 6 Abs. 1 lit. f DSGVO (Nachweis der Einwilligungen); für das
               Setzen von Cookies § 25 Abs. 1 TDDDG
               <br />
               <strong className="text-foreground">Zweck:</strong>{" "}
               Einwilligungsmanagement und Compliance
               <br />
-              <strong className="text-foreground">Speicherdauer:</strong> Gemäß den
-              Einstellungen des Consent-Tools.
+              <strong className="text-foreground">Speicherdauer:</strong> Gemäß
+              den Einstellungen des Consent-Tools.
             </p>
           </div>
 
@@ -152,17 +154,19 @@ export default function DatenschutzPage() {
               verarbeitet, um den Termin zu organisieren.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Anbieter:</strong> Calendly LLC,
-              115 E Main St, Ste A1B, Buford, GA 30518, USA.
+              <strong className="text-foreground">Anbieter:</strong> Calendly
+              LLC, 115 E Main St, Ste A1B, Buford, GA 30518, USA.
             </p>
             <p className="mt-2">
-              <strong className="text-foreground">Rechtsgrundlage:</strong> Art. 6
-              Abs. 1 lit. b DSGVO (Terminvereinbarung); Cookies bzw.
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. b DSGVO (Terminvereinbarung); Cookies bzw.
               vergleichbare Technologien nur nach Einwilligung gemäß § 25 Abs. 1
               TDDDG
               <br />
-              <strong className="text-foreground">Datenübermittlung:</strong> Bei
-              Calendly kann eine Verarbeitung in Drittländern (z. B. USA)
+              <strong className="text-foreground">
+                Datenübermittlung:
+              </strong>{" "}
+              Bei Calendly kann eine Verarbeitung in Drittländern (z. B. USA)
               stattfinden. Es gelten die von Calendly bereitgestellten
               geeigneten Garantien (z. B. SCCs).
             </p>

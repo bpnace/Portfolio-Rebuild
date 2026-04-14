@@ -12,9 +12,9 @@ export function BlogSection({ posts }: BlogSectionProps) {
   return (
     <section className="section-space">
       <div className="section-shell">
-        <SectionHeader label="Notizen" marker="(SKWKHS® — 09)" />
+        <SectionHeader label="Notizen" marker="(SKWKHS® — 08)" />
         <div className="mb-10 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
-          <div className="max-w-3xl space-y-4">
+          <div className="max-w-4xl space-y-4">
             <h2 className="display-lg">Gedanken zu Struktur, Websites und digitaler Klarheit.</h2>
             <p className="text-lg leading-8 text-muted">
               Notizen aus Projekten, Relaunches und Systementscheidungen, die

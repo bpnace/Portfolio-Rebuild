@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     "Website Relaunch",
     "Technisches SEO",
   ],
-  authors: [{ name: "Tarik Marshall" }],
+  authors: [{ name: "Arthur Marshall" }],
   alternates: {
     canonical: siteConfig.url,
   },

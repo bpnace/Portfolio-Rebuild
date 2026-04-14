@@ -6,8 +6,8 @@ export function Testimonials() {
   return (
     <section className="section-space">
       <div className="section-shell">
-        <SectionHeader label="Stimmen aus Projekten" marker="(SKWKHS® — 07)" />
-        <div className="mb-10 max-w-3xl space-y-4 md:mb-16">
+        <SectionHeader label="Stimmen aus Projekten" marker="(SKWKHS® — 06)" />
+        <div className="mb-10 max-w-4xl space-y-4 md:mb-16">
           <h2 className="display-lg">Ergebnisse, die ruhiger wirken, aber härter arbeiten.</h2>
           <p className="text-lg leading-8 text-muted">
             Gute Websites werden selten mit großen Worten beschrieben. Eher mit

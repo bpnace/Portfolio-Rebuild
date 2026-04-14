@@ -6,7 +6,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://stackwerkhaus.de",
   email: "info@stackwerkhaus.de",
   location: "Berlin / Remote",
-  founder: "Tarik Marshall",
+  founder: "Arthur Marshall",
   socialLinks: [
     {
       label: "Instagram",
@@ -14,7 +14,7 @@ export const siteConfig = {
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/tarik-arthur-marshall",
+      href: "https://www.linkedin.com/in/Arthur-arthur-marshall",
     },
   ],
   navigation: [
