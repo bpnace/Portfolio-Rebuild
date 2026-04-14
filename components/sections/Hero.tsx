@@ -122,7 +122,7 @@ export function Hero() {
             mask,
             {
               xPercent: 102,
-              duration: 0.68,
+              duration: 0.5,
               ease: "power2.inOut",
               onComplete: () => {
                 gsap.set(mask, { autoAlpha: 0 });
@@ -135,11 +135,11 @@ export function Hero() {
             {
               autoAlpha: 1,
               filter: "blur(0px)",
-              duration: 0.5,
+              duration: 0.42,
               stagger: 0.03,
               ease: "power3.out",
             },
-            "<",
+            "<0.08",
           );
       });
 
@@ -174,7 +174,7 @@ export function Hero() {
       className="relative flex min-h-[calc(100svh-5rem)] items-end md:min-h-[calc(100svh-6rem)]"
     >
       <div className="section-shell grid w-full gap-14 xl:items-start">
-        <div className="space-y-10">
+        <div>
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="hero-copy eyebrow text-foreground/75">SKWKHS</div>
             <div className="hero-copy md:text-right">
@@ -196,11 +196,10 @@ export function Hero() {
               </div>
             ))}
           </div>
-          <div className="hero-copy text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
-            Für Webdesign · Für Entwicklung · Für Relaunch · Für AEO · Für
-            Automatisierung
+          <div className="hero-copy mt-5 text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
+            Für Webdesign · Für Entwicklung · Für Relaunch · Für AEO
           </div>
-          <div className="hero-copy grid gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-start lg:justify-between">
+          <div className="hero-copy mt-5 grid gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-start lg:justify-between">
             <div className="min-w-[9ch]">
               <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
             </div>

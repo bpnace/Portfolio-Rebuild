@@ -30,7 +30,7 @@ export function Ticker() {
 
   return (
     <section className="overflow-hidden border-y border-border bg-white text-black">
-      <div ref={scope} className="-rotate-[1.2deg] py-4">
+      <div ref={scope} className="py-4">
         <div className="ticker-track flex w-max gap-10 whitespace-nowrap px-6 md:gap-16 md:px-12">
           {items.map((item, index) => (
             <span

@@ -153,7 +153,6 @@ export function Nav() {
       if (introNavAnimated.current) {
         gsap.set(letters, {
           autoAlpha: 1,
-          y: 0,
           filter: "blur(0px)",
           visibility: "visible",
         });
@@ -163,7 +162,6 @@ export function Nav() {
       if (shouldReduceMotion()) {
         gsap.set(letters, {
           autoAlpha: 1,
-          y: 0,
           filter: "blur(0px)",
           visibility: "visible",
         });
@@ -173,20 +171,18 @@ export function Nav() {
 
       gsap.set(letters, {
         autoAlpha: 0,
-        y: -10,
-        filter: "blur(6px)",
+        filter: "blur(8px)",
         visibility: "visible",
       });
 
       const startAnimation = () => {
         gsap.to(letters, {
           autoAlpha: 1,
-          y: 0,
           filter: "blur(0px)",
-          duration: 0.52,
+          duration: 0.44,
           ease: "power3.out",
           stagger: {
-            each: 0.022,
+            each: 0.02,
             from: "random",
           },
           overwrite: true,

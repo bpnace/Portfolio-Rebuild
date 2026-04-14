@@ -101,6 +101,16 @@
     position: relative;
     display: inline-block;
     overflow: hidden;
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+  }
+
+  .hero-line {
+    display: block;
+    line-height: 0.9;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+    overflow: visible;
   }
 
   .hero-word-text {
@@ -116,7 +126,7 @@
 
   .hero-word-mask {
     position: absolute;
-    inset: 0;
+    inset: 0 0 0.16em 0;
     z-index: 2;
     background: var(--text);
     transform-origin: left center;
