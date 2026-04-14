@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type PricingCardProps = {
   name: string;
@@ -47,7 +48,7 @@ export function PricingCard({
       </ul>
 
       <Link href="/#kontakt" className="link-arrow mt-10">
-        Projekt anfragen <span aria-hidden>↘</span>
+        <LinkRippleText text="Projekt anfragen" baseWeight={560} /> <span aria-hidden>↘</span>
       </Link>
     </article>
   );

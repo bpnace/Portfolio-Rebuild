@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type Status = {
   type: "idle" | "success" | "error";
@@ -72,8 +73,11 @@ export function Contact() {
             </p>
             <div className="space-y-3 text-sm text-muted">
               <div>{siteConfig.location}</div>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-                {siteConfig.email}
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text={siteConfig.email} />
               </a>
             </div>
           </div>

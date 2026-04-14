@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { BlogPost } from "@/lib/blog";
 import { ArticleCard } from "@/components/ui/ArticleCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type BlogSectionProps = {
   posts: BlogPost[];
@@ -22,7 +23,7 @@ export function BlogSection({ posts }: BlogSectionProps) {
             </p>
           </div>
           <Link href="/blog" className="link-arrow">
-            Zum Blog <span aria-hidden>↗</span>
+            <LinkRippleText text="Zum Blog" baseWeight={560} /> <span aria-hidden>↗</span>
           </Link>
         </div>
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">

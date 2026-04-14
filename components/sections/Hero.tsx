@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRef } from "react";
 import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
 import { siteConfig } from "@/lib/site-config";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
 const heroTitleLines = ["Deine digitalen", "Architekten."] as const;
@@ -162,7 +163,7 @@ export function Hero() {
                 href={`mailto:${siteConfig.email}`}
                 className="link-arrow text-foreground"
               >
-                Kontakt
+                <LinkRippleText text="Kontakt" baseWeight={560} />
               </a>
               <div className="text-[11px] uppercase tracking-[0.32em] text-muted">
                 {siteConfig.location}
@@ -179,16 +180,16 @@ export function Hero() {
           <div className="hero-copy text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
             Für Webdesign · Für Entwicklung · Für Relaunch · Für SEO · Für Automatisierung
           </div>
-          <div className="hero-copy grid gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-end lg:justify-between">
-            <div className="w-fit">
+          <div className="hero-copy grid gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-center lg:justify-between">
+            <div className="min-w-[9ch]">
               <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
             </div>
-            <div className="grid w-full max-w-[360px] grid-cols-1 gap-3 justify-self-end">
+            <div className="grid w-full max-w-[360px] grid-cols-1 gap-3 justify-center">
               <Link href="/#kontakt" className="hero-action link-arrow px-6 py-4">
-                Jetzt Erstgespräch buchen <span aria-hidden>↘</span>
+                <LinkRippleText text="Jetzt Erstgespräch buchen" baseWeight={560} /> <span aria-hidden>✚</span>
               </Link>
               <Link href="/#leistungen" className="hero-action link-arrow px-6 py-4 text-muted hover:text-foreground">
-                Leistungen ansehen <span aria-hidden>↘</span>
+                <LinkRippleText text="Leistungen" baseWeight={560} /> <span aria-hidden>✚</span>
               </Link>
             </div>
           </div>

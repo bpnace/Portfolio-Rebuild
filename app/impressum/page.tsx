@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export const metadata: Metadata = {
   title: "Impressum",
@@ -50,18 +51,24 @@ export default function ImpressumPage() {
             </h2>
             <p className="mt-3">
               <strong className="text-foreground">Telefon:</strong>{" "}
-              <a href="tel:017631378294" className="hover:text-foreground">
-                0176 31378294
+              <a href="tel:017631378294" className="hover-weight-link hover:text-foreground">
+                <LinkRippleText text="0176 31378294" />
               </a>
               <br />
               <strong className="text-foreground">E-Mail:</strong>{" "}
-              <a href="mailto:info@stackwerkhaus.de" className="hover:text-foreground">
-                info@stackwerkhaus.de
+              <a
+                href="mailto:info@stackwerkhaus.de"
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text="info@stackwerkhaus.de" />
               </a>
               <br />
               <strong className="text-foreground">Website:</strong>{" "}
-              <a href="https://www.stackwerkhaus.de" className="hover:text-foreground">
-                www.stackwerkhaus.de
+              <a
+                href="https://www.stackwerkhaus.de"
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text="www.stackwerkhaus.de" />
               </a>
             </p>
           </div>

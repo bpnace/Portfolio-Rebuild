@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -70,8 +71,12 @@ export function Nav() {
 
         <nav className="hidden items-center gap-7 text-[length:var(--label)] uppercase tracking-[0.34em] text-muted md:flex">
           {siteConfig.navigation.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-foreground">
-              {item.label}
+            <Link
+              key={item.href}
+              href={item.href}
+              className="hover-weight-link hover:text-foreground"
+            >
+              <LinkRippleText text={item.label} />
             </Link>
           ))}
         </nav>
@@ -98,9 +103,9 @@ export function Nav() {
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="border-b border-border pb-4"
+              className="hover-weight-link border-b border-border pb-4"
             >
-              {item.label}
+              <LinkRippleText text={item.label} baseWeight={700} />
             </Link>
           ))}
         </nav>

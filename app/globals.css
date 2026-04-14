@@ -130,6 +130,54 @@
 
   .link-arrow {
     @apply inline-flex items-center gap-3 text-[11px] uppercase tracking-[0.34em] text-foreground;
+    transition: color 180ms ease;
+  }
+
+  .hover-weight-link {
+    display: inline-block;
+    transition: color 180ms ease;
+  }
+
+  .link-ripple-text {
+    display: inline-flex;
+    align-items: baseline;
+  }
+
+  .link-ripple-visual {
+    white-space: pre;
+  }
+
+  .link-ripple-char {
+    display: inline-grid;
+    place-items: start;
+    vertical-align: baseline;
+  }
+
+  .link-ripple-char > span {
+    grid-area: 1 / 1;
+  }
+
+  .link-ripple-reserve,
+  .link-ripple-ink {
+    font-variation-settings: "opsz" 32, "wght" var(--link-ripple-active-wght, 900);
+  }
+
+  .link-ripple-base {
+    font-variation-settings: "opsz" 32, "wght" var(--link-ripple-base-wght, 520);
+  }
+
+  .link-ripple-reserve {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .link-ripple-ink {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .link-ripple-space {
+    white-space: pre;
   }
 
   .mdx-body {
@@ -165,6 +213,7 @@
 
   .mdx-body a {
     @apply underline decoration-border underline-offset-4 hover:text-highlight;
+    transition: color 180ms ease;
   }
 
   .mdx-body code {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
@@ -52,8 +53,11 @@ export default function DatenschutzPage() {
             </p>
             <p className="mt-2">
               <strong className="text-foreground">Kontakt:</strong>{" "}
-              <a href="mailto:info@stackwerkhaus.de" className="hover:text-foreground">
-                info@stackwerkhaus.de
+              <a
+                href="mailto:info@stackwerkhaus.de"
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text="info@stackwerkhaus.de" />
               </a>
             </p>
             <p className="mt-2">
@@ -200,8 +204,11 @@ export default function DatenschutzPage() {
               Telefon: 030 13889-0
               <br />
               Website:{" "}
-              <a href="https://www.datenschutz-berlin.de" className="hover:text-foreground">
-                www.datenschutz-berlin.de
+              <a
+                href="https://www.datenschutz-berlin.de"
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text="www.datenschutz-berlin.de" />
               </a>
             </p>
           </div>

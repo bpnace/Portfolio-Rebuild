@@ -9,6 +9,10 @@ type StaggeredCycleProps = {
 
 export function StaggeredCycle({ words }: StaggeredCycleProps) {
   const scope = useRef<HTMLDivElement | null>(null);
+  const longestWord = words.reduce(
+    (longest, word) => (word.length > longest.length ? word : longest),
+    words[0] ?? "",
+  );
 
   useGSAP(
     () => {
@@ -99,12 +103,18 @@ export function StaggeredCycle({ words }: StaggeredCycleProps) {
   return (
     <div
       ref={scope}
-      className="display-xl relative h-[1.18em] overflow-hidden md:h-[1.2em]"
+      className="display-xl relative inline-block h-[1.18em] overflow-x-visible overflow-y-hidden px-[0.04em] md:h-[1.2em]"
     >
+      <span
+        className="pointer-events-none invisible block whitespace-nowrap"
+        aria-hidden="true"
+      >
+        {longestWord}
+      </span>
       {words.map((word) => (
         <div
           key={word}
-          className="cycle-word absolute inset-x-0 top-0 whitespace-nowrap text-foreground"
+          className="cycle-word absolute left-[0.04em] top-0 whitespace-nowrap text-foreground"
           aria-hidden="true"
         >
           {Array.from(word).map((character, index) => (

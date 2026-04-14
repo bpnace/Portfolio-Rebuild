@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { BlogPost } from "@/lib/blog";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type ArticleCardProps = {
   post: BlogPost;
@@ -25,7 +26,7 @@ export function ArticleCard({ post }: ArticleCardProps) {
       <div className="mt-8 flex items-center justify-between gap-4 text-sm text-muted">
         <span>{published}</span>
         <Link href={`/blog/${post.slug}`} className="link-arrow">
-          Weiterlesen <span aria-hidden>↗</span>
+          <LinkRippleText text="Weiterlesen" baseWeight={560} /> <span aria-hidden>↗</span>
         </Link>
       </div>
     </article>
