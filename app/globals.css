@@ -138,6 +138,23 @@
     transition: color 180ms ease;
   }
 
+  .nav-word {
+    display: inline-flex;
+    white-space: pre;
+  }
+
+  .nav-letter {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+  }
+
+  [data-nav-ready="false"] .nav-letter {
+    visibility: hidden;
+    opacity: 0;
+    transform: none;
+    filter: none;
+  }
+
   .link-ripple-text {
     display: inline-flex;
     align-items: baseline;

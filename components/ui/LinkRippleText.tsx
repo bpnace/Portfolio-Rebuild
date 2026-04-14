@@ -43,6 +43,9 @@ export function LinkRippleText({
   useGSAP(
     (_, contextSafe) => {
       ensureGsap();
+      const safe =
+        contextSafe ??
+        (<T extends (...args: never[]) => unknown>(fn: T) => fn);
 
       const node = scope.current;
       if (!node) {
@@ -104,21 +107,21 @@ export function LinkRippleText({
 
       setInk(0);
 
-      const onPointerEnter = contextSafe((event: PointerEvent) => {
+      const onPointerEnter = safe((event: PointerEvent) => {
         animateTo(1, getClosestCharIndex(event.clientX));
       });
 
-      const onPointerLeave = contextSafe(() => {
+      const onPointerLeave = safe(() => {
         animateTo(0, lastOriginIndex.current);
       });
 
-      const onFocus = contextSafe(() => {
+      const onFocus = safe(() => {
         const origin = Math.floor(chars.length / 2);
         lastOriginIndex.current = origin;
         animateTo(1, origin);
       });
 
-      const onBlur = contextSafe(() => {
+      const onBlur = safe(() => {
         animateTo(0, lastOriginIndex.current);
       });
 

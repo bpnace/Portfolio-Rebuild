@@ -35,6 +35,10 @@ export function Hero() {
   useGSAP(
     () => {
       ensureGsap();
+      const markHeroIntroReady = () => {
+        document.documentElement.dataset.homeHeroIntroReady = "true";
+        window.dispatchEvent(new CustomEvent("home-hero-intro-ready"));
+      };
 
       const wordTexts = gsap.utils.toArray<HTMLElement>(".hero-word-text");
       const chars = gsap.utils.toArray<HTMLElement>(".hero-char");
@@ -51,6 +55,7 @@ export function Hero() {
           filter: "blur(0px)",
         });
         gsap.set(masks, { autoAlpha: 0, scaleX: 0, xPercent: 0 });
+        markHeroIntroReady();
         return;
       }
 
@@ -63,7 +68,12 @@ export function Hero() {
         transformOrigin: "left center",
       });
 
-      const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
+      document.documentElement.dataset.homeHeroIntroReady = "false";
+
+      const timeline = gsap.timeline({
+        defaults: { ease: "power4.out" },
+        onComplete: markHeroIntroReady,
+      });
 
       const wordTimelineEntries: Array<{
         mask: HTMLElement;
@@ -159,8 +169,11 @@ export function Hero() {
   );
 
   return (
-    <section ref={scope}>
-      <div className="section-shell grid gap-14 xl:items-start">
+    <section
+      ref={scope}
+      className="relative flex min-h-[calc(100svh-5rem)] items-end md:min-h-[calc(100svh-6rem)]"
+    >
+      <div className="section-shell grid w-full gap-14 xl:items-start">
         <div className="space-y-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div className="hero-copy eyebrow text-foreground/75">SKWKHS</div>

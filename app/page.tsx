@@ -6,6 +6,7 @@ import { Hero } from "@/components/sections/Hero";
 import { Pricing } from "@/components/sections/Pricing";
 import { Profile } from "@/components/sections/Profile";
 import { Projects } from "@/components/sections/Projects";
+import { PinnedIntroShell } from "@/components/sections/PinnedIntroShell";
 import { Services } from "@/components/sections/Services";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Ticker } from "@/components/sections/Ticker";
@@ -20,17 +21,18 @@ export default async function Home() {
 
   return (
     <main>
-      <Hero />
-      <Ticker />
-      <Projects projects={projects} />
-      <Services />
-      <Profile />
-      <Experience />
-      <Testimonials />
-      <Pricing />
-      <BlogSection posts={posts} />
-      <FAQ />
-      <Contact />
+      <PinnedIntroShell hero={<Hero />}>
+        <Ticker />
+        <Projects projects={projects} />
+        <Services />
+        <Profile />
+        <Experience />
+        <Testimonials />
+        <Pricing />
+        <BlogSection posts={posts} />
+        <FAQ />
+        <Contact />
+      </PinnedIntroShell>
     </main>
   );
 }
