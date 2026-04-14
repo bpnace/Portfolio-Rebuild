@@ -6,6 +6,8 @@ const checks = [
   ["/blog", "Creative Notes"],
   ["/blog/was-kostet-eine-website-2026", "Was kostet eine Website 2026?"],
   ["/projekte/zynapse", "Zynapse"],
+  ["/impressum", "Sigmaringer Str. 27"],
+  ["/datenschutz", "Resend"],
 ];
 
 for (const [pathname, expected] of checks) {
