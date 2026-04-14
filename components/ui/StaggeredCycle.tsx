@@ -14,40 +14,84 @@ export function StaggeredCycle({ words }: StaggeredCycleProps) {
     () => {
       ensureGsap();
 
-      const elements = gsap.utils.toArray<HTMLElement>(".cycle-word");
-      if (!elements.length) {
+      const wordElements = gsap.utils.toArray<HTMLElement>(".cycle-word");
+      if (!wordElements.length) {
         return;
       }
 
+      const charGroups = wordElements.map((wordElement) =>
+        gsap.utils.toArray<HTMLElement>(".cycle-char", wordElement),
+      );
+
       if (shouldReduceMotion()) {
-        elements.forEach((element, index) => {
-          gsap.set(element, { autoAlpha: index === 0 ? 1 : 0, yPercent: 0 });
+        wordElements.forEach((wordElement, index) => {
+          gsap.set(wordElement, { autoAlpha: index === 0 ? 1 : 0 });
+        });
+        charGroups.forEach((chars, index) => {
+          gsap.set(chars, { autoAlpha: index === 0 ? 1 : 0, yPercent: 0 });
         });
         return;
       }
 
-      gsap.set(elements, { autoAlpha: 0, yPercent: 112 });
-      gsap.set(elements[0], { autoAlpha: 1, yPercent: 0 });
+      gsap.set(wordElements, { autoAlpha: 0 });
+      gsap.set(charGroups.flat(), { autoAlpha: 0, yPercent: 118 });
+      gsap.set(wordElements[0], { autoAlpha: 1 });
+      gsap.set(charGroups[0], { autoAlpha: 1, yPercent: 0 });
 
-      const timeline = gsap.timeline({ repeat: -1, repeatDelay: 0.15 });
-      elements.forEach((element, index) => {
-        const next = elements[(index + 1) % elements.length];
+      let activeTimeline: gsap.core.Timeline | null = null;
+      let stopped = false;
 
-        timeline
-          .to(element, {
-            autoAlpha: 0,
-            yPercent: -112,
-            duration: 0.45,
-            delay: 1.18,
-            ease: "power3.in",
-          })
+      const runTransition = (index: number) => {
+        if (stopped) {
+          return;
+        }
+
+        const currentWord = wordElements[index];
+        const currentChars = charGroups[index];
+        const nextIndex = (index + 1) % wordElements.length;
+        const nextWord = wordElements[nextIndex];
+        const nextChars = charGroups[nextIndex];
+
+        activeTimeline = gsap.timeline({
+          onComplete: () => {
+            gsap.set(currentWord, { autoAlpha: 0 });
+            runTransition(nextIndex);
+          },
+        });
+
+        activeTimeline
+          .set(nextWord, { autoAlpha: 1 })
+          .to(
+            currentChars,
+            {
+              autoAlpha: 0,
+              yPercent: -112,
+              duration: 0.7,
+              stagger: 0.075,
+              ease: "power2.inOut",
+            },
+            "+=0.55",
+          )
           .fromTo(
-            next,
-            { autoAlpha: 0, yPercent: 112 },
-            { autoAlpha: 1, yPercent: 0, duration: 0.55, ease: "power3.out" },
-            "<0.04",
+            nextChars,
+            { autoAlpha: 0, yPercent: 118 },
+            {
+              autoAlpha: 1,
+              yPercent: 0,
+              duration: 0.78,
+              stagger: 0.075,
+              ease: "power3.out",
+            },
+            "<0.22",
           );
-      });
+      };
+
+      runTransition(0);
+
+      return () => {
+        stopped = true;
+        activeTimeline?.kill();
+      };
     },
     { scope },
   );
@@ -61,8 +105,16 @@ export function StaggeredCycle({ words }: StaggeredCycleProps) {
         <div
           key={word}
           className="cycle-word absolute inset-x-0 top-0 whitespace-nowrap text-foreground"
+          aria-hidden="true"
         >
-          {word}
+          {Array.from(word).map((character, index) => (
+            <span
+              key={`${word}-${index}`}
+              className="cycle-char inline-block"
+            >
+              {character}
+            </span>
+          ))}
         </div>
       ))}
     </div>

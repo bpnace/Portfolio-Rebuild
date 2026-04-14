@@ -6,6 +6,28 @@ import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
 import { siteConfig } from "@/lib/site-config";
 import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
+const heroTitleLines = ["Deine digitalen", "Architekten."] as const;
+
+function renderTitleLine(line: string) {
+  const words = line.split(" ");
+
+  return words.map((word, index) => (
+    <span key={`${line}-${word}-${index}`}>
+      <span className="hero-word">
+        <span className="hero-word-text">
+          {Array.from(word).map((character, charIndex) => (
+            <span key={`${word}-${charIndex}`} className="hero-char">
+              {character}
+            </span>
+          ))}
+        </span>
+        <span className="hero-word-mask" aria-hidden />
+      </span>
+      {index < words.length - 1 ? " " : null}
+    </span>
+  ));
+}
+
 export function Hero() {
   const scope = useRef<HTMLDivElement | null>(null);
 
@@ -13,23 +35,98 @@ export function Hero() {
     () => {
       ensureGsap();
 
+      const wordTexts = gsap.utils.toArray<HTMLElement>(".hero-word-text");
+      const chars = gsap.utils.toArray<HTMLElement>(".hero-char");
+      const masks = gsap.utils.toArray<HTMLElement>(".hero-word-mask");
       const lines = gsap.utils.toArray<HTMLElement>(".hero-line");
       const copy = gsap.utils.toArray<HTMLElement>(".hero-copy");
       const actions = gsap.utils.toArray<HTMLElement>(".hero-action");
 
       if (shouldReduceMotion()) {
-        gsap.set([...lines, ...copy, ...actions], { autoAlpha: 1, y: 0 });
+        gsap.set([...wordTexts, ...chars, ...copy, ...actions], {
+          autoAlpha: 1,
+          y: 0,
+          yPercent: 0,
+          filter: "blur(0px)",
+        });
+        gsap.set(masks, { autoAlpha: 0, scaleX: 0, xPercent: 0 });
         return;
       }
 
+      gsap.set(wordTexts, { autoAlpha: 1 });
+      gsap.set(chars, { autoAlpha: 0, yPercent: 0, filter: "blur(8px)" });
+      gsap.set(masks, {
+        autoAlpha: 1,
+        scaleX: 0,
+        xPercent: 0,
+        transformOrigin: "left center",
+      });
+
       const timeline = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+      const wordTimelineEntries: Array<{
+        mask: HTMLElement;
+        text: HTMLElement;
+        chars: HTMLElement[];
+        startAt: number;
+      }> = [];
+
+      lines.forEach((line) => {
+        const lineMasks = gsap.utils.toArray<HTMLElement>(".hero-word-mask", line);
+        const lineTexts = gsap.utils.toArray<HTMLElement>(".hero-word-text", line);
+
+        lineMasks.forEach((mask, lineWordIndex) => {
+          const text = lineTexts[lineWordIndex];
+          if (!text) {
+            return;
+          }
+
+          wordTimelineEntries.push({
+            mask,
+            text,
+            chars: gsap.utils.toArray<HTMLElement>(".hero-char", text),
+            startAt: lineWordIndex * 0.32,
+          });
+        });
+      });
+
+      wordTimelineEntries.forEach(({ mask, chars: wordChars, startAt }) => {
+        timeline
+          .to(
+            mask,
+            {
+              scaleX: 1,
+              duration: 0.42,
+              ease: "expo.out",
+            },
+            startAt,
+          )
+          .to(
+            mask,
+            {
+              xPercent: 102,
+              duration: 0.68,
+              ease: "power2.inOut",
+              onComplete: () => {
+                gsap.set(mask, { autoAlpha: 0 });
+              },
+            },
+            ">",
+          )
+          .to(
+            wordChars,
+            {
+              autoAlpha: 1,
+              filter: "blur(0px)",
+              duration: 0.5,
+              stagger: 0.03,
+              ease: "power3.out",
+            },
+            "<",
+          );
+      });
+
       timeline
-        .from(lines, {
-          autoAlpha: 0,
-          y: 64,
-          duration: 0.9,
-          stagger: 0.08,
-        })
         .from(
           copy,
           {
@@ -38,7 +135,7 @@ export function Hero() {
             duration: 0.55,
             stagger: 0.1,
           },
-          "-=0.35",
+          "+=0.08",
         )
         .from(
           actions,
@@ -55,11 +152,11 @@ export function Hero() {
   );
 
   return (
-    <section ref={scope} >
+    <section ref={scope}>
       <div className="section-shell grid gap-14 xl:items-start">
         <div className="space-y-10">
           <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="hero-copy eyebrow text-foreground/75">Stackwerkhaus</div>
+            <div className="hero-copy eyebrow text-foreground/75">SKWKHS</div>
             <div className="hero-copy md:text-right">
               <a
                 href={`mailto:${siteConfig.email}`}
@@ -73,8 +170,11 @@ export function Hero() {
             </div>
           </div>
           <div className="space-y-3">
-            <div className="hero-line display-xl">Deine digitalen</div>
-            <div className="hero-line display-xl">Architekten.</div>
+            {heroTitleLines.map((line) => (
+              <div key={line} className="hero-line display-xl">
+                {renderTitleLine(line)}
+              </div>
+            ))}
           </div>
           <div className="hero-copy text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
             Für Webdesign · Für Entwicklung · Für Relaunch · Für SEO · Für Automatisierung

@@ -63,7 +63,7 @@ export function Nav() {
       <div className="section-shell flex h-20 items-center justify-between">
         <Link
           href="/"
-          className="text-[11px] font-black uppercase tracking-[0.42em] text-foreground md:text-[13px]"
+          className="text-[11px] font-black uppercase text-foreground md:text-[13px]"
         >
           {siteConfig.name}
         </Link>

@@ -97,6 +97,33 @@
     @apply font-display font-extrabold;
   }
 
+  .hero-word {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+  }
+
+  .hero-word-text {
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-char {
+    display: inline-block;
+    will-change: transform, opacity, filter;
+  }
+
+  .hero-word-mask {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: var(--text);
+    transform-origin: left center;
+    pointer-events: none;
+    will-change: transform;
+  }
+
   .chip {
     @apply rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.28em] text-muted;
   }
