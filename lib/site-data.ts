@@ -3,7 +3,7 @@ export const tickerItems = [
   "Strukturiert",
   "Fokussiert",
   "Visuell stark",
-  "SEO-ready",
+  "SEO-stark",
   "DSGVO-bewusst",
 ];
 
@@ -71,7 +71,7 @@ export const experience = [
   {
     title: "Mediendesign-Studium",
     years: "2010 – 2013",
-    role: "Interaction Design",
+    role: "Interaktionsdesign",
     place: "Berlin",
   },
 ] as const;

@@ -4,14 +4,14 @@ import { getAllPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "Creative Notes zu Websites, Relaunches, Technik und digitaler Klarheit.",
+  description: "Notizen zu Websites, Relaunches, Technik und digitaler Klarheit.",
   alternates: {
     canonical: "/blog",
   },
   openGraph: {
     url: "/blog",
     title: "Blog | STACKWERKHAUS",
-    description: "Creative Notes zu Websites, Relaunches, Technik und digitaler Klarheit.",
+    description: "Notizen zu Websites, Relaunches, Technik und digitaler Klarheit.",
   },
 };
 
@@ -22,7 +22,7 @@ export default async function BlogIndexPage() {
     <main className="section-space">
       <div className="section-shell">
         <div className="max-w-4xl space-y-6">
-          <div className="eyebrow">Creative Notes</div>
+          <div className="eyebrow">Notizen</div>
           <h1 className="display-lg">Blog, Analysen und praktische Notizen aus Projekten.</h1>
           <p className="text-lg leading-8 text-muted">
             Gedanken zu Struktur, Relaunches, Tool-Entscheidungen und der Frage,

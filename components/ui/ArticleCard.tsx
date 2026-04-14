@@ -13,16 +13,10 @@ export function ArticleCard({ post }: ArticleCardProps) {
   }).format(new Date(post.publishedAt));
 
   return (
-    <article className="glass-card flex h-full flex-col justify-between p-6 md:p-8">
+    <article className="flex h-full flex-col justify-between border-t border-border pt-6">
       <div className="space-y-5">
         <div className="flex items-center justify-between gap-4 text-[length:var(--label)] uppercase tracking-[0.3em] text-muted">
-          <span className="flex items-center gap-3">
-            <span
-              className="h-2.5 w-2.5 rounded-full"
-              style={{ backgroundColor: post.accent }}
-            />
-            <span>{post.category}</span>
-          </span>
+          <span>{post.category}</span>
           <span>{post.readingTime}</span>
         </div>
         <h3 className="text-2xl font-semibold tracking-tight">{post.title}</h3>

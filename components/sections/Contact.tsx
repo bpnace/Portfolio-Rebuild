@@ -79,7 +79,7 @@ export function Contact() {
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="glass-card space-y-5 p-6 md:p-8">
+        <form onSubmit={onSubmit} className="space-y-5 border-t border-border pt-6">
           <div>
             <label htmlFor="name" className="eyebrow">
               Name
@@ -88,7 +88,7 @@ export function Contact() {
               id="name"
               name="name"
               required
-              className="mt-2 w-full rounded-2xl border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
+              className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
               placeholder="Wie sollen wir dich ansprechen?"
             />
           </div>
@@ -101,7 +101,7 @@ export function Contact() {
               name="email"
               type="email"
               required
-              className="mt-2 w-full rounded-2xl border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
+              className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
               placeholder="name@unternehmen.de"
             />
           </div>
@@ -114,7 +114,7 @@ export function Contact() {
               name="project"
               required
               rows={6}
-              className="mt-2 w-full rounded-[1.5rem] border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
+              className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
               placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
             />
           </div>
@@ -128,7 +128,7 @@ export function Contact() {
           </button>
           {status.type !== "idle" ? (
             <p
-              className={`text-sm ${status.type === "success" ? "text-highlight" : "text-red-300"}`}
+              className={`text-sm ${status.type === "success" ? "text-foreground" : "text-red-300"}`}
             >
               {status.message}
             </p>

@@ -51,19 +51,13 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
       <article className="section-shell">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div className="space-y-6">
-            <div className="eyebrow flex items-center gap-3">
-              <span
-                className="h-2.5 w-2.5 rounded-full"
-                style={{ backgroundColor: project.accent }}
-              />
-              <span>{project.category}</span>
-            </div>
+            <div className="eyebrow">{project.category}</div>
             <h1 className="display-lg">{project.title}</h1>
             <p className="max-w-3xl text-lg leading-8 text-muted">
               {project.summary}
             </p>
           </div>
-          <div className="glass-card space-y-5 p-6 md:p-8">
+          <div className="space-y-5 border-t border-border pt-6 md:pt-8">
             <div className="grid gap-4 text-sm text-muted">
               <div className="flex items-center justify-between gap-4">
                 <span>Jahr</span>

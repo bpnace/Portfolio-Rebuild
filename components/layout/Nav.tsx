@@ -61,11 +61,14 @@ export function Nav() {
       }`}
     >
       <div className="section-shell flex h-20 items-center justify-between">
-        <Link href="/" className="text-sm uppercase tracking-[0.45em] text-foreground">
+        <Link
+          href="/"
+          className="text-[11px] font-black uppercase tracking-[0.42em] text-foreground md:text-[13px]"
+        >
           {siteConfig.name}
         </Link>
 
-        <nav className="hidden items-center gap-8 text-[length:var(--label)] uppercase tracking-[0.3em] text-muted md:flex">
+        <nav className="hidden items-center gap-7 text-[length:var(--label)] uppercase tracking-[0.34em] text-muted md:flex">
           {siteConfig.navigation.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-foreground">
               {item.label}
@@ -76,7 +79,7 @@ export function Nav() {
         <button
           type="button"
           onClick={() => setOpen((value) => !value)}
-          className="eyebrow md:hidden"
+          className="eyebrow text-foreground md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
         >
@@ -87,9 +90,9 @@ export function Nav() {
       <div
         id="mobile-nav"
         ref={panelRef}
-        className="pointer-events-none absolute inset-x-0 top-full border-t border-border bg-black/95 px-6 py-8 opacity-0 md:hidden"
+        className="pointer-events-none absolute inset-x-0 top-full border-t border-border bg-black/96 px-6 py-8 opacity-0 md:hidden"
       >
-        <nav className="flex flex-col gap-5 text-xl font-semibold tracking-tight text-foreground">
+        <nav className="flex flex-col gap-5 text-xl font-bold tracking-[-0.04em] text-foreground">
           {siteConfig.navigation.map((item) => (
             <Link
               key={item.href}

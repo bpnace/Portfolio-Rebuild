@@ -55,18 +55,29 @@ export function Hero() {
   );
 
   return (
-    <section ref={scope} className="section-space">
-      <div className="section-shell grid gap-12 lg:grid-cols-[1.35fr_0.8fr] lg:items-end">
-        <div className="space-y-8">
-          <div className="hero-copy eyebrow">Berlin / Remote</div>
-          <div className="space-y-4">
+    <section ref={scope} >
+      <div className="section-shell grid gap-14 xl:items-start">
+        <div className="space-y-10">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
+            <div className="hero-copy eyebrow text-foreground/75">Stackwerkhaus</div>
+            <div className="hero-copy md:text-right">
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="link-arrow text-foreground"
+              >
+                Kontakt
+              </a>
+              <div className="text-[11px] uppercase tracking-[0.32em] text-muted">
+                {siteConfig.location}
+              </div>
+            </div>
+          </div>
+          <div className="space-y-3">
             <div className="hero-line display-xl">Deine digitalen</div>
             <div className="hero-line display-xl">Architekten.</div>
           </div>
-          <div className="hero-copy max-w-3xl text-lg leading-8 text-muted md:text-xl">
-            Webdesign, Entwicklung, Relaunch und technisches SEO für
-            Dienstleister, kleine Unternehmen und neue Marken, die digital
-            strukturierter, klarer und überzeugender auftreten wollen.
+          <div className="hero-copy text-[11px] uppercase tracking-[0.38em] text-muted md:text-xs">
+            Für Webdesign · Für Entwicklung · Für Relaunch · Für SEO · Für Automatisierung
           </div>
           <div className="hero-copy">
             <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
@@ -80,36 +91,6 @@ export function Hero() {
             </Link>
           </div>
         </div>
-
-        <aside className="glass-card hero-copy space-y-8 p-6 md:p-8">
-          <div className="eyebrow">Stackwerkhaus</div>
-          <div className="space-y-4">
-            <div className="text-3xl font-semibold tracking-tight">
-              Websites, die nicht nur gut aussehen, sondern präzise führen.
-            </div>
-            <p className="text-muted">
-              Wir verbinden Positionierung, Inhaltsführung, Design und technische
-              Umsetzung, damit Besucher schneller verstehen, was angeboten wird
-              und was der nächste sinnvolle Schritt ist.
-            </p>
-          </div>
-          <div className="grid gap-4 border-t border-border pt-6 text-sm text-muted">
-            <div className="flex items-center justify-between gap-4">
-              <span>Fokus</span>
-              <span>Dienstleister, KMU, neue Marken</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span>Standort</span>
-              <span>{siteConfig.location}</span>
-            </div>
-            <div className="flex items-center justify-between gap-4">
-              <span>Kontakt</span>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-                {siteConfig.email}
-              </a>
-            </div>
-          </div>
-        </aside>
       </div>
     </section>
   );

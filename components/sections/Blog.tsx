@@ -11,7 +11,7 @@ export function BlogSection({ posts }: BlogSectionProps) {
   return (
     <section className="section-space">
       <div className="section-shell">
-        <SectionHeader label="Creative Notes" marker="(SKWKHS® — 09)" />
+        <SectionHeader label="Notizen" marker="(SKWKHS® — 09)" />
         <div className="mb-10 flex flex-col gap-6 md:mb-16 md:flex-row md:items-end md:justify-between">
           <div className="max-w-3xl space-y-4">
             <h2 className="display-lg">Gedanken zu Struktur, Websites und digitaler Klarheit.</h2>

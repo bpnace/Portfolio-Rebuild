@@ -14,7 +14,7 @@ export const siteConfig = {
     },
     {
       label: "LinkedIn",
-      href: "https://linkedin.com/company/stackwerkhaus",
+      href: "https://www.linkedin.com/in/tarik-arthur-marshall",
     },
   ],
   navigation: [
@@ -22,6 +22,5 @@ export const siteConfig = {
     { label: "Projekte", href: "/#projekte" },
     { label: "FAQ", href: "/#faq" },
     { label: "Kontakt", href: "/#kontakt" },
-    { label: "Blog", href: "/blog" },
   ],
 } as const;

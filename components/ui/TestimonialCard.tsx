@@ -10,9 +10,9 @@ export function TestimonialCard({
   company,
 }: TestimonialCardProps) {
   return (
-    <article className="glass-card h-full p-6 md:p-8">
-      <p className="text-lg leading-8 text-foreground/90">“{quote}”</p>
-      <div className="mt-8 border-t border-border pt-5">
+    <article className="h-full border-t border-border pt-6">
+      <p className="text-lg leading-8 text-foreground/92">“{quote}”</p>
+      <div className="mt-8 pt-5">
         <div className="font-semibold">{name}</div>
         <div className="text-sm text-muted">{company}</div>
       </div>

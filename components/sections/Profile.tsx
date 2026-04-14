@@ -7,7 +7,7 @@ export function Profile() {
     <section className="section-space">
       <div className="section-shell grid gap-12 lg:grid-cols-[1fr_1.05fr]">
         <div>
-          <SectionHeader label="Personal Profile" marker="(SKWKHS® — 05)" />
+          <SectionHeader label="Profil" marker="(SKWKHS® — 05)" />
           <div className="space-y-6">
             <div className="display-md">{siteConfig.founder}</div>
             <p className="max-w-2xl text-lg leading-8 text-muted">
@@ -19,9 +19,9 @@ export function Profile() {
           </div>
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid gap-x-8 sm:grid-cols-2">
           {skills.map((skill) => (
-            <div key={skill} className="glass-card px-5 py-4 text-sm text-foreground/90">
+            <div key={skill} className="border-t border-border py-3 text-sm text-foreground/90">
               {skill}
             </div>
           ))}

@@ -10,7 +10,6 @@ export type BlogFrontmatter = {
   publishedAt: string;
   readingTime: string;
   featured?: boolean;
-  accent?: string;
 };
 
 export type BlogPost = BlogFrontmatter & {
@@ -28,12 +27,11 @@ async function readPostFile(fileName: string): Promise<BlogPost> {
   return {
     slug,
     title: String(data.title ?? slug),
-    category: String(data.category ?? "Creative Notes"),
+    category: String(data.category ?? "Notizen"),
     excerpt: String(data.excerpt ?? ""),
     publishedAt: String(data.publishedAt ?? new Date().toISOString()),
     readingTime: String(data.readingTime ?? "4 min"),
     featured: Boolean(data.featured ?? true),
-    accent: String(data.accent ?? "#d7f171"),
     content,
   };
 }
