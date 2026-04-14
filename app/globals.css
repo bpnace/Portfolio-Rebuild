@@ -1,26 +1,154 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #050505;
+  --surface: #0d0d0d;
+  --surface-elevated: #131313;
+  --border: rgba(255, 255, 255, 0.12);
+  --text: #f5f5f5;
+  --text-muted: #9f9f9f;
+  --accent: #ffffff;
+  --highlight: #d7f171;
+  --display-xl: clamp(4rem, 13vw, 13rem);
+  --display-lg: clamp(3rem, 8vw, 8rem);
+  --display-md: clamp(1.7rem, 4vw, 3.5rem);
+  --body-lg: 1.125rem;
+  --body: 1rem;
+  --label: 0.75rem;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-foreground: var(--text);
+  --color-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-highlight: var(--highlight);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-display);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply bg-background;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 25%),
+      radial-gradient(circle at left 30%, rgba(215, 241, 113, 0.12), transparent 25%),
+      var(--bg);
+    color: var(--text);
+  }
+
+  ::selection {
+    background: rgba(215, 241, 113, 0.9);
+    color: #111111;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .section-shell {
+    @apply mx-auto w-full max-w-[1400px] px-6 md:px-12;
+  }
+
+  .section-space {
+    @apply py-24 md:py-36;
+  }
+
+  .eyebrow {
+    @apply text-[length:var(--label)] uppercase tracking-[0.35em] text-muted;
+  }
+
+  .display-xl {
+    font-size: var(--display-xl);
+    line-height: 0.88;
+    letter-spacing: -0.06em;
+    @apply font-display font-semibold;
+  }
+
+  .display-lg {
+    font-size: var(--display-lg);
+    line-height: 0.95;
+    letter-spacing: -0.055em;
+    @apply font-display font-semibold;
+  }
+
+  .display-md {
+    font-size: var(--display-md);
+    line-height: 1;
+    letter-spacing: -0.045em;
+    @apply font-display font-semibold;
+  }
+
+  .glass-card {
+    @apply rounded-[2rem] border border-border bg-surface/80 backdrop-blur;
+  }
+
+  .chip {
+    @apply rounded-full border border-border px-3 py-1 text-sm text-muted;
+  }
+
+  .link-arrow {
+    @apply inline-flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-foreground;
+  }
+
+  .mdx-body {
+    @apply space-y-6 text-[length:var(--body)] leading-8 text-foreground/88;
+  }
+
+  .mdx-body h2 {
+    @apply mt-16 font-display font-semibold;
+    font-size: var(--display-md);
+    line-height: 1;
+    letter-spacing: -0.045em;
+  }
+
+  .mdx-body h3 {
+    @apply mt-10 text-2xl font-semibold tracking-tight text-foreground;
+  }
+
+  .mdx-body p {
+    @apply max-w-3xl;
+  }
+
+  .mdx-body ul {
+    @apply ml-5 list-disc space-y-2 text-foreground/88;
+  }
+
+  .mdx-body ol {
+    @apply ml-5 list-decimal space-y-2 text-foreground/88;
+  }
+
+  .mdx-body blockquote {
+    @apply rounded-[1.5rem] border border-border bg-surface-elevated px-6 py-5 text-lg italic text-foreground;
+  }
+
+  .mdx-body a {
+    @apply underline decoration-border underline-offset-4 hover:text-highlight;
+  }
+
+  .mdx-body code {
+    @apply rounded bg-white/8 px-1.5 py-0.5 text-sm text-highlight;
+  }
+
+  .mdx-body pre {
+    @apply overflow-x-auto rounded-[1.5rem] border border-border bg-surface-elevated p-5;
+  }
 }

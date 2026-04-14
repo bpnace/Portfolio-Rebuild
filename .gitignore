@@ -16,6 +16,10 @@
 # next.js
 /.next/
 /out/
+.omx
+test
+CLAUDE.md
+build_instructions.md
 
 # production
 /build

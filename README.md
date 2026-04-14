@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stackwerkhaus
 
-## Getting Started
+Next.js 16 App Router rebuild of the Stackwerkhaus marketing site.
 
-First, run the development server:
+## Stack
+
+- `Next.js 16`
+- `React 19`
+- `TypeScript`
+- `Tailwind CSS v4`
+- `GSAP` + `@gsap/react`
+- local MDX content via `next-mdx-remote/rsc`
+- contact delivery boundary prepared for `Resend`
+
+## Commands
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
+pnpm lint
+pnpm typecheck
+pnpm build
+pnpm test:content
+pnpm test:smoke
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` and fill only what you need:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `NEXT_PUBLIC_SITE_URL`
+- `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
+- `RESEND_API_KEY`
+- `CONTACT_TO_EMAIL`
 
-## Learn More
+If `RESEND_API_KEY` is missing, the contact route stays in validation-only preview mode and returns a non-failing preview response instead of sending email.
 
-To learn more about Next.js, take a look at the following resources:
+If `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is missing, analytics stays disabled locally and in preview.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The homepage and routed content use German copy by default.
+- Blog posts and project entries live under `content/blog` and `content/projects`.
+- GSAP motion is isolated to client islands and reduced-motion safe fallbacks are included.
