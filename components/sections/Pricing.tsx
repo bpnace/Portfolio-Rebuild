@@ -5,7 +5,7 @@ import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
 export function Pricing() {
   return (
-    <section className="section-space">
+    <section id="pricing" className="section-space">
       <div className="section-shell">
         <SectionHeader label="Pakete" marker="(SKWKHS® — 07)" />
         <div className="mb-8 max-w-4xl space-y-4 md:mb-10">
