@@ -290,4 +290,44 @@
   .mdx-body pre {
     @apply overflow-x-auto rounded-[1.5rem] border border-border bg-surface-elevated p-5;
   }
+
+  .github-contrib-shell {
+    position: relative;
+    min-height: 120px;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #020202;
+  }
+
+  .github-contrib-grid {
+    position: relative;
+    width: 100%;
+    min-height: 120px;
+    height: 100%;
+    overflow: hidden;
+    isolation: isolate;
+    transform: scaleY(1.12);
+    transform-origin: top;
+  }
+
+  .github-contrib-grid--placeholder {
+    opacity: 0.28;
+    background:
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02) 38%, rgba(255, 255, 255, 0.05));
+  }
+
+  .github-contrib-cell {
+    position: absolute;
+    border-radius: 2px;
+    overflow: hidden;
+    will-change: transform, opacity;
+  }
+
+  .github-contrib-cell__base,
+  .github-contrib-cell__regrow {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    will-change: transform, opacity;
+  }
 }

@@ -3,6 +3,7 @@
 import { Fragment, useRef } from "react";
 import { skills } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
+import { GithubContributionGrid } from "@/components/ui/GithubContributionGrid";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import {
   ensureGsap,
@@ -38,9 +39,6 @@ export function Profile() {
   const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME?.trim();
   const githubProfileUrl = githubUsername
     ? `https://github.com/${githubUsername}`
-    : undefined;
-  const githubContributionUrl = githubUsername
-    ? `https://github-contributions-api.deno.dev/${encodeURIComponent(githubUsername)}.svg?scheme=grey&bg=020202&no-legend=true`
     : undefined;
 
   useGSAP(
@@ -104,7 +102,7 @@ export function Profile() {
               Umsetzung, damit Websites nicht nur präsent sind, sondern präziser
               führen.
             </p>
-            {githubUsername && githubContributionUrl ? (
+            {githubUsername ? (
               <a
                 href={githubProfileUrl}
                 target="_blank"
@@ -113,12 +111,10 @@ export function Profile() {
                 aria-label="GitHub-Commit-Aktivität"
                 title="GitHub Contributions"
               >
-                <img
-                  src={githubContributionUrl}
-                  alt={`${githubUsername} Contribution Graph`}
-                  className="w-full rounded-[4px] opacity-90"
-                  style={{ transform: "scaleY(1.12)", transformOrigin: "top" }}
-                  loading="lazy"
+                <GithubContributionGrid
+                  username={githubUsername}
+                  fallbackSrc={`https://github-contributions-api.deno.dev/${encodeURIComponent(githubUsername)}.svg?scheme=grey&bg=020202&no-legend=true`}
+                  fallbackAlt={`${githubUsername} Contribution Graph`}
                 />
               </a>
             ) : null}
