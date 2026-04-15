@@ -90,18 +90,21 @@ export const experience = [
 
 export const testimonials = [
   {
+    highlight: "Klarer im Angebot",
     quote:
       "Den gesamten Relaunch hat Arthur eigenständig durchgezogen – von Konzept bis Launch. Das Ergebnis ist deutlich ästhetischer, komplett responsive und klarer im Angebot.",
     name: "Leonie",
     company: "Geschäftsführerin bei ginione",
   },
   {
+    highlight: "Technik mit Business-Verständnis",
     quote:
       "Arthur verbindet technische Exzellenz mit einem sehr guten Verständnis für Business-Anforderungen. Genau diese Mischung hat unser Projekt deutlich beschleunigt.",
     name: "Denis",
     company: "Partner bei Immo-Pal",
   },
   {
+    highlight: "Endlich passend zum Angebot",
     quote:
       "Die Zusammenarbeit war unkompliziert und das Ergebnis hat unsere Erwartungen übertroffen. Endlich eine Website, die zu unserem Angebot passt.",
     name: "Sarah",
