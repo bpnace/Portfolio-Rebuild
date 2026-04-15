@@ -1,68 +1,194 @@
+import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/lib/site-config";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
+const legalLinks = [
+  { label: "Impressum", href: "/impressum" },
+  { label: "Datenschutz", href: "/datenschutz" },
+] as const;
+
 export function Footer() {
+  const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME?.trim();
+  const githubProfileUrl = githubUsername
+    ? `https://github.com/${githubUsername}`
+    : undefined;
+
   return (
-    <footer className="border-t border-border bg-black">
-      <div className="section-shell section-space space-y-12">
-        <div className="flex flex-col gap-8 border-b border-border pb-8 md:flex-row md:items-start md:justify-between">
-          <div className="space-y-3">
-            <div className="text-[11px] font-black uppercase tracking-[0.42em] text-foreground">
+    <footer className="relative overflow-hidden border-t border-black/10 bg-[linear-gradient(180deg,#fcfbf8_0%,#f2ebe2_52%,#e7ded1_100%)] text-[#141414]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),transparent_34%),radial-gradient(circle_at_top_right,rgba(17,24,39,0.08),transparent_28%)]" />
+
+      <div className="section-shell relative py-10 md:py-10">
+        <div className="grid gap-14 border-b border-black/10 pb-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)] lg:gap-20">
+          <div className="space-y-7">
+            <div className="text-[11px] font-black uppercase tracking-[0.42em] text-black/55">
               {siteConfig.name}
             </div>
-            <p className="max-w-xl text-sm leading-7 text-muted">
-              Digitale Bauwerke mit klarer Struktur, verständlicher Nutzerführung
-              und sauberem technischen Fundament.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-5 text-[11px] uppercase tracking-[0.3em] text-muted">
-            {siteConfig.socialLinks.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                target="_blank"
-                rel="noreferrer"
-                className="hover-weight-link hover:text-foreground"
-              >
-                <LinkRippleText text={item.label} />
-              </a>
-            ))}
-          </div>
-        </div>
 
-        <div className="grid gap-10 md:grid-cols-[1fr_1fr]">
-          <div className="flex flex-wrap gap-x-8 gap-y-4 text-[11px] uppercase tracking-[0.32em] text-muted">
-            {siteConfig.navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="hover-weight-link hover:text-foreground"
-              >
-                <LinkRippleText text={item.label} />
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-wrap gap-x-8 gap-y-4 text-[11px] uppercase tracking-[0.32em] text-muted md:justify-end">
-            <Link href="/impressum" className="hover-weight-link hover:text-foreground">
-              <LinkRippleText text="Impressum" />
-            </Link>
-            <Link href="/datenschutz" className="hover-weight-link hover:text-foreground">
-              <LinkRippleText text="Datenschutz" />
-            </Link>
-          </div>
-        </div>
+            <div className="space-y-6">
+              <p className="display-lg max-w-4xl text-balance text-[#101010]">
+                Deine digitalen Architekten.
+              </p>
+              <p className="max-w-2xl text-base leading-8 text-black/65 md:text-lg">
+                Digitale Bauwerke mit klarer Struktur, verständlicher
+                Nutzerführung und sauberem technischen Fundament.
+              </p>
+            </div>
 
-        <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-          <div className="space-y-2 text-[11px] uppercase tracking-[0.32em] text-muted">
-            <div>© {siteConfig.name} 2026 · {siteConfig.location}</div>
-            <a href={`mailto:${siteConfig.email}`} className="hover-weight-link hover:text-foreground">
-              <LinkRippleText text={siteConfig.email} />
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="inline-flex w-fit items-center rounded-full border border-black/12 bg-black px-6 py-3 text-[11px] uppercase tracking-[0.34em] text-white transition-transform duration-200 hover:-translate-y-0.5"
+            >
+              <LinkRippleText text={siteConfig.email} baseWeight={560} activeWeight={860} />
             </a>
           </div>
-          <div className="display-md max-w-xl md:text-right">
-            Deine digitalen Architekten.
+
+          <div className="p-8 md:p-10">
+            <div className="grid gap-10 sm:grid-cols-2">
+              <div className="space-y-4">
+                <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
+                  Navigation
+                </div>
+                <div className="space-y-3 text-sm uppercase tracking-[0.22em] text-black/68">
+                  {siteConfig.navigation.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="hover-weight-link block w-fit hover:text-black"
+                    >
+                      <LinkRippleText
+                        text={item.label}
+                        baseWeight={500}
+                        activeWeight={820}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
+                  Kontakt
+                </div>
+                <div className="space-y-3 text-sm uppercase tracking-[0.22em] text-black/68">
+                  <a
+                    href={`mailto:${siteConfig.email}`}
+                    className="hover-weight-link block w-fit hover:text-black"
+                  >
+                    <LinkRippleText
+                      text={siteConfig.email}
+                      baseWeight={500}
+                      activeWeight={820}
+                    />
+                  </a>
+                  {siteConfig.socialLinks.map((item) => (
+                    <a
+                      key={item.href}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover-weight-link block w-fit hover:text-black"
+                    >
+                      <LinkRippleText
+                        text={item.label}
+                        baseWeight={500}
+                        activeWeight={820}
+                      />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <div className="grid gap-8 border-b border-black/10 py-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+          <div className="grid gap-8 md:grid-cols-[auto_auto] md:gap-14">
+            <div className="space-y-4">
+              <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
+                Rechtliches
+              </div>
+              <div className="space-y-3 text-sm uppercase tracking-[0.22em] text-black/68">
+                {legalLinks.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="hover-weight-link block w-fit hover:text-black"
+                  >
+                    <LinkRippleText
+                      text={item.label}
+                      baseWeight={500}
+                      activeWeight={820}
+                    />
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
+                Fundament
+              </div>
+              <p className="max-w-md text-sm leading-7 text-black/62">
+                Europäisches Hosting, datenschutznahe Infrastruktur und ein
+                offen dokumentierter Build-Prozess.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
+            {githubProfileUrl ? (
+              <a
+                href={githubProfileUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                className="inline-flex min-h-16 items-center px-5 py-4 transition-transform duration-200 hover:-translate-y-0.5"
+              >
+                <Image
+                  src="/logos/GitHub_Lockup_Black_Clearspace.svg"
+                  alt={`GitHub Profil von ${siteConfig.name}`}
+                  width={116}
+                  height={32}
+                  className="h-6 w-auto"
+                />
+              </a>
+            ) : null}
+
+            <div className="inline-flex min-h-16 items-center px-3 py-3">
+              <Image
+                src="/logos/eu_lock.svg"
+                alt="EU badge"
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain"
+              />
+            </div>
+
+            <div className="inline-flex min-h-16 items-center px-3 py-3">
+              <Image
+                src="/logos/eu_hoster.png"
+                alt="EU hosting badge"
+                width={44}
+                height={44}
+                className="h-11 w-11 object-contain"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 pt-8 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-2 text-[11px] uppercase tracking-[0.32em] text-black/48">
+            <div>
+              © {siteConfig.name} 2026
+            </div>
+            <div>Webdesign · Frontend · Technisches SEO</div>
+          </div>
+
+          <p className="max-w-2xl text-sm leading-7 text-black/56 md:text-right">
+            Klar geplant, präzise umgesetzt und bereit für einen professionellen
+            Auftritt mit Substanz.
+          </p>
         </div>
       </div>
     </footer>
