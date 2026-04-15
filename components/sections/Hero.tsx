@@ -17,7 +17,14 @@ function renderTitleLine(line: string) {
       <span className="hero-word">
         <span className="hero-word-text">
           {Array.from(word).map((character, charIndex) => (
-            <span key={`${word}-${charIndex}`} className="hero-char">
+            <span
+              key={`${word}-${charIndex}`}
+              className={`hero-char${
+                word === "Deine" && charIndex === word.length - 1
+                  ? " pr-[0.08em]"
+                  : ""
+              }`}
+            >
               {character}
             </span>
           ))}
