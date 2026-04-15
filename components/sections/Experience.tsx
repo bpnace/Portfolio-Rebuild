@@ -19,10 +19,10 @@ type ScrambleFieldProps = {
 const LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
 const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const DIGITS = "0123456789";
-const ROW_STAGGER_MS = 90;
 const FIELD_STAGGER_MS = 45;
 const FIELD_DURATION_MS = 860;
 const FIELD_DURATION_STEP_MS = 90;
+const EXPERIENCE_TRIGGER_START = "top bottom+=6%";
 
 function pickRandomCharacter(source: string) {
   const randomIndex = Math.floor(Math.random() * source.length);
@@ -137,8 +137,12 @@ export function Experience() {
         const durationMs =
           FIELD_DURATION_MS + fieldIndex * FIELD_DURATION_STEP_MS;
         const startedAt = window.performance.now();
+        const initialText = characters
+          .map((character) => getScrambleCharacter(character))
+          .join("");
 
         gsap.set(visual, { autoAlpha: 1 });
+        visual.textContent = initialText;
 
         const tick = (timestamp: number) => {
           const progress = Math.min((timestamp - startedAt) / durationMs, 1);
@@ -166,7 +170,7 @@ export function Experience() {
         activeFrames.set(visual, frameId);
       });
 
-      const startRow = safe((row: HTMLElement, rowIndex: number) => {
+      const startRow = safe((row: HTMLElement) => {
         if (playedRows.has(row)) {
           return;
         }
@@ -182,7 +186,7 @@ export function Experience() {
           const timeoutId = window.setTimeout(() => {
             timeoutIds.delete(timeoutId);
             animateField(field, fieldIndex);
-          }, rowIndex * ROW_STAGGER_MS + fieldIndex * FIELD_STAGGER_MS);
+          }, fieldIndex * FIELD_STAGGER_MS);
 
           timeoutIds.add(timeoutId);
         });
@@ -199,13 +203,13 @@ export function Experience() {
           playedRows = new WeakSet<HTMLElement>();
           showFinalText(false);
 
-          rows.forEach((row, rowIndex) => {
+          rows.forEach((row) => {
             ScrollTrigger.create({
               trigger: row,
-              start: "top 88%",
+              start: EXPERIENCE_TRIGGER_START,
               once: true,
               onEnter: () => {
-                startRow(row, rowIndex);
+                startRow(row);
               },
             });
           });
