@@ -21,7 +21,7 @@ export function PricingCard({
         >
           {name}
         </div>
-        <p className="max-w-[28ch] text-sm leading-6 text-muted">{description}</p>
+        <p className="max-w-[35ch] text-sm leading-6 text-muted">{description}</p>
       </div>
 
       <div className="mt-7">
