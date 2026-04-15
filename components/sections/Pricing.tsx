@@ -10,7 +10,10 @@ export function Pricing() {
         <SectionHeader label="Pakete" marker="(SKWKHS® — 07)" />
         <div className="mb-8 max-w-4xl space-y-4 md:mb-10">
           <div className="min-w-[15ch] max-w-[17ch]">
-            <StaggeredCycle words={["Aussuchen.", "Planen.", "Starten."]} />
+            <StaggeredCycle
+              words={["Aussuchen.", "Planen.", "Starten."]}
+              className="h-[1.02em] md:h-[.8em]"
+            />
           </div>
           <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
             Jedes Projekt wird sauber zugeschnitten. Trotzdem helfen klare
