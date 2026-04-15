@@ -69,7 +69,7 @@
   }
 
   .section-space {
-    @apply py-24 md:py-40;
+    @apply py-14 md:py-25;
   }
 
   [data-hero-intro="loading"] {
