@@ -23,12 +23,12 @@ export function BlogSection({ posts }: BlogSectionProps) {
             </p>
           </div>
           <Link href="/blog" className="link-arrow">
-            <LinkRippleText text="Zum Blog" baseWeight={560} /> <span aria-hidden>↗</span>
+            <LinkRippleText text="Zum Blog" baseWeight={560} />
           </Link>
         </div>
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-8 md:grid-cols-2">
           {posts.map((post) => (
-            <ArticleCard key={post.slug} post={post} />
+            <ArticleCard key={post.slug} post={post} variant="home" />
           ))}
         </div>
       </div>
