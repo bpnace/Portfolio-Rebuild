@@ -35,6 +35,10 @@ export function Hero() {
   useGSAP(
     () => {
       ensureGsap();
+      if (scope.current) {
+        scope.current.dataset.heroIntro = "ready";
+      }
+
       const markHeroIntroReady = () => {
         document.documentElement.dataset.homeHeroIntroReady = "true";
         window.dispatchEvent(new CustomEvent("home-hero-intro-ready"));
@@ -171,6 +175,7 @@ export function Hero() {
   return (
     <section
       ref={scope}
+      data-hero-intro="loading"
       className="relative flex min-h-[calc(100svh-5rem)] items-end md:min-h-[calc(100svh-6rem)]"
     >
       <div className="section-shell grid w-full gap-14 xl:items-start">

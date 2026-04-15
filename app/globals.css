@@ -72,6 +72,10 @@
     @apply py-24 md:py-40;
   }
 
+  [data-hero-intro="loading"] {
+    visibility: hidden;
+  }
+
   .eyebrow {
     @apply text-[length:var(--label)] uppercase tracking-[0.35em] text-muted;
   }
