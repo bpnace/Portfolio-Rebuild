@@ -247,6 +247,40 @@
     will-change: clip-path;
   }
 
+  .experience-scramble {
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  .experience-scramble-stack {
+    position: relative;
+    display: inline-grid;
+    max-width: 100%;
+    place-items: start;
+    vertical-align: top;
+  }
+
+  .experience-scramble-stack > span {
+    grid-area: 1 / 1;
+  }
+
+  .experience-scramble-reserve,
+  .experience-scramble-visual {
+    max-width: 100%;
+    white-space: pre-wrap;
+  }
+
+  .experience-scramble-reserve {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .experience-scramble-visual {
+    color: inherit;
+    opacity: 0;
+    will-change: opacity;
+  }
+
   .mdx-body {
     @apply space-y-6 text-[length:var(--body)] leading-8 text-foreground/88;
   }

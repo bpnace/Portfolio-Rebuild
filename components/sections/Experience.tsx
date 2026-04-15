@@ -1,21 +1,249 @@
-import { experience } from "@/lib/site-data";
+"use client";
+
+import { useRef } from "react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import {
+  ScrollTrigger,
+  ensureGsap,
+  gsap,
+  refreshScrollTriggers,
+  useGSAP,
+  withMotionPreference,
+} from "@/lib/gsap";
+import { experience } from "@/lib/site-data";
+
+type ScrambleFieldProps = {
+  text: string;
+};
+
+const LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
+const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const DIGITS = "0123456789";
+const ROW_STAGGER_MS = 90;
+const FIELD_STAGGER_MS = 45;
+const FIELD_DURATION_MS = 860;
+const FIELD_DURATION_STEP_MS = 90;
+
+function pickRandomCharacter(source: string) {
+  const randomIndex = Math.floor(Math.random() * source.length);
+  return source[randomIndex] ?? source[0] ?? "";
+}
+
+function getScrambleCharacter(character: string) {
+  if (/\d/u.test(character)) {
+    return pickRandomCharacter(DIGITS);
+  }
+
+  if (/\p{L}/u.test(character)) {
+    return pickRandomCharacter(
+      character === character.toUpperCase()
+        ? UPPERCASE_LETTERS
+        : LOWERCASE_LETTERS,
+    );
+  }
+
+  return character;
+}
+
+function getFieldVisual(field: HTMLElement) {
+  return field.querySelector<HTMLElement>("[data-scramble-visual='true']");
+}
+
+function ScrambleField({ text }: ScrambleFieldProps) {
+  return (
+    <span
+      className="experience-scramble"
+      data-scramble-field="true"
+      data-scramble-text={text}
+    >
+      <span className="sr-only">{text}</span>
+      <span className="experience-scramble-stack" aria-hidden="true">
+        <span className="experience-scramble-reserve">{text}</span>
+        <span
+          className="experience-scramble-visual"
+          data-scramble-visual="true"
+        >
+          {text}
+        </span>
+      </span>
+    </span>
+  );
+}
 
 export function Experience() {
+  const scope = useRef<HTMLDivElement | null>(null);
+
+  useGSAP(
+    (_, contextSafe) => {
+      ensureGsap();
+
+      const safe =
+        contextSafe ??
+        (<T extends (...args: never[]) => unknown>(fn: T) => fn);
+
+      const root = scope.current;
+      if (!root) {
+        return;
+      }
+
+      const rows = gsap.utils.toArray<HTMLElement>(".experience-row", root);
+      const fields = gsap.utils.toArray<HTMLElement>(
+        "[data-scramble-field='true']",
+        root,
+      );
+
+      const activeFrames = new Map<HTMLElement, number>();
+      const timeoutIds = new Set<number>();
+      let playedRows = new WeakSet<HTMLElement>();
+
+      const stopActiveWork = () => {
+        activeFrames.forEach((frameId) => {
+          window.cancelAnimationFrame(frameId);
+        });
+        activeFrames.clear();
+
+        timeoutIds.forEach((timeoutId) => {
+          window.clearTimeout(timeoutId);
+        });
+        timeoutIds.clear();
+      };
+
+      const showFinalText = (visible: boolean) => {
+        fields.forEach((field) => {
+          const visual = getFieldVisual(field);
+          if (!visual) {
+            return;
+          }
+
+          visual.textContent = field.dataset.scrambleText ?? "";
+          gsap.set(visual, { autoAlpha: visible ? 1 : 0 });
+        });
+      };
+
+      const animateField = safe((field: HTMLElement, fieldIndex: number) => {
+        const visual = getFieldVisual(field);
+        const targetText = field.dataset.scrambleText ?? "";
+
+        if (!visual) {
+          return;
+        }
+
+        if (!targetText.length) {
+          gsap.set(visual, { autoAlpha: 1 });
+          return;
+        }
+
+        const characters = Array.from(targetText);
+        const durationMs =
+          FIELD_DURATION_MS + fieldIndex * FIELD_DURATION_STEP_MS;
+        const startedAt = window.performance.now();
+
+        gsap.set(visual, { autoAlpha: 1 });
+
+        const tick = (timestamp: number) => {
+          const progress = Math.min((timestamp - startedAt) / durationMs, 1);
+          const resolvedCharacters = Math.floor(progress * characters.length);
+
+          visual.textContent = characters
+            .map((character, characterIndex) =>
+              characterIndex < resolvedCharacters
+                ? character
+                : getScrambleCharacter(character),
+            )
+            .join("");
+
+          if (progress >= 1) {
+            visual.textContent = targetText;
+            activeFrames.delete(visual);
+            return;
+          }
+
+          const nextFrameId = window.requestAnimationFrame(tick);
+          activeFrames.set(visual, nextFrameId);
+        };
+
+        const frameId = window.requestAnimationFrame(tick);
+        activeFrames.set(visual, frameId);
+      });
+
+      const startRow = safe((row: HTMLElement, rowIndex: number) => {
+        if (playedRows.has(row)) {
+          return;
+        }
+
+        playedRows.add(row);
+
+        const rowFields = gsap.utils.toArray<HTMLElement>(
+          "[data-scramble-field='true']",
+          row,
+        );
+
+        rowFields.forEach((field, fieldIndex) => {
+          const timeoutId = window.setTimeout(() => {
+            timeoutIds.delete(timeoutId);
+            animateField(field, fieldIndex);
+          }, rowIndex * ROW_STAGGER_MS + fieldIndex * FIELD_STAGGER_MS);
+
+          timeoutIds.add(timeoutId);
+        });
+      });
+
+      const cleanup = withMotionPreference({
+        reduce: () => {
+          stopActiveWork();
+          playedRows = new WeakSet<HTMLElement>();
+          showFinalText(true);
+        },
+        motion: () => {
+          stopActiveWork();
+          playedRows = new WeakSet<HTMLElement>();
+          showFinalText(false);
+
+          rows.forEach((row, rowIndex) => {
+            ScrollTrigger.create({
+              trigger: row,
+              start: "top 88%",
+              once: true,
+              onEnter: () => {
+                startRow(row, rowIndex);
+              },
+            });
+          });
+
+          refreshScrollTriggers();
+        },
+      });
+
+      return () => {
+        stopActiveWork();
+        cleanup();
+      };
+    },
+    { scope, revertOnUpdate: true },
+  );
+
   return (
     <section className="section-space">
-      <div className="section-shell">
+      <div ref={scope} className="section-shell">
         <SectionHeader label="Erfahrung" marker="(SKWKHS® — 05)" />
         <div className="space-y-4">
           {experience.map((entry) => (
             <article
               key={entry.title}
-              className="grid gap-4 border-b border-border py-6 md:grid-cols-[1.1fr_180px_220px_120px] md:items-center"
+              className="experience-row grid gap-4 border-b border-border py-6 md:grid-cols-[1.1fr_180px_220px_120px] md:items-center"
             >
-              <h3 className="text-2xl font-semibold tracking-tight">{entry.title}</h3>
-              <div className="text-sm text-muted">{entry.years}</div>
-              <div className="text-sm text-muted">{entry.role}</div>
-              <div className="text-sm text-muted">{entry.place}</div>
+              <h3 className="text-2xl font-semibold tracking-tight">
+                <ScrambleField text={entry.title} />
+              </h3>
+              <div className="text-sm text-muted">
+                <ScrambleField text={entry.years} />
+              </div>
+              <div className="text-sm text-muted">
+                <ScrambleField text={entry.role} />
+              </div>
+              <div className="text-sm text-muted">
+                <ScrambleField text={entry.place} />
+              </div>
             </article>
           ))}
         </div>
