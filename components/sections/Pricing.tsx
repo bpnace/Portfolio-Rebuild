@@ -1,20 +1,26 @@
 import { pricingTiers } from "@/lib/site-data";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { PricingCard } from "@/components/ui/PricingCard";
+import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
 export function Pricing() {
   return (
-    <section className="section-space">
+    <section id="pricing" className="section-space">
       <div className="section-shell">
-        <SectionHeader label="Pakete" marker="(SKWKHS® — 08)" />
-        <div className="mb-10 max-w-3xl space-y-4 md:mb-16">
-          <h2 className="display-lg">Klare Pakete für einen sinnvollen Startpunkt.</h2>
-          <p className="text-lg leading-8 text-muted">
+        <SectionHeader label="Pakete" marker="(SKWKHS® — 07)" />
+        <div className="mb-8 max-w-4xl space-y-4 md:mb-10">
+          <div className="min-w-[15ch] max-w-[17ch]">
+            <StaggeredCycle
+              words={["Aussuchen.", "Planen.", "Starten."]}
+              className="h-[1.02em] md:h-[.8em]"
+            />
+          </div>
+          <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
             Jedes Projekt wird sauber zugeschnitten. Trotzdem helfen klare
             Pakete, Aufwand, Tiefe und Prioritäten schneller einzuordnen.
           </p>
         </div>
-        <div className="grid gap-6 xl:grid-cols-3">
+        <div className="grid items-start gap-x-10 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
           {pricingTiers.map((tier) => (
             <PricingCard key={tier.name} {...tier} />
           ))}

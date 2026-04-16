@@ -11,7 +11,6 @@ export type ProjectFrontmatter = {
   summary: string;
   teaser: string;
   featured?: boolean;
-  accent?: string;
   services?: string[];
   deliverables?: string[];
 };
@@ -47,7 +46,6 @@ async function readProjectFile(fileName: string): Promise<Project> {
     summary: String(data.summary ?? ""),
     teaser: String(data.teaser ?? ""),
     featured: Boolean(data.featured ?? true),
-    accent: String(data.accent ?? "#ffffff"),
     services: toStringArray(data.services),
     deliverables: toStringArray(data.deliverables),
     content,

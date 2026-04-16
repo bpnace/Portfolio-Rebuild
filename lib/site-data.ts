@@ -1,36 +1,48 @@
 export const tickerItems = [
-  "Präzise",
-  "Strukturiert",
-  "Fokussiert",
-  "Visuell stark",
-  "SEO-ready",
-  "DSGVO-bewusst",
+  "Technisches SEO",
+  "Informationsarchitektur",
+  "AEO-fähig",
+  "Semantische Inhalte",
+  "Crawlbare Struktur",
+  "Schnelle Ladezeiten",
 ];
 
 export const services = [
   {
     number: "01",
-    title: "Webdesign",
+    title: "Strategie",
     description:
-      "Individuelle Websites, die Besucher in Anfragen verwandeln. Wir gestalten Struktur, Nutzerführung und visuelle Sprache so, dass dein Angebot sofort verstanden wird.",
+      "Wir schärfen Angebotslogik, Website-Architektur, Seitenstruktur, Nutzerführung und die inhaltische Grundlage für SEO und AEO, damit dein Auftritt nicht nur gut aussieht, sondern logisch funktioniert.",
   },
   {
     number: "02",
-    title: "Entwicklung",
+    title: "Webdesign",
     description:
-      "Sauberer Frontend-Code auf einem wartbaren Fundament. Kein Plugin-Chaos, keine unnötige Abhängigkeit, sondern eine schnelle und robuste Website.",
+      "Wir entwickeln eine visuelle Sprache mit klarer Hierarchie, glaubwürdiger Präsentation und sauberen Conversion-Wegen, damit dein Angebot schnell verstanden und ernst genommen wird.",
   },
   {
     number: "03",
+    title: "Entwicklung",
+    description:
+      "Performante Frontends, saubere CMS-Umsetzung und belastbare technische Integrationen auf einem wartbaren Fundament. Schnell, responsiv und ohne unnötige technische Altlasten.",
+  },
+  {
+    number: "04",
+    title: "Automatisierung",
+    description:
+      "Wir bauen n8n-Workflows, Webhooks und Backend-Automationen für Lead-Anreicherung, E-Mail-Flows, Mailings, CMS-Prozesse und saubere Übergaben zwischen Formularen, CRM, Newsletter, Kalendern und internen Tools.",
+  },
+  {
+    number: "05",
     title: "Relaunch",
     description:
       "Bestehende Seiten werden neu geordnet, modernisiert und technisch stabilisiert, ohne die bisherige Sichtbarkeit leichtfertig zu riskieren.",
   },
   {
-    number: "04",
-    title: "SEO",
+    number: "06",
+    title: "SEO & AEO",
     description:
-      "Technisches SEO, klare Informationsarchitektur und Inhalte, die für Google wie für KI-Antworten sauber lesbar und indexierbar bleiben.",
+      "Technisches SEO, semantische Struktur und indexierbare Inhalte, die für Google wie für KI-Systeme sauber lesbar, crawlbar und als Antwortquelle nutzbar bleiben.",
   },
 ] as const;
 
@@ -71,25 +83,28 @@ export const experience = [
   {
     title: "Mediendesign-Studium",
     years: "2010 – 2013",
-    role: "Interaction Design",
+    role: "Interaktionsdesign",
     place: "Berlin",
   },
 ] as const;
 
 export const testimonials = [
   {
+    highlight: "Klarer im Angebot",
     quote:
-      "Den gesamten Relaunch hat Tarik eigenständig durchgezogen – von Konzept bis Launch. Das Ergebnis ist deutlich ästhetischer, komplett responsive und klarer im Angebot.",
+      "Den gesamten Relaunch hat Arthur eigenständig durchgezogen – von Konzept bis Launch. Das Ergebnis ist deutlich ästhetischer, komplett responsive und klarer im Angebot.",
     name: "Leonie",
     company: "Geschäftsführerin bei ginione",
   },
   {
+    highlight: "Technik mit Business-Verständnis",
     quote:
-      "Tarik verbindet technische Exzellenz mit einem sehr guten Verständnis für Business-Anforderungen. Genau diese Mischung hat unser Projekt deutlich beschleunigt.",
+      "Arthur verbindet technische Exzellenz mit einem sehr guten Verständnis für Business-Anforderungen. Genau diese Mischung hat unser Projekt deutlich beschleunigt.",
     name: "Denis",
     company: "Partner bei Immo-Pal",
   },
   {
+    highlight: "Endlich passend zum Angebot",
     quote:
       "Die Zusammenarbeit war unkompliziert und das Ergebnis hat unsere Erwartungen übertroffen. Endlich eine Website, die zu unserem Angebot passt.",
     name: "Sarah",
@@ -97,57 +112,87 @@ export const testimonials = [
   },
 ] as const;
 
+export type PricingFeature = {
+  label: string;
+  enabled: boolean;
+};
+
+export type PricingTier = {
+  name: string;
+  price: string;
+  description: string;
+  timeline: string;
+  pages: string;
+  features: readonly PricingFeature[];
+  highlight?: boolean;
+};
+
 export const pricingTiers = [
   {
     name: "Starter",
     price: "899",
     description:
-      "Fokussierte Website für Einzelunternehmer und Dienstleister.",
+      "Für Dienstleister, die schnell online gehen wollen, mit fokussiertem Einstieg und klarer technischer Basis.",
     timeline: "3 Wochen",
     pages: "5 Seiten",
     features: [
-      "Individuelles Design",
-      "Responsive Umsetzung",
-      "Technisches SEO-Grundsetup",
-      "DSGVO-Basis",
-      "Kontaktformular",
-      "Live-Schaltung & Übergabe",
+      { label: "5-seitige Next.js Website", enabled: true },
+      { label: "Responsive & mobiloptimiert", enabled: true },
+      { label: "DSGVO-konform inkl. Consent-Setup", enabled: true },
+      { label: "Impressum & Datenschutz-Seiten", enabled: true },
+      { label: "Klare Seitenstruktur & Nutzerführung", enabled: true },
+      { label: "Ø 95+ Lighthouse Score", enabled: false },
+      { label: "Kontaktformular", enabled: false },
+      { label: "Deployment & Hosting-Setup", enabled: false },
+      { label: "SEO-Grundstruktur", enabled: false },
+      { label: "Google Search Console & Sitemap", enabled: false },
+      { label: "Saubere Launch-Begleitung", enabled: false },
     ],
   },
   {
     name: "Business",
     price: "1.499",
     description:
-      "Professionelle Website mit Content-Bereich für wachsende Unternehmen.",
+      "Alles aus Starter, plus CMS, Blog, SEO-Grundlagen und Analytics für Marken mit mehr Inhalt und mehr Bewegung.",
     timeline: "4 Wochen",
     pages: "bis 8 Seiten",
     highlight: true,
     features: [
-      "Alles aus Starter",
-      "Blog- oder Portfolio-Bereich",
-      "Erweiterte SEO-Struktur",
-      "Analytics-Setup",
-      "Consent-orientierte Umsetzung",
-      "Redaktionsfähige Inhalte",
+      { label: "Bis zu 8 Seiten", enabled: true },
+      { label: "CMS-Integration", enabled: true },
+      { label: "Blog & Artikel-Bereich", enabled: true },
+      { label: "SEO-Grundoptimierung", enabled: true },
+      { label: "Google Analytics Setup", enabled: true },
+      { label: "Search Console & saubere Indexierung", enabled: true },
+      { label: "Redaktionsfähige Inhaltsbereiche", enabled: true },
+      { label: "Erweiterte Animationen", enabled: false },
+      { label: "Newsletter-Anbindung", enabled: false },
+      { label: "Conversion-orientierte Landingpages", enabled: false },
+      { label: "Individuelle Funnel-Logik", enabled: false },
     ],
   },
   {
     name: "Premium",
     price: "2.499",
     description:
-      "Maßgeschneiderte Lösung mit Animationen und Integrationen.",
+      "Maximale digitale Präsenz mit Custom Features, Integrationen und vollständigerem System für Wachstum und Launch.",
     timeline: "5–6 Wochen",
     pages: "10+ Seiten",
     features: [
-      "Alles aus Business",
-      "Custom GSAP Animationen",
-      "CRM- oder Buchungsintegration",
-      "Mehrsprachigkeit möglich",
-      "Performance-Ziel 90+",
-      "Launch-Support",
+      { label: "10+ Seiten inkl. Landingpages", enabled: true },
+      { label: "Custom-Funktionen & Integrationen", enabled: true },
+      { label: "Online-Buchungssystem", enabled: true },
+      { label: "Newsletter-Automation", enabled: true },
+      { label: "Performance-Optimierung", enabled: true },
+      { label: "Tracking- & Event-Konzept", enabled: true },
+      { label: "CRM-, Zapier- oder n8n-Anbindung", enabled: true },
+      { label: "Brand-System & Style Guide", enabled: true },
+      { label: "Launch-Support & QA", enabled: true },
+      { label: "Staging-, Device- & Browser-Testing", enabled: true },
+      { label: "Übergabe mit Ausbau-Perspektive", enabled: true },
     ],
   },
-] as const;
+] satisfies readonly PricingTier[];
 
 export const faqs = [
   {

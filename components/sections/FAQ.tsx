@@ -6,13 +6,13 @@ export function FAQ() {
   return (
     <section id="faq" className="section-space">
       <div className="section-shell">
-        <SectionHeader label="FAQ" marker="(SKWKHS® — 10)" />
-        <div className="mb-10 max-w-3xl space-y-4 md:mb-16">
-          <h2 className="display-lg">Fragen, die vor einer guten Entscheidung auftauchen.</h2>
+        <SectionHeader label="FAQ" marker="(SKWKHS® — 09)" />
+        <div className="mb-10 max-w-4xl space-y-4 md:mb-16">
+          <h2 className="display-lg">FAQ, aber in sinnvoll.</h2>
           <p className="text-lg leading-8 text-muted">
-            Kein Pitch, sondern die Punkte, die im Erstgespräch ohnehin auf den
-            Tisch kommen. So lässt sich schneller klären, ob Umfang, Timing und
-            Anspruch zusammenpassen.
+            Nicht nur Pflichtblock für die Sitemap, sondern Antworten auf
+            Fragen, die man vor einem gemeinsamen Projektstart geklärt haben
+            will.
           </p>
         </div>
         <div>

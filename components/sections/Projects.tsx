@@ -10,13 +10,13 @@ export function Projects({ projects }: ProjectsProps) {
   return (
     <section id="projekte" className="section-space">
       <div className="section-shell">
-        <SectionHeader label="vorgestellte Projekte" marker="(SKWKHS® — 03)" />
+        <SectionHeader label="Projekte" marker="(SKWKHS® — 02)" />
         <div className="mb-10 max-w-3xl space-y-4 md:mb-16">
-          <h2 className="display-lg">Digitale Systeme mit klarer Angebotslogik.</h2>
+          <h2 className="display-lg">Sieht gut aus. Funktioniert noch besser.</h2>
           <p className="text-lg leading-8 text-muted">
-            Keine Galerie für hübsche Shots, sondern eine Auswahl an Arbeiten, bei
-            denen Struktur, Verständlichkeit und technische Umsetzung zusammen
-            gedacht wurden.
+              Hier landen keine drapierten Showcase-Screens, sondern Projekte,
+              bei denen Design, Nutzerführung und technische Umsetzung gemeinsam dafür sorgen, dass
+              aus Aufmerksamkeit auch echtes Interesse wird.
           </p>
         </div>
         <div>

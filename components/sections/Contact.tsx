@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type Status = {
   type: "idle" | "success" | "error";
@@ -14,9 +15,22 @@ const initialStatus: Status = { type: "idle", message: "" };
 export function Contact() {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [project, setProject] = useState("");
+
+  const isNameValid = name.trim().length >= 2;
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isProjectValid = project.trim().length >= 12;
+  const isFormValid = isNameValid && isEmailValid && isProjectValid;
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!isFormValid) {
+      return;
+    }
+
     setIsSubmitting(true);
     setStatus(initialStatus);
 
@@ -45,6 +59,9 @@ export function Contact() {
         message: result.message || "Danke. Die Anfrage wurde aufgenommen.",
       });
       event.currentTarget.reset();
+      setName("");
+      setEmail("");
+      setProject("");
     } catch (error) {
       setStatus({
         type: "error",
@@ -60,79 +77,87 @@ export function Contact() {
 
   return (
     <section id="kontakt" className="section-space">
-      <div className="section-shell grid gap-12 lg:grid-cols-[1fr_1fr]">
+      <div className="section-shell grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:gap-20">
         <div>
-          <SectionHeader label="Kontakt" marker="(SKWKHS® — 11)" />
+          <SectionHeader label="Kontakt" marker="(SKWKHS® — 10)" />
           <div className="space-y-6">
-            <h2 className="display-lg">Gib uns 30 Minuten, um dein Projekt zu verstehen.</h2>
-            <p className="max-w-2xl text-lg leading-8 text-muted">
-              Im Erstgespräch klären wir Angebot, Zielgruppe und Projektumfang,
-              damit eine saubere Entscheidung möglich wird – ohne künstlichen
-              Sales-Druck.
+            <h2 className="display-lg">Lass uns was einzigartiges bauen.</h2>
+            <p className="max-w-4xl text-lg leading-8 text-muted">
+              Wir klären gemeinsam, worum’s geht, was gerade bremst und was als Nächstes
+              Priorität hat. Angebot schärfen, Zielgruppe sauber einordnen und Projektumfang
+              realisieren damit der nächsten Schritt nicht aus dem Bauch heraus entscheiden wird.
             </p>
             <div className="space-y-3 text-sm text-muted">
               <div>{siteConfig.location}</div>
-              <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-                {siteConfig.email}
+              <a
+                href={`mailto:${siteConfig.email}`}
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text={siteConfig.email} />
               </a>
             </div>
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="glass-card space-y-5 p-6 md:p-8">
-          <div>
-            <label htmlFor="name" className="eyebrow">
-              Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              required
-              className="mt-2 w-full rounded-2xl border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
-              placeholder="Wie sollen wir dich ansprechen?"
-            />
+        <form onSubmit={onSubmit} className="border-t border-border pt-6">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div>
+              <label htmlFor="name" className="eyebrow text-white">
+                <b>Name</b>
+              </label>
+              <input
+                id="name"
+                name="name"
+                required
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+                placeholder="Wie sollen wir dich ansprechen?"
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="eyebrow text-white">
+                <b>E-Mail</b>
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                required
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+                placeholder="name@unternehmen.de"
+              />
+            </div>
           </div>
-          <div>
-            <label htmlFor="email" className="eyebrow">
-              E-Mail
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              className="mt-2 w-full rounded-2xl border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
-              placeholder="name@unternehmen.de"
-            />
-          </div>
-          <div>
-            <label htmlFor="project" className="eyebrow">
-              Projekt
+          <div className="mt-6">
+            <label htmlFor="project" className="eyebrow text-white">
+              <b>Projekt</b>
             </label>
             <textarea
               id="project"
               name="project"
               required
-              rows={6}
-              className="mt-2 w-full rounded-[1.5rem] border border-border bg-white/4 px-4 py-3 outline-none transition focus:border-foreground"
+              rows={9}
+              value={project}
+              onChange={(event) => setProject(event.target.value)}
+              className="mt-2 min-h-[18rem] w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
               placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
             />
           </div>
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="link-arrow rounded-full border border-foreground px-6 py-4 disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {isSubmitting ? "Wird gesendet ..." : "Jetzt Erstgespräch anfragen"}{" "}
-            <span aria-hidden>↘</span>
-          </button>
-          {status.type !== "idle" ? (
-            <p
-              className={`text-sm ${status.type === "success" ? "text-highlight" : "text-red-300"}`}
+          <div className="mt-6 flex flex-col items-center gap-4 border-t border-border pt-6">
+            <button
+              type="submit"
+              disabled={isSubmitting || !isFormValid}
+              className="link-arrow mx-auto w-fit border border-border px-6 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-30"
             >
-              {status.message}
-            </p>
-          ) : null}
+              {isSubmitting ? "Wird gesendet ..." : "Jetzt Erstgespräch anfragen"}{" "}
+            </button>
+            {status.type !== "idle" ? (
+              <p className="max-w-xl text-sm text-muted">{status.message}</p>
+            ) : null}
+          </div>
         </form>
       </div>
     </section>
