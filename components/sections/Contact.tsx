@@ -15,9 +15,22 @@ const initialStatus: Status = { type: "idle", message: "" };
 export function Contact() {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [project, setProject] = useState("");
+
+  const isNameValid = name.trim().length >= 2;
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const isProjectValid = project.trim().length >= 12;
+  const isFormValid = isNameValid && isEmailValid && isProjectValid;
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!isFormValid) {
+      return;
+    }
+
     setIsSubmitting(true);
     setStatus(initialStatus);
 
@@ -46,6 +59,9 @@ export function Contact() {
         message: result.message || "Danke. Die Anfrage wurde aufgenommen.",
       });
       event.currentTarget.reset();
+      setName("");
+      setEmail("");
+      setProject("");
     } catch (error) {
       setStatus({
         type: "error",
@@ -86,52 +102,57 @@ export function Contact() {
         <form onSubmit={onSubmit} className="border-t border-border pt-6">
           <div className="grid gap-5 md:grid-cols-2">
             <div>
-              <label htmlFor="name" className="eyebrow">
-                Name
+              <label htmlFor="name" className="eyebrow text-white">
+                <b>Name</b>
               </label>
               <input
                 id="name"
                 name="name"
                 required
-                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
                 placeholder="Wie sollen wir dich ansprechen?"
               />
             </div>
             <div>
-              <label htmlFor="email" className="eyebrow">
-                E-Mail
+              <label htmlFor="email" className="eyebrow text-white">
+                <b>E-Mail</b>
               </label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
                 placeholder="name@unternehmen.de"
               />
             </div>
           </div>
           <div className="mt-6">
-            <label htmlFor="project" className="eyebrow">
-              Projekt
+            <label htmlFor="project" className="eyebrow text-white">
+              <b>Projekt</b>
             </label>
             <textarea
               id="project"
               name="project"
               required
               rows={9}
-              className="mt-2 min-h-[18rem] w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground"
+              value={project}
+              onChange={(event) => setProject(event.target.value)}
+              className="mt-2 min-h-[18rem] w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
               placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
             />
           </div>
-          <div className="mt-6 flex flex-col gap-4 border-t border-border pt-6">
+          <div className="mt-6 flex flex-col items-center gap-4 border-t border-border pt-6">
             <button
               type="submit"
-              disabled={isSubmitting}
-              className="link-arrow w-fit border border-border px-6 py-4 disabled:cursor-not-allowed disabled:opacity-60"
+              disabled={isSubmitting || !isFormValid}
+              className="link-arrow mx-auto w-fit border border-border px-6 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-30"
             >
               {isSubmitting ? "Wird gesendet ..." : "Jetzt Erstgespräch anfragen"}{" "}
-              <span aria-hidden>↘</span>
             </button>
             {status.type !== "idle" ? (
               <p className="max-w-xl text-sm text-muted">{status.message}</p>

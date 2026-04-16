@@ -2,6 +2,11 @@ import { cache } from "react";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import {
+  getExcerptFromText,
+  getReadingTimeFromText,
+  normalizeDrupalHtmlToText,
+} from "@/lib/drupal-rich-text.mjs";
 
 export type BlogFrontmatter = {
   title: string;
@@ -16,11 +21,22 @@ export type BlogFrontmatter = {
   tags?: string[];
 };
 
-export type BlogPost = BlogFrontmatter & {
+type BlogPostBase = BlogFrontmatter & {
   slug: string;
-  content: string;
-  source: "drupal" | "local";
 };
+
+export type LocalBlogPost = BlogPostBase & {
+  source: "local";
+  mdxSource: string;
+};
+
+export type DrupalBlogPost = BlogPostBase & {
+  source: "drupal";
+  drupalHtml: string;
+  drupalPlainText: string;
+};
+
+export type BlogPost = LocalBlogPost | DrupalBlogPost;
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 const DRUPAL_CMS_URL =
@@ -86,33 +102,6 @@ type DrupalIncludedResource =
       } | null;
     };
 
-function stripHtml(value: string) {
-  return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function normalizeDrupalHtmlToText(value: string) {
-  if (!value) {
-    return "";
-  }
-
-  return value
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<\/(p|div|li|h[1-6]|blockquote|pre|article|section)>/gi, "\n\n")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/[ \t]+\n/g, "\n")
-    .replace(/\r/g, "")
-    .replace(/\u00a0/g, " ")
-    .replace(/[^\S\r\n]{2,}/g, " ")
-    .split("\n")
-    .map((line) => line.trim())
-    .join("\n")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-}
-
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -121,20 +110,6 @@ function slugify(value: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .trim();
-}
-
-function getReadingTime(content: string) {
-  const words = stripHtml(content).split(/\s+/).filter(Boolean).length;
-  return `${Math.max(1, Math.ceil(words / 220))} min`;
-}
-
-function getExcerpt(summary: string, body: string) {
-  const source = stripHtml(summary) || stripHtml(body);
-  if (source.length <= 180) {
-    return source;
-  }
-
-  return `${source.slice(0, 177).trimEnd()}...`;
 }
 
 function getSlugFromAlias(alias: string | null | undefined, title: string, id: string) {
@@ -163,11 +138,11 @@ async function readPostFile(fileName: string): Promise<BlogPost> {
     updatedAt: String(data.updatedAt ?? data.publishedAt ?? new Date().toISOString()),
     readingTime: String(data.readingTime ?? "4 min"),
     featured: Boolean(data.featured ?? true),
-    content,
     tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     imageUrl: data.imageUrl ? String(data.imageUrl) : null,
     imageAlt: data.imageAlt ? String(data.imageAlt) : "",
     source: "local",
+    mdxSource: content,
   };
 }
 
@@ -183,7 +158,7 @@ async function getLocalPosts() {
   );
 }
 
-async function getDrupalPosts(): Promise<BlogPost[]> {
+async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
   const response = await fetch(DRUPAL_ARTICLE_ENDPOINT, {
     headers: {
       Accept: "application/vnd.api+json",
@@ -218,9 +193,8 @@ async function getDrupalPosts(): Promise<BlogPost[]> {
     .filter((item) => item.attributes?.status === true)
     .map((item) => {
       const title = item.attributes?.title?.trim() || "Ohne Titel";
-      const body = normalizeDrupalHtmlToText(
-        item.attributes?.body?.processed ?? "",
-      );
+      const drupalHtml = item.attributes?.body?.processed ?? "";
+      const drupalPlainText = normalizeDrupalHtmlToText(drupalHtml);
       const summary = normalizeDrupalHtmlToText(
         item.attributes?.field_summary?.processed ?? "",
       );
@@ -243,16 +217,17 @@ async function getDrupalPosts(): Promise<BlogPost[]> {
         slug,
         title,
         category,
-        excerpt: getExcerpt(summary, body),
+        excerpt: getExcerptFromText(summary, drupalPlainText),
         publishedAt,
         updatedAt,
-        readingTime: getReadingTime(body),
+        readingTime: getReadingTimeFromText(drupalPlainText),
         featured: Boolean(item.attributes?.status),
-        content: body,
         imageUrl,
         imageAlt,
         tags,
         source: "drupal" as const,
+        drupalHtml,
+        drupalPlainText,
       };
     })
     .sort(

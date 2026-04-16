@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 
 const baseUrl = process.env.SMOKE_BASE_URL || "http://127.0.0.1:3000";
+const pinnedBlogSlug = process.env.SMOKE_BLOG_SLUG;
+const richPattern = process.env.SMOKE_BLOG_RICH_PATTERN;
 const checks = [
   ["/", "Deine digitalen"],
   ["/blog", "Blog, Analysen"],
@@ -22,15 +24,23 @@ assert.ok(firstBlogLink, "blog index did not expose a blog detail link");
 
 const firstBlogSlug = firstBlogLink?.[1];
 assert.ok(firstBlogSlug, "could not parse first blog slug");
-const blogDetailPath = `/blog/${firstBlogSlug}`;
+const blogDetailSlug = pinnedBlogSlug || firstBlogSlug;
+const blogDetailPath = `/blog/${blogDetailSlug}`;
 const blogDetailResponse = await fetch(new URL(blogDetailPath, baseUrl));
 assert.equal(blogDetailResponse.status, 200, `${blogDetailPath} returned ${blogDetailResponse.status}`);
 const blogDetailHtml = await blogDetailResponse.text();
 assert.match(
   blogDetailHtml,
-  /class="mdx-body"|<article class="section-shell">/,
-  `${blogDetailPath} missing article shell`,
+  /class="mdx-body"/,
+  `${blogDetailPath} missing article content wrapper`,
 );
+if (richPattern) {
+  assert.match(
+    blogDetailHtml,
+    new RegExp(richPattern),
+    `${blogDetailPath} missing expected rich content pattern`,
+  );
+}
 
 console.log(
   "Smoke test passed for",

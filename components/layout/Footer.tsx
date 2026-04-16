@@ -19,7 +19,7 @@ export function Footer() {
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.95),transparent_34%),radial-gradient(circle_at_top_right,rgba(17,24,39,0.08),transparent_28%)]" />
 
       <div className="section-shell relative py-10 md:py-10">
-        <div className="grid gap-14 border-b border-black/10 pb-14 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)] lg:gap-20">
+        <div className="grid gap-14 border-b border-black/10 pb-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)] lg:gap-20">
           <div className="space-y-7">
             <div className="text-[11px] font-black uppercase tracking-[0.42em] text-black/55">
               {siteConfig.name}
@@ -34,13 +34,6 @@ export function Footer() {
                 Nutzerführung und sauberem technischen Fundament.
               </p>
             </div>
-
-            <a
-              href={`mailto:${siteConfig.email}`}
-              className="inline-flex w-fit items-center rounded-full border border-black/12 bg-black px-6 py-3 text-[11px] uppercase tracking-[0.34em] text-white transition-transform duration-200 hover:-translate-y-0.5"
-            >
-              <LinkRippleText text={siteConfig.email} baseWeight={560} activeWeight={860} />
-            </a>
           </div>
 
           <div className="p-8 md:p-10">

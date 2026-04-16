@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { notFound } from "next/navigation";
+import { renderDrupalRichText } from "@/components/DrupalRichText";
 import { CustomMDX } from "@/components/mdx";
+import { getDrupalPlainTextParagraphs } from "@/lib/drupal-rich-text.mjs";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
 
 type BlogPostPageProps = {
@@ -51,13 +54,19 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     month: "long",
     year: "numeric",
   }).format(new Date(post.publishedAt));
-  const drupalParagraphs =
-    post.source === "drupal"
-      ? post.content
-          .split(/\n{2,}/)
-          .map((paragraph) => paragraph.trim())
-          .filter(Boolean)
-      : [];
+  let drupalContent: ReactNode = null;
+
+  if (post.source === "drupal") {
+    try {
+      drupalContent = renderDrupalRichText(post.drupalHtml);
+    } catch (error) {
+      console.error(`Failed to render Drupal rich text for slug "${post.slug}"`, error);
+      const paragraphs = getDrupalPlainTextParagraphs(post.drupalPlainText);
+      drupalContent = paragraphs.map((paragraph: string, index: number) => (
+        <p key={`${post.slug}-fallback-${index}`}>{paragraph}</p>
+      ));
+    }
+  }
 
   return (
     <main className="section-space">
@@ -73,13 +82,9 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
         <div className="mt-14">
           {post.source === "drupal" ? (
-            <div className="mdx-body">
-              {drupalParagraphs.map((paragraph, index) => (
-                <p key={`${post.slug}-p-${index}`}>{paragraph}</p>
-              ))}
-            </div>
+            <div className="mdx-body">{drupalContent}</div>
           ) : (
-            <CustomMDX source={post.content} />
+            <CustomMDX source={post.mdxSource} />
           )}
         </div>
       </article>

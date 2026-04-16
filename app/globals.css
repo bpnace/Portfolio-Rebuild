@@ -248,6 +248,72 @@
     padding-top: 1.2rem;
   }
 
+  .project-preview-card,
+  .project-preview-card * {
+    border-radius: 0 !important;
+  }
+
+  .project-preview-card {
+    isolation: isolate;
+    background:
+      linear-gradient(145deg, rgba(10, 10, 10, 0.98), rgba(25, 25, 25, 0.84)),
+      rgba(0, 0, 0, 0.92);
+  }
+
+  .project-preview-image {
+    object-fit: cover;
+    border-radius: 0 !important;
+    filter: saturate(0.95) contrast(1.08) brightness(0.68);
+    transform: scale(1.04);
+    transition:
+      transform 320ms ease,
+      filter 320ms ease;
+  }
+
+  .group:hover .project-preview-image {
+    transform: scale(1.1);
+    filter: saturate(0.96) contrast(1.1) brightness(0.74);
+  }
+
+  .project-preview-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(4, 4, 4, 0.16) 0%,
+        rgba(4, 4, 4, 0.08) 28%,
+        rgba(4, 4, 4, 0.76) 100%
+      ),
+      radial-gradient(circle at 16% 20%, rgba(244, 244, 245, 0.18), transparent 32%);
+  }
+
+  .project-preview-title {
+    position: absolute;
+    inset: auto 0 0 0;
+    z-index: 2;
+    width: 100%;
+    max-width: 100%;
+    display: block;
+    color: #ffffff;
+    text-wrap: balance;
+    font-family: var(--font-display);
+    font-size: var(--project-preview-title-size, clamp(2.4rem, 3.6vw, 3.4rem)) !important;
+    font-weight: 900;
+    line-height: 0.84;
+    letter-spacing: var(--project-preview-title-letter-spacing, -0.05em);
+    mix-blend-mode: difference;
+    text-transform: uppercase;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+    padding-inline: 0.18rem;
+    padding-bottom: 0.18rem;
+    text-align: left;
+    text-shadow: 0 0 18px rgba(0, 0, 0, 0.22);
+    word-break: break-word;
+  }
+
   @media (max-width: 48rem) {
     .blog-preview-media {
       min-height: 14rem;
@@ -266,6 +332,10 @@
     .blog-preview-meta {
       gap: 0.55rem;
       letter-spacing: 0.22em;
+    }
+
+    .project-preview-title {
+      font-size: var(--project-preview-title-size, clamp(2rem, 8vw, 2.8rem)) !important;
     }
   }
 
@@ -434,6 +504,14 @@
     @apply rounded-[1.5rem] border border-border bg-surface-elevated px-6 py-5 text-lg italic text-foreground;
   }
 
+  .mdx-body strong {
+    @apply font-semibold text-foreground;
+  }
+
+  .mdx-body em {
+    @apply italic;
+  }
+
   .mdx-body a {
     @apply underline decoration-border underline-offset-4 hover:text-highlight;
     transition: color 180ms ease;
@@ -445,6 +523,10 @@
 
   .mdx-body pre {
     @apply overflow-x-auto rounded-[1.5rem] border border-border bg-surface-elevated p-5;
+  }
+
+  .mdx-body hr {
+    @apply my-10 border-border;
   }
 
   .github-contrib-shell {

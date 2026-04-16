@@ -28,10 +28,10 @@ export default async function Home() {
         <Profile />
         <Experience />
         <Testimonials />
+        <Contact />
         <Pricing />
         <BlogSection posts={posts} />
         <FAQ />
-        <Contact />
       </PinnedIntroShell>
     </main>
   );
