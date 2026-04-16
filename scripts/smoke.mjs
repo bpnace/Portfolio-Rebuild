@@ -7,6 +7,8 @@ const checks = [
   ["/", "Deine digitalen"],
   ["/blog", "Blog, Analysen"],
   ["/projekte/zynapse", "Zynapse"],
+  ["/impressum", "Sigmaringer Str. 27"],
+  ["/datenschutz", "Resend"],
 ];
 
 for (const [pathname, expected] of checks) {
