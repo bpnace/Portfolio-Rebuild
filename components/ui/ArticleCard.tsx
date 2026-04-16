@@ -38,22 +38,22 @@ function getTitleFitStyle(title: string) {
 
   if (characterCount <= 8) {
     return {
-      "--blog-preview-title-size": "clamp(5.8rem, 13vw, 10.8rem)",
-      "--blog-preview-title-letter-spacing": "0.14em",
+      "--blog-preview-title-size": "clamp(5.6rem, 12.6vw, 10.6rem)",
+      "--blog-preview-title-letter-spacing": "-0.07em",
     } as CSSProperties;
   }
 
   if (characterCount <= 12) {
     return {
       "--blog-preview-title-size": "clamp(5rem, 11.2vw, 9.4rem)",
-      "--blog-preview-title-letter-spacing": "0.08em",
+      "--blog-preview-title-letter-spacing": "-0.06em",
     } as CSSProperties;
   }
 
   if (characterCount <= 18) {
     return {
       "--blog-preview-title-size": "clamp(4.6rem, 10vw, 8.2rem)",
-      "--blog-preview-title-letter-spacing": "0.02em",
+      "--blog-preview-title-letter-spacing": "-0.05em",
     } as CSSProperties;
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { ScrambleField } from "@/components/ui/ScrambleField";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import {
   ScrollTrigger,
@@ -10,65 +11,16 @@ import {
   useGSAP,
   withMotionPreference,
 } from "@/lib/gsap";
+import {
+  getFieldVisual,
+  getInitialScrambleText,
+  getScrambleFrameText,
+} from "@/lib/scramble";
 import { experience } from "@/lib/site-data";
-
-type ScrambleFieldProps = {
-  text: string;
-};
-
-const LOWERCASE_LETTERS = "abcdefghijklmnopqrstuvwxyz";
-const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const DIGITS = "0123456789";
 const FIELD_STAGGER_MS = 45;
 const FIELD_DURATION_MS = 860;
 const FIELD_DURATION_STEP_MS = 90;
 const EXPERIENCE_TRIGGER_START = "top bottom+=6%";
-
-function pickRandomCharacter(source: string) {
-  const randomIndex = Math.floor(Math.random() * source.length);
-  return source[randomIndex] ?? source[0] ?? "";
-}
-
-function getScrambleCharacter(character: string) {
-  if (/\d/u.test(character)) {
-    return pickRandomCharacter(DIGITS);
-  }
-
-  if (/\p{L}/u.test(character)) {
-    return pickRandomCharacter(
-      character === character.toUpperCase()
-        ? UPPERCASE_LETTERS
-        : LOWERCASE_LETTERS,
-    );
-  }
-
-  return character;
-}
-
-function getFieldVisual(field: HTMLElement) {
-  return field.querySelector<HTMLElement>("[data-scramble-visual='true']");
-}
-
-function ScrambleField({ text }: ScrambleFieldProps) {
-  return (
-    <span
-      className="experience-scramble"
-      data-scramble-field="true"
-      data-scramble-text={text}
-    >
-      <span className="sr-only">{text}</span>
-      <span className="experience-scramble-stack" aria-hidden="true">
-        <span className="experience-scramble-reserve">{text}</span>
-        <span
-          className="experience-scramble-visual"
-          data-scramble-visual="true"
-        >
-          {text}
-        </span>
-      </span>
-    </span>
-  );
-}
 
 export function Experience() {
   const scope = useRef<HTMLDivElement | null>(null);
@@ -137,9 +89,7 @@ export function Experience() {
         const durationMs =
           FIELD_DURATION_MS + fieldIndex * FIELD_DURATION_STEP_MS;
         const startedAt = window.performance.now();
-        const initialText = characters
-          .map((character) => getScrambleCharacter(character))
-          .join("");
+        const initialText = getInitialScrambleText(characters);
 
         gsap.set(visual, { autoAlpha: 1 });
         visual.textContent = initialText;
@@ -148,13 +98,10 @@ export function Experience() {
           const progress = Math.min((timestamp - startedAt) / durationMs, 1);
           const resolvedCharacters = Math.floor(progress * characters.length);
 
-          visual.textContent = characters
-            .map((character, characterIndex) =>
-              characterIndex < resolvedCharacters
-                ? character
-                : getScrambleCharacter(character),
-            )
-            .join("");
+          visual.textContent = getScrambleFrameText(
+            characters,
+            resolvedCharacters,
+          );
 
           if (progress >= 1) {
             visual.textContent = targetText;

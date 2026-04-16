@@ -51,6 +51,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     month: "long",
     year: "numeric",
   }).format(new Date(post.publishedAt));
+  const drupalParagraphs =
+    post.source === "drupal"
+      ? post.content
+          .split(/\n{2,}/)
+          .map((paragraph) => paragraph.trim())
+          .filter(Boolean)
+      : [];
 
   return (
     <main className="section-space">
@@ -66,10 +73,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
         <div className="mt-14">
           {post.source === "drupal" ? (
-            <div
-              className="mdx-body"
-              dangerouslySetInnerHTML={{ __html: post.content }}
-            />
+            <div className="mdx-body">
+              {drupalParagraphs.map((paragraph, index) => (
+                <p key={`${post.slug}-p-${index}`}>{paragraph}</p>
+              ))}
+            </div>
           ) : (
             <CustomMDX source={post.content} />
           )}

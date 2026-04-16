@@ -225,7 +225,7 @@
     max-width: 100%;
     display: block;
     color: #ffffff;
-    text-wrap: pretty;
+    text-wrap: balance;
     font-family: var(--font-display);
     font-size: var(--blog-preview-title-size, clamp(4.8rem, 10vw, 9rem)) !important;
     font-weight: 900;
@@ -235,16 +235,9 @@
     text-transform: uppercase;
     overflow-wrap: anywhere;
     hyphens: auto;
-    padding: 0;
-    text-align: justify;
-    text-align-last: justify;
-    overflow: hidden;
-  }
-
-  .blog-preview-title::after {
-    content: "";
-    display: inline-block;
-    width: 100%;
+    padding-inline: 0.08rem;
+    text-align: left;
+    word-break: break-word;
   }
 
   .blog-preview-body {
@@ -266,7 +259,8 @@
       max-width: 100%;
       font-size: var(--blog-preview-title-size, clamp(3.4rem, 16vw, 5.8rem)) !important;
       line-height: 0.74;
-      padding: 0;
+      padding-inline: 0.06rem;
+      letter-spacing: var(--blog-preview-title-letter-spacing, -0.05em);
     }
 
     .blog-preview-meta {

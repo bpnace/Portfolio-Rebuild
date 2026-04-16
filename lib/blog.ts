@@ -90,6 +90,29 @@ function stripHtml(value: string) {
   return value.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function normalizeDrupalHtmlToText(value: string) {
+  if (!value) {
+    return "";
+  }
+
+  return value
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/<script[\s\S]*?>[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?>[\s\S]*?<\/style>/gi, "")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/(p|div|li|h[1-6]|blockquote|pre|article|section)>/gi, "\n\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\r/g, "")
+    .replace(/\u00a0/g, " ")
+    .replace(/[^\S\r\n]{2,}/g, " ")
+    .split("\n")
+    .map((line) => line.trim())
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function slugify(value: string) {
   return value
     .toLowerCase()
@@ -195,8 +218,12 @@ async function getDrupalPosts(): Promise<BlogPost[]> {
     .filter((item) => item.attributes?.status === true)
     .map((item) => {
       const title = item.attributes?.title?.trim() || "Ohne Titel";
-      const body = item.attributes?.body?.processed ?? "";
-      const summary = item.attributes?.field_summary?.processed ?? "";
+      const body = normalizeDrupalHtmlToText(
+        item.attributes?.body?.processed ?? "",
+      );
+      const summary = normalizeDrupalHtmlToText(
+        item.attributes?.field_summary?.processed ?? "",
+      );
       const category = item.attributes?.field_category?.trim() || "Notizen";
       const publishedAt = item.attributes?.created ?? new Date().toISOString();
       const updatedAt = item.attributes?.changed ?? publishedAt;

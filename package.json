@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test:content": "node --test scripts/content.test.mjs",
+    "test:mobile": "node scripts/mobile-smoke.mjs",
     "test:smoke": "node scripts/smoke.mjs"
   },
   "dependencies": {

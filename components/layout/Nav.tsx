@@ -2,9 +2,15 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { siteConfig } from "@/lib/site-config";
 import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
+import {
+  useBodyScrollLock,
+  useHomeIntroCovered,
+  useHomeNavReady,
+  useNavScrolled,
+} from "@/components/layout/nav-hooks";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 function renderAnimatedNavLabel(text: string) {
@@ -41,88 +47,17 @@ function renderDesktopNavLabel(
 
 export function Nav() {
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const [homeIntroCovered, setHomeIntroCovered] = useState(false);
-  const [homeNavReady, setHomeNavReady] = useState(false);
   const pathname = usePathname();
   const scope = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const introNavAnimated = useRef(false);
+  const scrolled = useNavScrolled(32);
+  useBodyScrollLock(open);
+  const homeIntroCovered = useHomeIntroCovered(pathname);
+  const homeNavReady = useHomeNavReady(pathname);
   const useIntroNavState = pathname === "/";
   const introCovered = pathname !== "/" || homeIntroCovered;
   const navReady = pathname !== "/" || homeNavReady;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 32);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (pathname !== "/") {
-      return;
-    }
-
-    const applyState = (covered: boolean) => {
-      setHomeIntroCovered(covered);
-    };
-
-    applyState(document.documentElement.dataset.homeIntroCovered === "true");
-
-    const onIntroCoverChange = (event: Event) => {
-      const detail = (event as CustomEvent<{ covered?: boolean }>).detail;
-      applyState(Boolean(detail?.covered));
-    };
-
-    window.addEventListener("home-intro-cover-change", onIntroCoverChange);
-    return () => {
-      window.removeEventListener("home-intro-cover-change", onIntroCoverChange);
-    };
-  }, [pathname]);
-
-  useEffect(() => {
-    if (pathname !== "/") {
-      return;
-    }
-
-    let pageLoaded = document.readyState === "complete";
-    let heroIntroReady =
-      document.documentElement.dataset.homeHeroIntroReady === "true";
-
-    const maybeMarkReady = () => {
-      if (pageLoaded && heroIntroReady) {
-        setHomeNavReady(true);
-      }
-    };
-
-    maybeMarkReady();
-
-    const onLoad = () => {
-      pageLoaded = true;
-      maybeMarkReady();
-    };
-
-    const onHeroReady = () => {
-      heroIntroReady = true;
-      maybeMarkReady();
-    };
-
-    window.addEventListener("load", onLoad);
-    window.addEventListener("home-hero-intro-ready", onHeroReady);
-
-    return () => {
-      window.removeEventListener("load", onLoad);
-      window.removeEventListener("home-hero-intro-ready", onHeroReady);
-    };
-  }, [pathname]);
 
   useGSAP(
     () => {
