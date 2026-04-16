@@ -65,7 +65,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <p className="max-w-3xl text-lg leading-8 text-muted">{post.excerpt}</p>
         </div>
         <div className="mt-14">
-          <CustomMDX source={post.content} />
+          {post.source === "drupal" ? (
+            <div
+              className="mdx-body"
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
+          ) : (
+            <CustomMDX source={post.content} />
+          )}
         </div>
       </article>
     </main>

@@ -8,8 +8,8 @@ import {
   ensureGsap,
   gsap,
   refreshScrollTriggers,
+  shouldReduceMotion,
   useGSAP,
-  withMotionPreference,
 } from "@/lib/gsap";
 
 type ScrambleFieldProps = {
@@ -177,34 +177,34 @@ export function Services() {
         animateTitle(titleField);
       });
 
-      const cleanup = withMotionPreference({
-        reduce: () => {
-          stopActiveWork();
-          playedRows = new WeakSet<HTMLElement>();
-          showFinalText(true);
-        },
-        motion: () => {
-          stopActiveWork();
-          playedRows = new WeakSet<HTMLElement>();
-          showFinalText(false);
+      if (shouldReduceMotion()) {
+        stopActiveWork();
+        playedRows = new WeakSet<HTMLElement>();
+        showFinalText(true);
 
-          rows.forEach((row) => {
-            ScrollTrigger.create({
-              trigger: row,
-              start: TITLE_TRIGGER_START,
-              once: true,
-              onEnter: () => {
-                startRow(row);
-              },
-            });
-          });
-          refreshScrollTriggers();
-        },
+        return () => {
+          stopActiveWork();
+        };
+      }
+
+      stopActiveWork();
+      playedRows = new WeakSet<HTMLElement>();
+      showFinalText(false);
+
+      rows.forEach((row) => {
+        ScrollTrigger.create({
+          trigger: row,
+          start: TITLE_TRIGGER_START,
+          once: true,
+          onEnter: () => {
+            startRow(row);
+          },
+        });
       });
+      refreshScrollTriggers();
 
       return () => {
         stopActiveWork();
-        cleanup();
       };
     },
     { scope, revertOnUpdate: true },

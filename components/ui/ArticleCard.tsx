@@ -33,6 +33,36 @@ function getPreviewTheme(slug: string) {
   return previewThemes[total % previewThemes.length];
 }
 
+function getTitleFitStyle(title: string) {
+  const characterCount = title.replace(/\s+/g, "").length;
+
+  if (characterCount <= 8) {
+    return {
+      "--blog-preview-title-size": "clamp(5.8rem, 13vw, 10.8rem)",
+      "--blog-preview-title-letter-spacing": "0.14em",
+    } as CSSProperties;
+  }
+
+  if (characterCount <= 12) {
+    return {
+      "--blog-preview-title-size": "clamp(5rem, 11.2vw, 9.4rem)",
+      "--blog-preview-title-letter-spacing": "0.08em",
+    } as CSSProperties;
+  }
+
+  if (characterCount <= 18) {
+    return {
+      "--blog-preview-title-size": "clamp(4.6rem, 10vw, 8.2rem)",
+      "--blog-preview-title-letter-spacing": "0.02em",
+    } as CSSProperties;
+  }
+
+  return {
+    "--blog-preview-title-size": "clamp(4rem, 8.4vw, 7.2rem)",
+    "--blog-preview-title-letter-spacing": "-0.03em",
+  } as CSSProperties;
+}
+
 export function ArticleCard({ post, variant = "default" }: ArticleCardProps) {
   const published = new Intl.DateTimeFormat("de-DE", {
     day: "2-digit",
@@ -42,18 +72,20 @@ export function ArticleCard({ post, variant = "default" }: ArticleCardProps) {
 
   if (variant === "home") {
     const theme = getPreviewTheme(post.slug);
+    const previewImage = post.imageUrl || "/blog/blog-section-hero.jpg";
     const previewStyle = {
       "--blog-preview-accent": theme.accent,
       objectPosition: theme.objectPosition,
     } as CSSProperties;
+    const titleFitStyle = getTitleFitStyle(post.title);
 
     return (
       <article className="blog-preview-card">
         <Link href={`/blog/${post.slug}`} className="group block">
           <div className="blog-preview-media">
             <Image
-              src="/blog/blog-section-hero.jpg"
-              alt=""
+              src={previewImage}
+              alt={post.imageAlt || post.title}
               fill
               sizes="(min-width: 768px) calc((100vw - 9rem) / 2), calc(100vw - 3rem)"
               className="blog-preview-image"
@@ -64,7 +96,9 @@ export function ArticleCard({ post, variant = "default" }: ArticleCardProps) {
               <span>{post.category}</span>
               <span>{post.readingTime}</span>
             </div>
-            <h3 className="blog-preview-title">{post.title}</h3>
+            <h3 className="blog-preview-title" style={titleFitStyle}>
+              {post.title}
+            </h3>
           </div>
         </Link>
         <div className="blog-preview-body">
