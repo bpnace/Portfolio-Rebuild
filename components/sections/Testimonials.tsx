@@ -111,15 +111,14 @@ export function Testimonials() {
 
         <div className="mb-10 max-w-4xl space-y-4 md:mb-16">
           <h2 className="display-lg">
-            Ergebnisse, die ruhiger wirken, aber härter arbeiten.
+            Ist Ganz gut geworden, wäre untertrieben.
           </h2>
           <p className="text-lg leading-8 text-muted">
-            Gute Websites werden selten mit großen Worten beschrieben. Eher mit
-            Klarheit, Geschwindigkeit und dem Gefühl, dass plötzlich alles
-            sinnvoller zusammenpasst.
+            Die Rückmeldungen aus Projekten zeigen ziemlich klar, worauf es am Ende ankommt:
+            Erkentnis, Perfomance, Vertrauen und dieses Gefühl, dass endlich alles an seinem
+            Platz ist.
           </p>
         </div>
-
         <div className="relative overflow-hidden">
           <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-white/14" />
           <div className="pointer-events-none absolute inset-y-0 right-[8%] hidden w-px bg-white/6 lg:block" />

@@ -81,11 +81,11 @@ export function Contact() {
         <div>
           <SectionHeader label="Kontakt" marker="(SKWKHS® — 10)" />
           <div className="space-y-6">
-            <h2 className="display-lg">Gib uns 30 Minuten, um dein Projekt zu verstehen.</h2>
+            <h2 className="display-lg">Lass uns was einzigartiges bauen.</h2>
             <p className="max-w-4xl text-lg leading-8 text-muted">
-              Im Erstgespräch klären wir Angebot, Zielgruppe und Projektumfang,
-              damit eine saubere Entscheidung möglich wird – ohne künstlichen
-              Sales-Druck.
+              Wir klären gemeinsam, worum’s geht, was gerade bremst und was als Nächstes
+              Priorität hat. Angebot schärfen, Zielgruppe sauber einordnen und Projektumfang
+              realisieren damit der nächsten Schritt nicht aus dem Bauch heraus entscheiden wird.
             </p>
             <div className="space-y-3 text-sm text-muted">
               <div>{siteConfig.location}</div>

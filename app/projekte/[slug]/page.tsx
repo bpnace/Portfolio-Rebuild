@@ -52,11 +52,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   }
 
   return (
-    <main className="section-space">
+    <main className="">
       <article className="section-shell">
-        <div className="mb-8">
+        <div className="mb-15">
           <Link href="/#projekte" className="link-arrow">
-            Zurück zu den Projekten
+            <b>Zurück zu den Projekten</b>
           </Link>
         </div>
 

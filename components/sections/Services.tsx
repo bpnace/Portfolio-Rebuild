@@ -163,10 +163,10 @@ export function Services() {
       <div ref={scope} className="section-shell">
         <SectionHeader label="Leistungen" marker="(SKWKHS® — 03)" />
         <div className="mb-10 max-w-4xl space-y-4 md:mb-16">
-          <h2 className="display-lg">Klare Leistungen für Sichtbarkeit, Systeme und Wachstum.</h2>
+          <h2 className="display-lg"> Strategie, Design, Code. Ohne lästiges Überdenken.</h2>
           <p className="text-lg leading-8 text-muted">
-            Gute Websites entstehen dort, wo Strategie, Gestaltung, technische
-            Qualität und saubere Prozesse zusammen gedacht werden.
+             Wir schärfen Angebote, bauen klare Nutzerführung und entwickeln Frontends,
+             die stabil laufen, schnell verstanden werden und nicht nur in deinem Pitchdeck gut aussehen.
           </p>
         </div>
 
