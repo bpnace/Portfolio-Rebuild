@@ -589,7 +589,7 @@ export function GithubContributionGrid({
         <img
           src={fallbackSrc}
           alt={fallbackAlt}
-          className={`w-full rounded-[4px] opacity-90 ${className ?? ""}`.trim()}
+          className={`w-full opacity-90 ${className ?? ""}`.trim()}
           style={{ transform: "scaleY(1.12)", transformOrigin: "top" }}
           loading="lazy"
         />

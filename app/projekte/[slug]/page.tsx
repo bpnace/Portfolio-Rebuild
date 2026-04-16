@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CustomMDX } from "@/components/mdx";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
@@ -24,16 +25,20 @@ export async function generateMetadata({
     };
   }
 
+  const metaDescription = [project.summary, project.teaser]
+    .filter(Boolean)
+    .join(" ");
+
   return {
-    title: project.title,
-    description: project.summary,
+    title: `${project.title} – ${project.category} Projekt`,
+    description: metaDescription,
     alternates: {
       canonical: `/projekte/${project.slug}`,
     },
     openGraph: {
       url: `/projekte/${project.slug}`,
-      title: `${project.title} | STACKWERKHAUS`,
-      description: project.summary,
+      title: `${project.title} – ${project.category} | STACKWERKHAUS`,
+      description: metaDescription,
     },
   };
 }
@@ -49,6 +54,12 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   return (
     <main className="section-space">
       <article className="section-shell">
+        <div className="mb-8">
+          <Link href="/#projekte" className="link-arrow">
+            Zurück zu den Projekten
+          </Link>
+        </div>
+
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
           <div className="space-y-6">
             <div className="eyebrow">{project.category}</div>
@@ -56,6 +67,11 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             <p className="max-w-3xl text-lg leading-8 text-muted">
               {project.summary}
             </p>
+            {project.teaser ? (
+              <p className="max-w-2xl text-sm leading-7 text-muted/85 md:text-base">
+                {project.teaser}
+              </p>
+            ) : null}
           </div>
           <div className="space-y-5 border-t border-border pt-6 md:pt-8">
             <div className="grid gap-4 text-sm text-muted">
