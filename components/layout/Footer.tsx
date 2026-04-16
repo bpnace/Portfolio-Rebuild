@@ -30,8 +30,8 @@ export function Footer() {
                 Deine digitalen Architekten.
               </p>
               <p className="max-w-2xl text-base leading-8 text-black/65 md:text-lg">
-                Digitale Bauwerke mit klarer Struktur, verständlicher
-                Nutzerführung und sauberem technischen Fundament.
+                  Digitale Auftritte mit stabilem Aufbau, klarer Führung und
+                  einem Fundament, das mehr kann als nur gut aussehen.
               </p>
             </div>
           </div>
@@ -56,6 +56,27 @@ export function Footer() {
                       />
                     </Link>
                   ))}
+                </div>
+
+                <div className="space-y-4 pt-4">
+                  <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
+                    Rechtliches
+                  </div>
+                  <div className="space-y-3 text-sm uppercase tracking-[0.22em] text-black/68">
+                    {legalLinks.map((item) => (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="hover-weight-link block w-fit hover:text-black"
+                      >
+                        <LinkRippleText
+                          text={item.label}
+                          baseWeight={500}
+                          activeWeight={820}
+                        />
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -89,66 +110,36 @@ export function Footer() {
                       />
                     </a>
                   ))}
+                  {githubProfileUrl ? (
+                    <a
+                      href={githubProfileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover-weight-link block w-fit hover:text-black"
+                    >
+                      <LinkRippleText
+                        text="GitHub"
+                        baseWeight={500}
+                        activeWeight={820}
+                      />
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid gap-8 border-b border-black/10 py-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-          <div className="grid gap-8 md:grid-cols-[auto_auto] md:gap-14">
-            <div className="space-y-4">
-              <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
-                Rechtliches
-              </div>
-              <div className="space-y-3 text-sm uppercase tracking-[0.22em] text-black/68">
-                {legalLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="hover-weight-link block w-fit hover:text-black"
-                  >
-                    <LinkRippleText
-                      text={item.label}
-                      baseWeight={500}
-                      activeWeight={820}
-                    />
-                  </Link>
-                ))}
-              </div>
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="space-y-2 text-[11px] uppercase tracking-[0.32em] text-black/48">
+            <div>
+              © {siteConfig.name} 2026
             </div>
-
-            <div className="space-y-4">
-              <div className="text-[11px] uppercase tracking-[0.32em] text-black/45">
-                Fundament
-              </div>
-              <p className="max-w-md text-sm leading-7 text-black/62">
-                Europäisches Hosting, datenschutznahe Infrastruktur und ein
-                offen dokumentierter Build-Prozess.
-              </p>
-            </div>
+            <div>Webdesign · Frontend · Backend · AEO/SEO</div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 lg:justify-end">
-            {githubProfileUrl ? (
-              <a
-                href={githubProfileUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="GitHub"
-                className="inline-flex min-h-16 items-center px-5 py-4 transition-transform duration-200 hover:-translate-y-0.5"
-              >
-                <Image
-                  src="/logos/GitHub_Lockup_Black_Clearspace.svg"
-                  alt={`GitHub Profil von ${siteConfig.name}`}
-                  width={116}
-                  height={32}
-                  className="h-6 w-auto"
-                />
-              </a>
-            ) : null}
-
-            <div className="inline-flex min-h-16 items-center px-3 py-3">
+          <div className="flex flex-wrap items-center gap-3 md:justify-end">
+            <div className="inline-flex min-h-10 items-center px-3 py-3">
               <Image
                 src="/logos/eu_lock.svg"
                 alt="EU badge"
@@ -158,7 +149,7 @@ export function Footer() {
               />
             </div>
 
-            <div className="inline-flex min-h-16 items-center px-3 py-3">
+            <div className="inline-flex min-h-10 items-center px-3 py-3">
               <Image
                 src="/logos/eu_hoster.png"
                 alt="EU hosting badge"
@@ -168,20 +159,6 @@ export function Footer() {
               />
             </div>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-4 pt-8 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-2 text-[11px] uppercase tracking-[0.32em] text-black/48">
-            <div>
-              © {siteConfig.name} 2026
-            </div>
-            <div>Webdesign · Frontend · Technisches SEO</div>
-          </div>
-
-          <p className="max-w-2xl text-sm leading-7 text-black/56 md:text-right">
-            Klar geplant, präzise umgesetzt und bereit für einen professionellen
-            Auftritt mit Substanz.
-          </p>
         </div>
       </div>
     </footer>
