@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Image from "next/image";
+import { ViewTransition } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderDrupalRichText } from "@/components/DrupalRichText";
@@ -74,43 +75,71 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <main className="">
-      <article className="section-shell">
-        <div className="mb-15">
-          <Link href="/blog" className="link-arrow">
-            <LinkRippleText text="Zurück zur Übersicht" baseWeight={560} />
-          </Link>
-        </div>
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-start">
-          <div className="space-y-6">
-            <div className="flex flex-wrap items-center gap-4 text-[length:var(--label)] uppercase tracking-[0.3em] text-muted">
-              <span>{post.category}</span>
-              <span>{published}</span>
-              <span>{post.readingTime}</span>
+      <ViewTransition
+        enter={{
+          "nav-forward": "nav-forward",
+          "nav-back": "nav-back",
+          default: "none",
+        }}
+        exit={{
+          "nav-forward": "nav-forward",
+          "nav-back": "nav-back",
+          default: "none",
+        }}
+        default="none"
+      >
+        <article className="section-shell">
+          <div className="mb-15">
+            <Link
+              href="/#blog"
+              className="link-arrow"
+              transitionTypes={["nav-back"]}
+            >
+              <LinkRippleText text="Zurück zu den Artikeln" baseWeight={560} />
+            </Link>
+          </div>
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-start">
+            <div className="space-y-6">
+              <div className="flex flex-wrap items-center gap-4 text-[length:var(--label)] uppercase tracking-[0.3em] text-muted">
+                <span>{post.category}</span>
+                <span>{published}</span>
+                <span>{post.readingTime}</span>
+              </div>
+              <ViewTransition
+                name={`blog-title-${post.slug}`}
+                share="project-title-crossfade"
+              >
+                <h1 className="display-lg">{post.title}</h1>
+              </ViewTransition>
             </div>
-            <h1 className="display-lg">{post.title}</h1>
+            <ViewTransition
+              name={`blog-image-${post.slug}`}
+              share="project-image-morph"
+            >
+              <div className="relative overflow-hidden border border-border bg-surface/50 aspect-[4/3] lg:aspect-[5/4]">
+                <Image
+                  src={heroImage}
+                  alt={post.imageAlt || post.title}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 34vw, (min-width: 768px) 40vw, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            </ViewTransition>
           </div>
-          <div className="relative overflow-hidden border border-border bg-surface/50 aspect-[4/3] lg:aspect-[5/4]">
-            <Image
-              src={heroImage}
-              alt={post.imageAlt || post.title}
-              fill
-              priority
-              sizes="(min-width: 1024px) 34vw, (min-width: 768px) 40vw, 100vw"
-              className="object-cover"
-            />
+          <div className="mt-10 max-w-3xl">
+            <p className="text-lg leading-8 text-muted">{post.excerpt}</p>
           </div>
-        </div>
-        <div className="mt-10 max-w-3xl">
-          <p className="text-lg leading-8 text-muted">{post.excerpt}</p>
-        </div>
-        <div className="mt-14 pb-10">
-          {post.source === "drupal" ? (
-            <div className="mdx-body">{drupalContent}</div>
-          ) : (
-            <CustomMDX source={post.mdxSource} />
-          )}
-        </div>
-      </article>
+          <div className="mt-14 pb-10">
+            {post.source === "drupal" ? (
+              <div className="mdx-body">{drupalContent}</div>
+            ) : (
+              <CustomMDX source={post.mdxSource} />
+            )}
+          </div>
+        </article>
+      </ViewTransition>
     </main>
   );
 }

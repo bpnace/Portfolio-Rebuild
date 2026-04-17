@@ -1,9 +1,12 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { FormEvent, useEffect, useState } from "react";
+import { pricingTiers } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
+import type { PricingTier } from "@/lib/site-data";
 
 type Status = {
   type: "idle" | "success" | "error";
@@ -11,6 +14,34 @@ type Status = {
 };
 
 const initialStatus: Status = { type: "idle", message: "" };
+const PRESET_LIMIT = 3;
+
+function buildPackageProjectMessage(selectedPackage: string | null): string {
+  const packageSlug = selectedPackage?.toLowerCase().trim();
+  if (!packageSlug) {
+    return "";
+  }
+
+  const tier = pricingTiers.find(
+    (entry: PricingTier) => entry.name.toLowerCase() === packageSlug,
+  );
+  if (!tier) {
+    return "";
+  }
+
+  const topFeatures = tier.features
+    .filter((feature) => feature.enabled)
+    .slice(0, PRESET_LIMIT)
+    .map((feature) => feature.label);
+
+  const featureText =
+    topFeatures.length > 0 ? `\n\nEnthalten:\n- ${topFeatures.join("\n- ")}` : "";
+
+  return `Wir interessieren uns für das Paket "${tier.name}".\n\n`
+    + `Kurz: ab ${tier.price} €, ${tier.timeline}, ${tier.pages}.`
+    + featureText
+    + "\n\nErgänze bitte:\n- Dein Ziel\n- Gewünschter Umfang\n- Wann soll gestartet werden?\n\nWir freuen uns auf dein Update!";
+}
 
 export function Contact() {
   const [status, setStatus] = useState<Status>(initialStatus);
@@ -18,6 +49,15 @@ export function Contact() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [project, setProject] = useState("");
+  const searchParams = useSearchParams();
+  const selectedPackage = searchParams.get("paket");
+
+  useEffect(() => {
+    const prefill = buildPackageProjectMessage(selectedPackage);
+    if (prefill) {
+      setProject(prefill);
+    }
+  }, [selectedPackage]);
 
   const isNameValid = name.trim().length >= 2;
   const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
@@ -99,7 +139,7 @@ export function Contact() {
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="border-t border-border pt-6">
+        <form onSubmit={onSubmit} className="pt-26">
           <div className="grid gap-5 md:grid-cols-2">
             <div>
               <label htmlFor="name" className="eyebrow text-white">
@@ -142,7 +182,7 @@ export function Contact() {
               rows={9}
               value={project}
               onChange={(event) => setProject(event.target.value)}
-              className="mt-2 min-h-[18rem] w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+              className="mt-2 min-h-[18rem] w-full bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
               placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
             />
           </div>
