@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { pricingTiers } from "@/lib/site-data";
@@ -43,14 +44,16 @@ function buildPackageProjectMessage(selectedPackage: string | null): string {
     + "\n\nErgänze bitte:\n- Dein Ziel\n- Gewünschter Umfang\n- Wann soll gestartet werden?\n\nWir freuen uns auf dein Update!";
 }
 
-export function Contact() {
+type ContactFormProps = {
+  selectedPackage: string | null;
+};
+
+function ContactForm({ selectedPackage }: ContactFormProps) {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [project, setProject] = useState("");
-  const searchParams = useSearchParams();
-  const selectedPackage = searchParams.get("paket");
 
   useEffect(() => {
     const prefill = buildPackageProjectMessage(selectedPackage);
@@ -116,6 +119,76 @@ export function Contact() {
   }
 
   return (
+    <form onSubmit={onSubmit} className="pt-26">
+      <div className="grid gap-5 md:grid-cols-2">
+        <div>
+          <label htmlFor="name" className="eyebrow text-white">
+            <b>Name</b>
+          </label>
+          <input
+            id="name"
+            name="name"
+            required
+            value={name}
+            onChange={(event) => setName(event.target.value)}
+            className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+            placeholder="Wie sollen wir dich ansprechen?"
+          />
+        </div>
+        <div>
+          <label htmlFor="email" className="eyebrow text-white">
+            <b>E-Mail</b>
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+            placeholder="name@unternehmen.de"
+          />
+        </div>
+      </div>
+      <div className="mt-6">
+        <label htmlFor="project" className="eyebrow text-white">
+          <b>Projekt</b>
+        </label>
+        <textarea
+          id="project"
+          name="project"
+          required
+          rows={9}
+          value={project}
+          onChange={(event) => setProject(event.target.value)}
+          className="mt-2 min-h-[18rem] w-full bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
+          placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
+        />
+      </div>
+      <div className="mt-6 flex flex-col items-center gap-4 border-t border-border pt-6">
+        <button
+          type="submit"
+          disabled={isSubmitting || !isFormValid}
+          className="link-arrow mx-auto w-fit border border-border px-6 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-30"
+        >
+          {isSubmitting ? "Wird gesendet ..." : "Jetzt Erstgespräch anfragen"}{" "}
+        </button>
+        {status.type !== "idle" ? (
+          <p className="max-w-xl text-sm text-muted">{status.message}</p>
+        ) : null}
+      </div>
+    </form>
+  );
+}
+
+function ContactFormWithSearchParams() {
+  const searchParams = useSearchParams();
+  return <ContactForm selectedPackage={searchParams.get("paket")} />;
+}
+
+export function Contact() {
+  return (
     <section id="kontakt" className="section-space">
       <div className="section-shell grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:gap-20">
         <div>
@@ -139,66 +212,9 @@ export function Contact() {
           </div>
         </div>
 
-        <form onSubmit={onSubmit} className="pt-26">
-          <div className="grid gap-5 md:grid-cols-2">
-            <div>
-              <label htmlFor="name" className="eyebrow text-white">
-                <b>Name</b>
-              </label>
-              <input
-                id="name"
-                name="name"
-                required
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
-                placeholder="Wie sollen wir dich ansprechen?"
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="eyebrow text-white">
-                <b>E-Mail</b>
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                className="mt-2 w-full rounded-none border-b border-border bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
-                placeholder="name@unternehmen.de"
-              />
-            </div>
-          </div>
-          <div className="mt-6">
-            <label htmlFor="project" className="eyebrow text-white">
-              <b>Projekt</b>
-            </label>
-            <textarea
-              id="project"
-              name="project"
-              required
-              rows={9}
-              value={project}
-              onChange={(event) => setProject(event.target.value)}
-              className="mt-2 min-h-[18rem] w-full bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
-              placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
-            />
-          </div>
-          <div className="mt-6 flex flex-col items-center gap-4 border-t border-border pt-6">
-            <button
-              type="submit"
-              disabled={isSubmitting || !isFormValid}
-              className="link-arrow mx-auto w-fit border border-border px-6 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-30"
-            >
-              {isSubmitting ? "Wird gesendet ..." : "Jetzt Erstgespräch anfragen"}{" "}
-            </button>
-            {status.type !== "idle" ? (
-              <p className="max-w-xl text-sm text-muted">{status.message}</p>
-            ) : null}
-          </div>
-        </form>
+        <Suspense fallback={<ContactForm selectedPackage={null} />}>
+          <ContactFormWithSearchParams />
+        </Suspense>
       </div>
     </section>
   );
