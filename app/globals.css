@@ -95,6 +95,19 @@
     @apply font-display font-extrabold;
   }
 
+  .article-detail-title {
+    max-inline-size: min(100%, 11ch);
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+  }
+
+  @supports (text-wrap: balance) {
+    .article-detail-title {
+      text-wrap: balance;
+    }
+  }
+
   .display-md {
     font-size: var(--display-md);
     line-height: 0.96;

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-arrow-callback */
-
 "use client";
 
 import { useRef } from "react";

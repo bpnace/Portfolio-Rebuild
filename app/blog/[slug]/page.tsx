@@ -99,7 +99,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </Link>
           </div>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)] lg:items-start">
-            <div className="space-y-6">
+            <div className="min-w-0 space-y-6 lg:pr-4">
               <div className="flex flex-wrap items-center gap-4 text-[length:var(--label)] uppercase tracking-[0.3em] text-muted">
                 <span>{post.category}</span>
                 <span>{published}</span>
@@ -109,7 +109,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                 name={`blog-title-${post.slug}`}
                 share="project-title-crossfade"
               >
-                <h1 className="display-lg">{post.title}</h1>
+                <h1 className="article-detail-title display-lg">{post.title}</h1>
               </ViewTransition>
             </div>
             <ViewTransition
