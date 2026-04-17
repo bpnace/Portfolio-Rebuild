@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { Footer } from "@/components/layout/Footer";
 import { Nav } from "@/components/layout/Nav";
+import { Analytics } from "@/components/layout/Analytics";
 import { siteConfig } from "@/lib/site-config";
 import "./globals.css";
 
@@ -74,6 +75,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
           referrerPolicy="origin"
         />
+        <Analytics />
         <div className="relative flex min-h-screen flex-col">
           <Nav />
           <div className="flex-1 pt-20 md:pt-24">{children}</div>
