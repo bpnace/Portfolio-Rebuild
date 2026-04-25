@@ -225,13 +225,20 @@ export function Hero() {
             </div>
             <div className="grid w-full max-w-[360px] grid-cols-1 gap-4 justify-self-center md:gap-3">
               <HashLink
-                href="/#kontakt"
-                className="hero-action link-arrow w-full justify-between gap-2 whitespace-nowrap px-3 py-4 text-[9px] tracking-[0.2em] md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.34em] md:whitespace-normal"
+                href="/baustellencheck"
+                className="hero-action link-arrow w-full justify-between gap-2 px-3 py-4 text-left text-[9px] leading-[1.35] tracking-[0.2em] md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.24em]"
               >
-                <LinkRippleText
-                  text="Jetzt Erstgespräch buchen"
-                  baseWeight={560}
-                />{" "}
+                <span className="md:hidden">
+                  Der Stackwerkhaus
+                  <br />
+                  Webseitecheck
+                </span>
+                <span className="hidden md:inline">
+                  <LinkRippleText
+                    text="Der Stackwerkhaus Webseitecheck"
+                    baseWeight={560}
+                  />
+                </span>{" "}
                 <span aria-hidden>✚</span>
               </HashLink>
               <HashLink

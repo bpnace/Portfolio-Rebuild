@@ -28,6 +28,25 @@ assert.match(
   "home page missing viewport meta tag",
 );
 
+const baustellencheckHtml = await fetchHtml("/baustellencheck");
+assert.match(
+  baustellencheckHtml,
+  /Webseitecheck starten/,
+  "baustellencheck page missing primary CTA",
+);
+assert.match(
+  baustellencheckHtml,
+  /name="websiteUrl"/,
+  "baustellencheck page missing URL field",
+);
+
+const baustellencheckDankeHtml = await fetchHtml("/baustellencheck/danke");
+assert.match(
+  baustellencheckDankeHtml,
+  /Deine Baustelle ist eingetragen/,
+  "baustellencheck thank-you page missing confirmation headline",
+);
+
 const blogDetailHtml = await fetchHtml(`/blog/${pinnedBlogSlug}`);
 assert.match(
   blogDetailHtml,
@@ -52,5 +71,5 @@ assert.match(
 console.log(
   "Mobile smoke passed for /, /blog/" +
     pinnedBlogSlug +
-    `, /projekte/${DEFAULT_PROJECT_SLUG}`,
+    `, /baustellencheck, /baustellencheck/danke, /projekte/${DEFAULT_PROJECT_SLUG}`,
 );
