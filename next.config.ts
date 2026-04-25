@@ -23,6 +23,20 @@ const nextConfig: NextConfig = {
   experimental: {
     viewTransition: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/baustellencheck",
+        destination: "/webseitecheck",
+        permanent: true,
+      },
+      {
+        source: "/baustellencheck/danke",
+        destination: "/webseitecheck/danke",
+        permanent: true,
+      },
+    ];
+  },
   transpilePackages: ["next-mdx-remote"],
   images: {
     remotePatterns: cmsHostnames.map((hostname) => ({

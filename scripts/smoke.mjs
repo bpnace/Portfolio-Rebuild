@@ -6,8 +6,8 @@ const pinnedBlogSlug = process.env.SMOKE_BLOG_SLUG || DEFAULT_BLOG_SLUG;
 const richPattern = process.env.SMOKE_BLOG_RICH_PATTERN;
 const checks = [
   ["/", "Deine digitalen"],
-  ["/baustellencheck", "Ist deine Website"],
-  ["/baustellencheck/danke", "Deine Baustelle ist eingetragen"],
+  ["/webseitecheck", "Ist deine Website"],
+  ["/webseitecheck/danke", "Deine Baustelle ist eingetragen"],
   [`/blog/${pinnedBlogSlug}`, "class=\"mdx-body\""],
   [`/projekte/${DEFAULT_PROJECT_SLUG}`, "class=\"section-shell\""],
   ["/impressum", "Sigmaringer Str. 27"],

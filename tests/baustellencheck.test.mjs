@@ -80,7 +80,7 @@ test("builds a compact summary and structured webhook payload", () => {
     validation.data,
     {
       submitted_at: "2026-04-25T12:00:00.000Z",
-      page_url: "https://stackwerkhaus.de/baustellencheck",
+      page_url: "https://stackwerkhaus.de/webseitecheck",
       page_title: "Website Check für Webdesign und Relaunch | STACKWERKHAUS",
       origin: "STACKWERKHAUS Webseitecheck",
     },

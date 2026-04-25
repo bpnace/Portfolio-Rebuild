@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Danke für deine Anfrage zum Stackwerkhaus Webseitecheck.",
   alternates: {
-    canonical: "/baustellencheck/danke",
+    canonical: "/webseitecheck/danke",
   },
   robots: {
     index: false,
@@ -23,8 +23,8 @@ const nextLinks = [
 
 export default function BaustellencheckDankePage() {
   return (
-    <main className="section-space">
-      <div className="section-shell grid min-h-[calc(100svh-13rem)] gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)] lg:items-end">
+    <main className="pb-16 lg:pb-24">
+      <div className="section-shell grid min-h-[calc(100svh-13rem)] gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.72fr)] lg:items-center">
         <div className="space-y-8">
           <div className="eyebrow text-foreground/75">
             Der Stackwerkhaus Webseitecheck

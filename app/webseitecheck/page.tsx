@@ -1,31 +1,135 @@
 import Image from "next/image";
 import type { Metadata } from "next";
 import { buildingResults, inspectionFields } from "@/lib/baustellencheck.mjs";
+import { siteConfig } from "@/lib/site-config";
 import { BaustellencheckForm } from "@/components/baustellencheck/BaustellencheckForm";
 import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
+const pagePath = "/webseitecheck";
+const pageUrl = `${siteConfig.url}${pagePath}`;
+const pageTitle = "Webseitecheck für Webdesign und Relaunch | STACKWERKHAUS";
+const pageDescription =
+  "Prüfe deine Website mit dem Stackwerkhaus Webseitecheck. Wir bewerten Struktur, Design, Technik und Kontaktwege für Relaunch, Webdesign und bessere Anfragen.";
+const pageImage = "/og-baustellencheck.png";
+
 export const metadata: Metadata = {
   title: {
-    absolute: "Webseitecheck für Webdesign und Relaunch | STACKWERKHAUS",
+    absolute: pageTitle,
   },
-  description:
-    "Prüfe deine Website mit dem Stackwerkhaus Webseitecheck. STACKWERKHAUS bewertet Struktur, Design, Technik und Kontaktwege und zeigt, ob dein Auftritt Penthouse, Plattenbau oder Rohbau ist.",
+  description: pageDescription,
+  keywords: [
+    "Webseitecheck",
+    "Website Check",
+    "Website Relaunch",
+    "Webdesign Berlin",
+    "Technisches SEO",
+    "Conversion Optimierung",
+    "AEO",
+  ],
   alternates: {
-    canonical: "/baustellencheck",
+    canonical: pagePath,
   },
   openGraph: {
-    url: "/baustellencheck",
-    title: "Webseitecheck für Webdesign und Relaunch | STACKWERKHAUS",
-    description:
-      "Prüfe deine Website mit dem Stackwerkhaus Webseitecheck. STACKWERKHAUS bewertet Struktur, Design, Technik und Kontaktwege und zeigt, ob dein Auftritt Penthouse, Plattenbau oder Rohbau ist.",
+    type: "website",
+    locale: "de_DE",
+    url: pagePath,
+    siteName: siteConfig.name,
+    title: pageTitle,
+    description: pageDescription,
+    images: [
+      {
+        url: pageImage,
+        width: 1200,
+        height: 630,
+        alt: "Stackwerkhaus Webseitecheck als digitale Bauzustandsprüfung",
+      },
+    ],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: pageTitle,
+    description: pageDescription,
+    images: [pageImage],
+  },
+};
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: pageTitle,
+      description: pageDescription,
+      inLanguage: "de-DE",
+      isPartOf: {
+        "@id": `${siteConfig.url}#website`,
+      },
+      about: {
+        "@id": `${pageUrl}#service`,
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: `${siteConfig.url}${pageImage}`,
+        width: 1200,
+        height: 630,
+      },
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "Stackwerkhaus Webseitecheck",
+      serviceType: "Website Check für Webdesign, Relaunch und technische Website-Prüfung",
+      description:
+        "Der Stackwerkhaus Webseitecheck prüft Struktur, Design, Technik und Kontaktwege einer Website und ordnet den digitalen Bauzustand ein.",
+      provider: {
+        "@type": "Organization",
+        "@id": `${siteConfig.url}#organization`,
+        name: siteConfig.name,
+        url: siteConfig.url,
+        email: siteConfig.email,
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "Deutschland",
+      },
+      potentialAction: {
+        "@type": "RegisterAction",
+        target: `${pageUrl}#webseitecheck-form`,
+        name: "Webseitecheck anfragen",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteConfig.url,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Webseitecheck",
+          item: pageUrl,
+        },
+      ],
+    },
+  ],
 };
 
 export default function BaustellencheckPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <section className="section-space pt-8 md:pt-0">
         <div className="section-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
           <div className="space-y-8">
@@ -47,7 +151,7 @@ export default function BaustellencheckPage() {
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <HashLink
-                href="/baustellencheck#baustellencheck-form"
+                href="/webseitecheck#webseitecheck-form"
                 className="link-arrow w-full justify-between bg-foreground px-5 py-4 text-background sm:w-fit"
               >
                 <LinkRippleText
@@ -57,7 +161,7 @@ export default function BaustellencheckPage() {
                 <span aria-hidden>+</span>
               </HashLink>
               <HashLink
-                href="/baustellencheck#bauzustand"
+                href="/webseitecheck#bauzustand"
                 className="link-arrow w-full justify-between py-4 pr-5 pl-16 text-muted hover:text-foreground sm:w-fit sm:px-5"
               >
                 <LinkRippleText
@@ -78,11 +182,15 @@ export default function BaustellencheckPage() {
               sizes="(min-width: 1280px) 23rem, (min-width: 1024px) 21rem, (min-width: 768px) 26rem, 92vw"
               className="object-contain"
             />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.16),transparent_30%),radial-gradient(circle_at_left_top,rgba(255,255,255,0.08),transparent_28%)]"
+            />
           </div>
         </div>
       </section>
 
-      <section id="baustellencheck-form" className="section-space border-t border-border">
+      <section id="webseitecheck-form" className="section-space border-t border-border">
         <div className="section-shell">
           <SectionHeader label="Webseitecheck" marker="(CHECK — 01)" />
           <BaustellencheckForm />

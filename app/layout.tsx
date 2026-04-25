@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Ccm19Loader } from "@/components/layout/Ccm19Loader";
 import { Footer } from "@/components/layout/Footer";
+import { HashScrollRestorer } from "@/components/layout/HashScrollRestorer";
 import { Nav } from "@/components/layout/Nav";
 import { Analytics } from "@/components/layout/Analytics";
 import { siteConfig } from "@/lib/site-config";
@@ -71,6 +72,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
         <Ccm19Loader />
         <Analytics />
+        <HashScrollRestorer />
         <div className="relative flex min-h-screen flex-col">
           <Nav />
           <div className="flex-1 pt-20 md:pt-24">{children}</div>

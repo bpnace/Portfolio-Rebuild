@@ -220,7 +220,7 @@ export function BaustellencheckForm() {
         message: result.message || "Deine Anfrage ist eingetragen.",
       });
       await new Promise((resolve) => setTimeout(resolve, 720));
-      router.push("/baustellencheck/danke");
+      router.push("/webseitecheck/danke");
     } catch (error) {
       setStatus({
         type: "error",
