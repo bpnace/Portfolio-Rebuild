@@ -8,12 +8,7 @@ import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
 const heroTitleLines = ["Deine digitalen", "Architekten"] as const;
-const heroServiceTags = [
-  "Für Webdesign",
-  "Für Entwicklung",
-  "Für Relaunch",
-  "Für AEO",
-] as const;
+const heroServiceTags = ["Manche Websites sind Penthouse. Manche Plattenbau. Viele leider Rohbau.",]as const;
 
 function renderTitleLine(line: string) {
   const words = line.split(" ");
