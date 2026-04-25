@@ -8,7 +8,9 @@ import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
 
 const heroTitleLines = ["Deine digitalen", "Architekten"] as const;
-const heroServiceTags = ["Manche Websites sind Penthouse. Manche Plattenbau. Viele leider Rohbau.",]as const;
+const heroServiceTags = [
+  "Manche Websites sind Penthouse. Manche Plattenbau. Viele leider Rohbau.",
+] as const;
 
 function renderTitleLine(line: string) {
   const words = line.split(" ");
@@ -59,6 +61,36 @@ export function Hero() {
       const copy = gsap.utils.toArray<HTMLElement>(".hero-copy");
       const actions = gsap.utils.toArray<HTMLElement>(".hero-action");
 
+      const wordTimelineEntries: Array<{
+        mask: HTMLElement;
+        chars: HTMLElement[];
+        startAt: number;
+      }> = [];
+
+      lines.forEach((line) => {
+        const lineMasks = gsap.utils.toArray<HTMLElement>(
+          ".hero-word-mask",
+          line,
+        );
+        const lineTexts = gsap.utils.toArray<HTMLElement>(
+          ".hero-word-text",
+          line,
+        );
+
+        lineMasks.forEach((mask, lineWordIndex) => {
+          const text = lineTexts[lineWordIndex];
+          if (!text) {
+            return;
+          }
+
+          wordTimelineEntries.push({
+            mask,
+            chars: gsap.utils.toArray<HTMLElement>(".hero-char", text),
+            startAt: lineWordIndex * 0.32,
+          });
+        });
+      });
+
       if (shouldReduceMotion()) {
         gsap.set([...wordTexts, ...chars, ...copy, ...actions], {
           autoAlpha: 1,
@@ -85,38 +117,6 @@ export function Hero() {
       const timeline = gsap.timeline({
         defaults: { ease: "power4.out" },
         onComplete: markHeroIntroReady,
-      });
-
-      const wordTimelineEntries: Array<{
-        mask: HTMLElement;
-        text: HTMLElement;
-        chars: HTMLElement[];
-        startAt: number;
-      }> = [];
-
-      lines.forEach((line) => {
-        const lineMasks = gsap.utils.toArray<HTMLElement>(
-          ".hero-word-mask",
-          line,
-        );
-        const lineTexts = gsap.utils.toArray<HTMLElement>(
-          ".hero-word-text",
-          line,
-        );
-
-        lineMasks.forEach((mask, lineWordIndex) => {
-          const text = lineTexts[lineWordIndex];
-          if (!text) {
-            return;
-          }
-
-          wordTimelineEntries.push({
-            mask,
-            text,
-            chars: gsap.utils.toArray<HTMLElement>(".hero-char", text),
-            startAt: lineWordIndex * 0.32,
-          });
-        });
       });
 
       wordTimelineEntries.forEach(({ mask, chars: wordChars, startAt }) => {
@@ -184,13 +184,13 @@ export function Hero() {
     <section
       ref={scope}
       data-hero-intro="loading"
-      className="relative flex min-h-[calc(100svh-5rem)] items-end md:min-h-[calc(100svh-6rem)]"
+      className="relative flex min-h-[calc(100svh-5rem)] items-start pb-12 pt-10 md:min-h-[calc(100svh-6rem)] md:items-end md:pb-0 md:pt-0"
     >
       <div className="section-shell grid w-full gap-10 md:gap-14 xl:items-start">
         <div>
-          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-6">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-6">
             <div className="hero-copy eyebrow text-foreground/75">SKWKHS</div>
-            <div className="hero-copy md:text-right">
+            <div className="hero-copy hidden md:block md:text-right">
               <a
                 href={`mailto:${siteConfig.email}`}
                 className="link-arrow text-foreground"
@@ -202,7 +202,7 @@ export function Hero() {
               </div>
             </div>
           </div>
-          <div className="space-y-1.5 md:space-y-3">
+          <div className="mt-8 space-y-2.5 md:mt-0 md:space-y-3">
             {heroTitleLines.map((line, index) => (
               <div
                 key={line}
@@ -214,19 +214,19 @@ export function Hero() {
               </div>
             ))}
           </div>
-          <div className="hero-copy mt-6 flex flex-wrap gap-x-4 gap-y-1.5 text-[10px] leading-[1.65] uppercase tracking-[0.28em] text-muted md:mt-5 md:gap-x-6 md:gap-y-2 md:text-xs md:tracking-[0.38em]">
+          <div className="hero-copy mt-8 flex flex-wrap gap-x-4 gap-y-1.5 text-[10px] leading-[1.65] uppercase tracking-[0.28em] text-muted md:mt-5 md:gap-x-6 md:gap-y-2 md:text-xs md:tracking-[0.38em]">
             {heroServiceTags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
           </div>
-          <div className="hero-copy mt-4 grid gap-5 md:mt-5 md:gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-start lg:justify-between">
+          <div className="hero-copy mt-8 grid gap-5 md:mt-5 md:gap-6 lg:grid-cols-[max-content_minmax(260px,360px)] lg:items-start lg:justify-between">
             <div className="min-w-[9ch]">
               <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
             </div>
-            <div className="grid w-full max-w-[360px] grid-cols-1 gap-3 justify-self-center">
+            <div className="grid w-full max-w-[360px] grid-cols-1 gap-4 justify-self-center md:gap-3">
               <HashLink
                 href="/#kontakt"
-                className="hero-action link-arrow px-6 py-4"
+                className="hero-action link-arrow w-full justify-between gap-2 whitespace-nowrap px-3 py-4 text-[9px] tracking-[0.2em] md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.34em] md:whitespace-normal"
               >
                 <LinkRippleText
                   text="Jetzt Erstgespräch buchen"
@@ -236,9 +236,9 @@ export function Hero() {
               </HashLink>
               <HashLink
                 href="/#leistungen"
-                className="hero-action link-arrow px-6 py-4 text-muted hover:text-foreground"
+                className="hero-action link-arrow w-full justify-between gap-2 whitespace-nowrap px-3 py-4 text-[9px] tracking-[0.2em] text-muted hover:text-foreground md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.34em] md:whitespace-normal"
               >
-                <LinkRippleText text="Leistungen" baseWeight={560} />{" "}
+                <LinkRippleText text="Unsere Bauwerke" baseWeight={560} />{" "}
                 <span aria-hidden>✚</span>
               </HashLink>
             </div>

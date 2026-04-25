@@ -1,8 +1,8 @@
 export const siteConfig = {
   name: "STACKWERKHAUS",
-  title: "STACKWERKHAUS – Hier wird nicht nur dekoriert, sondern gebaut.",
+  title: "STACKWERKHAUS | Webdesign und Full Stack Development mit Stil.",
   description:
-    "Wir bauen digitale Auftritte, bei denen Fassade, Grundriss und Technik zusammenpassen für Unternehmen die hoch hinaus wollen.",
+    "Wir bauen Websites, Web Apps und digitale Auftritte, bei denen Fassade, Grundriss und Technik zusammenpassen. Für Unternehmen, die online nicht nach einem Rohbau aussehen wollen.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://stackwerkhaus.de",
   email: "info@stackwerkhaus.de",
   location: "Berlin / Remote",
@@ -14,7 +14,7 @@ export const siteConfig = {
     },
     {
       label: "LinkedIn",
-      href: "https://www.linkedin.com/in/Arthur-arthur-marshall",
+      href: "https://www.linkedin.com/in/tarik-arthur-marshall",
     },
   ],
   navigation: [

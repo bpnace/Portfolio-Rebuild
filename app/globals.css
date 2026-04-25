@@ -73,8 +73,10 @@
     @apply py-14 md:py-25;
   }
 
-  [data-hero-intro="loading"] {
-    visibility: hidden;
+  @media (min-width: 768px) {
+    [data-hero-intro="loading"] {
+      visibility: hidden;
+    }
   }
 
   .eyebrow {
@@ -602,6 +604,27 @@
   }
 
   @media (max-width: 767px) {
+    .hero-line.display-xl {
+      font-size: clamp(3.45rem, 16.5vw, 4.25rem);
+      line-height: 0.92;
+    }
+
+    .hero-word,
+    .hero-word-text {
+      white-space: nowrap;
+    }
+
+    [data-hero-intro="loading"] .hero-char,
+    [data-hero-intro="loading"] .hero-copy,
+    [data-hero-intro="loading"] .hero-action {
+      opacity: 0;
+    }
+
+    [data-hero-intro="loading"] .hero-word-mask {
+      opacity: 1;
+      transform: scaleX(0);
+    }
+
     .link-ripple-static {
       display: inline;
     }
