@@ -5,6 +5,15 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { currentStateOptions, goalOptions } from "@/lib/baustellencheck.mjs";
 import { siteConfig } from "@/lib/site-config";
+import type { BaustellencheckStep } from "@/components/baustellencheck/form-state";
+import {
+  canVisitStep as canVisitFormStep,
+  getFirstIncompleteStep as getFirstIncompleteFormStep,
+  isFormReady as isBaustellencheckFormReady,
+  isStepReady,
+  readBaustellencheckResponse,
+  stepLabels,
+} from "@/components/baustellencheck/form-state";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 type Status = {
@@ -13,8 +22,6 @@ type Status = {
 };
 
 const initialStatus: Status = { type: "idle", message: "" };
-
-const stepLabels = ["URL", "Zustand", "Ziel", "Kontakt"] as const;
 
 function StepKicker({ stepIndex }: { stepIndex: number }) {
   return (
@@ -28,7 +35,13 @@ function StepKicker({ stepIndex }: { stepIndex: number }) {
   );
 }
 
-function FieldError({ visible, children }: { visible: boolean; children: string }) {
+function FieldError({
+  visible,
+  children,
+}: {
+  visible: boolean;
+  children: string;
+}) {
   if (!visible) {
     return null;
   }
@@ -41,7 +54,7 @@ export function BaustellencheckForm() {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showValidationHint, setShowValidationHint] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
+  const [stepIndex, setStepIndex] = useState<BaustellencheckStep>(0);
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [currentState, setCurrentState] = useState("");
   const [goals, setGoals] = useState<string[]>([]);
@@ -52,13 +65,15 @@ export function BaustellencheckForm() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [newsletterOptIn, setNewsletterOptIn] = useState(false);
 
-  const isFormReady =
-    websiteUrl.trim().length >= 4 &&
-    currentState.length > 0 &&
-    goals.length > 0 &&
-    name.trim().length >= 2 &&
-    email.trim().length > 0 &&
-    termsAccepted;
+  const formState = {
+    websiteUrl,
+    currentState,
+    goals,
+    name,
+    email,
+    termsAccepted,
+  };
+  const formReady = isBaustellencheckFormReady(formState);
   const submitButtonText = isSubmitting
     ? "Wird eingetragen ..."
     : status.type !== "idle"
@@ -76,58 +91,18 @@ export function BaustellencheckForm() {
   }
 
   function isCurrentStepReady() {
-    switch (stepIndex) {
-      case 0:
-        return websiteUrl.trim().length >= 4;
-      case 1:
-        return currentState.length > 0;
-      case 2:
-        return goals.length > 0;
-      case 3:
-        return (
-          name.trim().length >= 2 &&
-          email.trim().length > 0 &&
-          termsAccepted
-        );
-      default:
-        return false;
-    }
+    return isStepReady(formState, stepIndex);
   }
 
   function getFirstIncompleteStep() {
-    if (websiteUrl.trim().length < 4) {
-      return 0;
-    }
-    if (!currentState) {
-      return 1;
-    }
-    if (goals.length === 0) {
-      return 2;
-    }
-    return 3;
+    return getFirstIncompleteFormStep(formState);
   }
 
-  function canVisitStep(targetStep: number) {
-    if (targetStep <= stepIndex) {
-      return true;
-    }
-
-    if (targetStep === 1) {
-      return websiteUrl.trim().length >= 4;
-    }
-
-    if (targetStep === 2) {
-      return websiteUrl.trim().length >= 4 && currentState.length > 0;
-    }
-
-    return (
-      websiteUrl.trim().length >= 4 &&
-      currentState.length > 0 &&
-      goals.length > 0
-    );
+  function canVisitStep(targetStep: BaustellencheckStep) {
+    return canVisitFormStep(formState, stepIndex, targetStep);
   }
 
-  function goToStep(nextStep: number) {
+  function goToStep(nextStep: BaustellencheckStep) {
     if (!canVisitStep(nextStep)) {
       setShowValidationHint(true);
       return;
@@ -144,7 +119,9 @@ export function BaustellencheckForm() {
       return;
     }
 
-    goToStep(Math.min(stepIndex + 1, stepLabels.length - 1));
+    goToStep(
+      Math.min(stepIndex + 1, stepLabels.length - 1) as BaustellencheckStep,
+    );
   }
 
   function chooseCurrentState(value: string) {
@@ -167,7 +144,7 @@ export function BaustellencheckForm() {
     event.preventDefault();
     const form = event.currentTarget;
 
-    if (!isFormReady || !form.reportValidity()) {
+    if (!formReady || !form.reportValidity()) {
       setStepIndex(getFirstIncompleteStep());
       setShowValidationHint(true);
       return;
@@ -206,7 +183,7 @@ export function BaustellencheckForm() {
         body: JSON.stringify(payload),
       });
 
-      const result = (await response.json()) as { message?: string };
+      const result = await readBaustellencheckResponse(response);
 
       if (!response.ok) {
         throw new Error(
@@ -274,8 +251,8 @@ export function BaustellencheckForm() {
               <button
                 key={label}
                 type="button"
-                onClick={() => goToStep(index)}
-                disabled={!canVisitStep(index)}
+                onClick={() => goToStep(index as BaustellencheckStep)}
+                disabled={!canVisitStep(index as BaustellencheckStep)}
                 className={`border px-3 py-2 text-[10px] uppercase tracking-[0.24em] transition ${
                   stepIndex === index
                     ? "border-foreground bg-foreground text-background"

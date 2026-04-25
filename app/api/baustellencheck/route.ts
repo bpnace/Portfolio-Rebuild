@@ -104,23 +104,36 @@ export async function POST(request: Request) {
     );
   }
 
-  const webhookResponse = await fetch(CONTACT_WEBHOOK_URL, {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${Buffer.from(
-        `${webhookUsername}:${webhookPassword}`,
-      ).toString("base64")}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(
-      buildForwardedBaustellencheckPayload(
-        validation.data,
-        payload,
-        request,
+  let webhookResponse: Response;
+
+  try {
+    webhookResponse = await fetch(CONTACT_WEBHOOK_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${Buffer.from(
+          `${webhookUsername}:${webhookPassword}`,
+        ).toString("base64")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        buildForwardedBaustellencheckPayload(
+          validation.data,
+          payload,
+          request,
+        ),
       ),
-    ),
-    cache: "no-store",
-  });
+      cache: "no-store",
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        message: getDefaultWebhookMessage(502),
+        webhookStatus: 502,
+        webhookResult: null,
+      },
+      { status: 502 },
+    );
+  }
 
   let webhookResult: WebhookResult | null = null;
   try {
