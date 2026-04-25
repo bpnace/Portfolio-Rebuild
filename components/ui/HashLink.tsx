@@ -21,6 +21,16 @@ function isModifiedEvent(event: MouseEvent<HTMLAnchorElement>) {
 
 export function HashLink({ href, onClick, scroll, children, ...props }: HashLinkProps) {
   const pathname = usePathname();
+  const parsedHref = (() => {
+    try {
+      return new URL(href, "https://stackwerkhaus.local");
+    } catch {
+      return null;
+    }
+  })();
+  const isSamePathHash =
+    Boolean(parsedHref?.hash) && parsedHref?.pathname === pathname;
+  const resolvedScroll = scroll ?? (isSamePathHash ? false : undefined);
 
   function handleClick(event: MouseEvent<HTMLAnchorElement>) {
     onClick?.(event);
@@ -58,7 +68,7 @@ export function HashLink({ href, onClick, scroll, children, ...props }: HashLink
   }
 
   return (
-    <Link href={href} onClick={handleClick} scroll={scroll ?? false} {...props}>
+    <Link href={href} onClick={handleClick} scroll={resolvedScroll} {...props}>
       {children}
     </Link>
   );

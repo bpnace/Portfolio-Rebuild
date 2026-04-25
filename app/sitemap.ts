@@ -3,7 +3,12 @@ import { getAllPosts } from "@/lib/blog";
 import { getAllProjects } from "@/lib/projects";
 import { siteConfig } from "@/lib/site-config";
 
-const STATIC_ROUTES = ["/", "/impressum", "/datenschutz"] as const;
+const STATIC_ROUTES = [
+  "/",
+  "/webseitecheck",
+  "/impressum",
+  "/datenschutz",
+] as const;
 
 function getProjectLastModified(yearValue: string) {
   const year = Number(yearValue);

@@ -53,7 +53,11 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
         return;
       }
 
-      if (shouldReduceMotion()) {
+      const canUseMousePreview = window.matchMedia(
+        "(min-width: 768px) and (hover: hover) and (pointer: fine)",
+      ).matches;
+
+      if (!canUseMousePreview || shouldReduceMotion()) {
         gsap.set(preview, { autoAlpha: 0 });
         return;
       }
@@ -116,6 +120,10 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
       });
 
       const handleEnter = (event: PointerEvent) => {
+        if (event.pointerType !== "mouse") {
+          return;
+        }
+
         firstEnter = true;
         fade.play();
         startFollow();
@@ -148,7 +156,7 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
     >
       <div
         ref={previewRef}
-        className="project-preview-card pointer-events-none fixed left-0 top-0 z-40 invisible aspect-[700/467] w-[360px] overflow-hidden border border-white/12 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:block"
+        className="project-preview-card pointer-events-none fixed left-0 top-0 z-40 hidden aspect-[700/467] w-[360px] overflow-hidden border border-white/12 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:block"
         aria-hidden="true"
       >
         <ViewTransition

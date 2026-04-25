@@ -154,7 +154,43 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              5. Cookies und Einwilligungsmanagement (CCM19)
+              5. Stackwerkhaus Webseitecheck
+            </h2>
+            <p className="mt-3">
+              Wenn du den Webseitecheck nutzt, verarbeiten wir die von dir
+              eingegebenen Angaben, insbesondere Website-URL, Einschätzung zum
+              aktuellen Website-Zustand, ausgewählte Ziele, Name,
+              E-Mail-Adresse, freiwillige Unternehmensangaben, optionale
+              Nachricht sowie technische Metadaten der Übermittlung. Diese Daten
+              nutzen wir, um deinen digitalen Bauzustand einzuordnen und dir
+              eine kurze Einschätzung mit möglichen nächsten Schritten zu
+              senden.
+            </p>
+            <p className="mt-2">
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. b DSGVO (vorvertragliche Maßnahmen) sowie Art. 6
+              Abs. 1 lit. f DSGVO (Missbrauchs- und Spam-Abwehr)
+              <br />
+              <strong className="text-foreground">Zweck:</strong> Bearbeitung
+              des Webseitechecks, Einordnung deiner Website und Rückmeldung
+              per E-Mail
+              <br />
+              <strong className="text-foreground">Speicherdauer:</strong> Bis
+              zum Abschluss der Bearbeitung und im Rahmen gesetzlicher
+              Aufbewahrungspflichten
+            </p>
+            <p className="mt-2">
+              Wenn du die optionale Newsletter-Einwilligung auswählst, speichern
+              wir diese Auswahl getrennt vom Pflichtteil des Webseitechecks.
+              Eine Anmeldung zu Tipps rund um Webdesign, Development und
+              digitale Bauwerke erfolgt nur auf Grundlage deiner freiwilligen
+              Einwilligung und kann jederzeit widerrufen werden.
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
+              6. Cookies und Einwilligungsmanagement (CCM19)
             </h2>
             <p className="mt-3">
               Wir verwenden CCM19, um deine Einwilligungen in das Setzen von
@@ -182,7 +218,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              6. Google Analytics
+              7. Google Analytics
             </h2>
             <p className="mt-3">
               Wir verwenden Google Analytics 4 zur statistischen Auswertung der
@@ -216,7 +252,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              7. Social-Media-Links
+              8. Social-Media-Links
             </h2>
             <p className="mt-3">
               Auf der Website sind nur Links zu Instagram und LinkedIn
@@ -227,7 +263,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              8. Deine Rechte
+              9. Deine Rechte
             </h2>
             <p className="mt-3">
               Du hast das Recht auf Auskunft, Berichtigung, Löschung,
@@ -238,7 +274,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              9. Beschwerderecht
+              10. Beschwerderecht
             </h2>
             <p className="mt-3">
               <strong className="text-foreground">

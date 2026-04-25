@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
+import { Ccm19Loader } from "@/components/layout/Ccm19Loader";
 import { Footer } from "@/components/layout/Footer";
+import { HashScrollRestorer } from "@/components/layout/HashScrollRestorer";
 import { Nav } from "@/components/layout/Nav";
 import { Analytics } from "@/components/layout/Analytics";
 import { siteConfig } from "@/lib/site-config";
@@ -69,13 +70,9 @@ export default function RootLayout({
       className={`${interSans.variable} ${interDisplay.variable} scroll-smooth`}
     >
       <body className="min-h-screen bg-background text-foreground font-sans antialiased">
-        <Script
-          id="ccm19"
-          src="https://cloud.ccm19.de/app.js?apiKey=eefc8fecf37d0d4d42423ebb8d2ff0c38ee07663469480b8&domain=69c4664129605f52500e0082"
-          strategy="beforeInteractive"
-          referrerPolicy="origin"
-        />
+        <Ccm19Loader />
         <Analytics />
+        <HashScrollRestorer />
         <div className="relative flex min-h-screen flex-col">
           <Nav />
           <div className="flex-1 pt-20 md:pt-24">{children}</div>
