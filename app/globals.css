@@ -671,14 +671,9 @@
 
   .experience-scramble-stack {
     position: relative;
-    display: inline-grid;
+    display: inline-block;
     max-width: 100%;
-    place-items: start;
     vertical-align: top;
-  }
-
-  .experience-scramble-stack > span {
-    grid-area: 1 / 1;
   }
 
   .experience-scramble-reserve,
@@ -688,11 +683,15 @@
   }
 
   .experience-scramble-reserve {
+    display: block;
     visibility: hidden;
     pointer-events: none;
   }
 
   .experience-scramble-visual {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 100%;
     color: inherit;
     opacity: 0;
     will-change: opacity;

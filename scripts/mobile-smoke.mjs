@@ -4,6 +4,32 @@ import { DEFAULT_BLOG_SLUG, DEFAULT_PROJECT_SLUG } from "./fixtures/content-slug
 const baseUrl = process.env.SMOKE_BASE_URL || "http://127.0.0.1:3000";
 const pinnedBlogSlug = process.env.SMOKE_BLOG_SLUG || DEFAULT_BLOG_SLUG;
 const richPattern = process.env.SMOKE_BLOG_RICH_PATTERN;
+const landingPages = [
+  [
+    "/website-erstellen-lassen-deutschland",
+    "Schnelle professionelle Website erstellen lassen, deutschlandweit",
+  ],
+  [
+    "/webdesign-kleine-unternehmen",
+    "Webdesign für kleine Unternehmen, Dienstleister und Gründer",
+  ],
+  [
+    "/landingpage-erstellen-lassen",
+    "Landingpage erstellen lassen für Angebote, Kampagnen und Anfragen",
+  ],
+  [
+    "/nextjs-website-erstellen-lassen",
+    "Next.js Website erstellen lassen für schnelle moderne Webauftritte",
+  ],
+  [
+    "/ki-website-automatisierung",
+    "Website mit KI-Automatisierung erstellen lassen",
+  ],
+];
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function fetchHtml(pathname) {
   const response = await fetch(new URL(pathname, baseUrl));
@@ -68,8 +94,23 @@ assert.match(
   "project detail page missing section shell",
 );
 
+for (const [pathname, h1] of landingPages) {
+  const html = await fetchHtml(pathname);
+  assert.match(
+    html,
+    new RegExp(escapeRegExp(h1)),
+    `${pathname} missing landing page H1`,
+  );
+  assert.match(
+    html,
+    /"@type":"FAQPage"/,
+    `${pathname} missing visible FAQ schema`,
+  );
+}
+
 console.log(
   "Mobile smoke passed for /, /blog/" +
     pinnedBlogSlug +
-    `, /webseitecheck, /webseitecheck/danke, /projekte/${DEFAULT_PROJECT_SLUG}`,
+    `, /webseitecheck, /webseitecheck/danke, /projekte/${DEFAULT_PROJECT_SLUG}, ` +
+    landingPages.map(([pathname]) => pathname).join(", "),
 );

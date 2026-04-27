@@ -4,6 +4,32 @@ import { DEFAULT_BLOG_SLUG, DEFAULT_PROJECT_SLUG } from "./fixtures/content-slug
 const baseUrl = process.env.SMOKE_BASE_URL || "http://127.0.0.1:3000";
 const pinnedBlogSlug = process.env.SMOKE_BLOG_SLUG || DEFAULT_BLOG_SLUG;
 const richPattern = process.env.SMOKE_BLOG_RICH_PATTERN;
+const landingPages = [
+  [
+    "/website-erstellen-lassen-deutschland",
+    "Schnelle professionelle Website erstellen lassen, deutschlandweit",
+  ],
+  [
+    "/webdesign-kleine-unternehmen",
+    "Webdesign für kleine Unternehmen, Dienstleister und Gründer",
+  ],
+  [
+    "/landingpage-erstellen-lassen",
+    "Landingpage erstellen lassen für Angebote, Kampagnen und Anfragen",
+  ],
+  [
+    "/nextjs-website-erstellen-lassen",
+    "Next.js Website erstellen lassen für schnelle moderne Webauftritte",
+  ],
+  [
+    "/ki-website-automatisierung",
+    "Website mit KI-Automatisierung erstellen lassen",
+  ],
+];
+
+function escapeRegExp(value) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function assertRedirect(pathname, expectedPathname) {
   const response = await fetch(new URL(pathname, baseUrl), {
@@ -40,6 +66,70 @@ async function assertSitemapRoutes() {
     /\/webseitecheck\/danke<\/loc>/,
     "sitemap contains thank-you page",
   );
+
+  for (const [pathname] of landingPages) {
+    assert.match(
+      sitemap,
+      new RegExp(`${escapeRegExp(pathname)}<\\/loc>`),
+      `sitemap missing ${pathname}`,
+    );
+  }
+}
+
+async function assertRobotsAllowsAiSearch() {
+  const response = await fetch(new URL("/robots.txt", baseUrl));
+  assert.equal(response.status, 200, `/robots.txt returned ${response.status}`);
+  const robots = await response.text();
+
+  assert.match(
+    robots,
+    /User-Agent:\s*OAI-SearchBot/i,
+    "robots.txt missing OAI-SearchBot rule",
+  );
+  assert.doesNotMatch(
+    robots,
+    /Disallow:\s*\/\s*$/im,
+    "robots.txt blocks crawling at root",
+  );
+}
+
+async function assertLandingPages() {
+  for (const [pathname, h1] of landingPages) {
+    const response = await fetch(new URL(pathname, baseUrl));
+    assert.equal(response.status, 200, `${pathname} returned ${response.status}`);
+    const html = await response.text();
+
+    assert.match(
+      html,
+      new RegExp(escapeRegExp(h1)),
+      `${pathname} missing H1 text`,
+    );
+    assert.match(
+      html,
+      /Kurz gesagt/,
+      `${pathname} missing compact answer section`,
+    );
+    assert.match(
+      html,
+      /application\/ld\+json/,
+      `${pathname} missing JSON-LD script`,
+    );
+    assert.match(
+      html,
+      /"@type":"FAQPage"/,
+      `${pathname} missing FAQPage schema`,
+    );
+    assert.match(
+      html,
+      new RegExp(`rel="canonical" href="[^"]*${escapeRegExp(pathname)}`),
+      `${pathname} missing self canonical`,
+    );
+    assert.doesNotMatch(
+      html,
+      /noindex/i,
+      `${pathname} contains noindex`,
+    );
+  }
 }
 
 const checks = [
@@ -79,8 +169,10 @@ if (richPattern) {
 await assertRedirect("/baustellencheck", "/webseitecheck");
 await assertRedirect("/baustellencheck/danke", "/webseitecheck/danke");
 await assertSitemapRoutes();
+await assertRobotsAllowsAiSearch();
+await assertLandingPages();
 
 console.log(
   "Smoke test passed for",
-  checks.map(([pathname]) => pathname).join(", "),
+  checks.map(([pathname]) => pathname).concat(landingPages.map(([pathname]) => pathname)).join(", "),
 );

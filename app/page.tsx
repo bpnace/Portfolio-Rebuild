@@ -9,6 +9,7 @@ import { Profile } from "@/components/sections/Profile";
 import { Projects } from "@/components/sections/Projects";
 import { PinnedIntroShell } from "@/components/sections/PinnedIntroShell";
 import { Services } from "@/components/sections/Services";
+import { SpecializedServices } from "@/components/sections/SpecializedServices";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Ticker } from "@/components/sections/Ticker";
 import { getLatestPosts } from "@/lib/blog";
@@ -39,6 +40,7 @@ export default async function Home() {
           <Ticker />
           <Projects projects={projects} />
           <Services />
+          <SpecializedServices />
           <Profile />
           <Experience />
           <Testimonials />
