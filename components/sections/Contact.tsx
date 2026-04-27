@@ -19,6 +19,29 @@ type Status = {
 const initialStatus: Status = { type: "idle", message: "" };
 const PRESET_LIMIT = 3;
 
+const offerPrefills = {
+  "website-audit": {
+    title: "Website Audit / Bauzustandsbericht",
+    price: "249 €",
+    bullets: [
+      "48h Lieferung",
+      "5–8 Seiten oder Loom",
+      "Anrechnung bei Projektbuchung",
+    ],
+  },
+  "wartung-wachstum": {
+    title: "Wartung & Wachstum",
+    price: "ab 99 €/Monat",
+    bullets: [
+      "Monitoring",
+      "Kleine Änderungen",
+      "Search-Console-Sichtung",
+      "Backup/Updates",
+      "Monatlicher Mini-Report",
+    ],
+  },
+} as const;
+
 function buildPackageProjectMessage(selectedPackage: string | null): string {
   const packageSlug = selectedPackage?.toLowerCase().trim();
   if (!packageSlug) {
@@ -46,11 +69,25 @@ function buildPackageProjectMessage(selectedPackage: string | null): string {
     + "\n\nErgänze bitte:\n- Dein Ziel\n- Gewünschter Umfang\n- Wann soll gestartet werden?\n\nWir freuen uns auf dein Update!";
 }
 
+function buildOfferProjectMessage(selectedOffer: string | null): string {
+  const offerSlug = selectedOffer?.toLowerCase().trim();
+  if (!offerSlug || !(offerSlug in offerPrefills)) {
+    return "";
+  }
+
+  const offer = offerPrefills[offerSlug as keyof typeof offerPrefills];
+
+  return `Ich interessiere mich für: ${offer.title} (${offer.price}).\n\n`
+    + `Eckpunkte:\n- ${offer.bullets.join("\n- ")}`
+    + "\n\nErgänze bitte:\n- Website URL\n- Aktuelle Frage oder Ziel\n- Gewünschter Start";
+}
+
 type ContactFormProps = {
   selectedPackage: string | null;
+  selectedOffer: string | null;
 };
 
-function ContactForm({ selectedPackage }: ContactFormProps) {
+function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showValidationHint, setShowValidationHint] = useState(false);
@@ -60,11 +97,13 @@ function ContactForm({ selectedPackage }: ContactFormProps) {
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
-    const prefill = buildPackageProjectMessage(selectedPackage);
+    const prefill =
+      buildPackageProjectMessage(selectedPackage) ||
+      buildOfferProjectMessage(selectedOffer);
     if (prefill) {
       setMessage(prefill);
     }
-  }, [selectedPackage]);
+  }, [selectedPackage, selectedOffer]);
 
   const isNameValid = name.trim().length >= 2;
   const isEmailReady = email.trim().length > 0;
@@ -227,14 +266,19 @@ function ContactForm({ selectedPackage }: ContactFormProps) {
             required
           />
           <span>
-            Ich akzeptiere die{" "}
+            Ich habe die{" "}
             <Link href="/datenschutz" className="font-semibold text-foreground">
-              Datenschutzerklärung
+              Datenschutzhinweise
             </Link>{" "}
-            und stimme der Verarbeitung meiner Angaben gemäß Art. 6 Abs. 1 lit.
-            a DSGVO zur Bearbeitung meiner Anfrage zu.
+            gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage bzw.
+            des Website-Checks verarbeitet.
           </span>
         </label>
+        <p className="mt-3 pl-7 text-xs leading-5 text-muted/82">
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf
+          ein Angebot oder eine Zusammenarbeit gerichtet ist; in sonstigen Fällen
+          Art. 6 Abs. 1 lit. f DSGVO.
+        </p>
       </div>
       <div className="mt-6 flex flex-col items-center gap-4 pt-6">
         <button
@@ -267,8 +311,8 @@ function ContactForm({ selectedPackage }: ContactFormProps) {
         </button>
         {showValidationHint ? (
           <p className="max-w-xl text-center text-xs text-muted">
-            Bitte Name, E-Mail und Nachricht ausfüllen und der Verarbeitung
-            zustimmen.
+            Bitte Name, E-Mail und Nachricht ausfüllen und die
+            Datenschutzhinweise bestätigen.
           </p>
         ) : null}
         {status.type !== "idle" ? (
@@ -283,7 +327,12 @@ function ContactForm({ selectedPackage }: ContactFormProps) {
 
 function ContactFormWithSearchParams() {
   const searchParams = useSearchParams();
-  return <ContactForm selectedPackage={searchParams.get("paket")} />;
+  return (
+    <ContactForm
+      selectedPackage={searchParams.get("paket")}
+      selectedOffer={searchParams.get("angebot")}
+    />
+  );
 }
 
 export function Contact() {
@@ -325,7 +374,9 @@ export function Contact() {
           </div>
         </div>
 
-        <Suspense fallback={<ContactForm selectedPackage={null} />}>
+        <Suspense
+          fallback={<ContactForm selectedPackage={null} selectedOffer={null} />}
+        >
           <ContactFormWithSearchParams />
         </Suspense>
       </div>

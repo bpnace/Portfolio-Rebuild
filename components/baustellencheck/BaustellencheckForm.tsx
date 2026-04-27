@@ -22,6 +22,8 @@ type Status = {
 };
 
 const initialStatus: Status = { type: "idle", message: "" };
+const legalBasisText =
+  "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf ein Angebot oder eine Zusammenarbeit gerichtet ist; in sonstigen Fällen Art. 6 Abs. 1 lit. f DSGVO.";
 
 function StepKicker({ stepIndex }: { stepIndex: number }) {
   return (
@@ -212,13 +214,13 @@ export function BaustellencheckForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="border-y border-border">
+    <form onSubmit={onSubmit} className="border-t border-border">
       <div className="grid gap-8 py-7 lg:grid-cols-[minmax(0,0.34fr)_minmax(0,0.66fr)] lg:py-9">
         <aside className="space-y-7">
           <div>
             <div className="eyebrow text-foreground/75">Abfrage</div>
             <h2 className="mt-4 text-3xl font-black tracking-[-0.04em] md:text-5xl">
-              Einmal kurz durchklicken.
+              Einmal kurz durch klicken.
             </h2>
             <p className="mt-4 max-w-md text-sm leading-6 text-muted md:text-base md:leading-7">
               Erst Selbstcheck, dann schauen wir gezielt auf Fundament,
@@ -263,6 +265,11 @@ export function BaustellencheckForm() {
               </button>
             ))}
           </div>
+
+          <p className="flex max-w-sm gap-2 border-t border-border pt-4 text-xs leading-5 text-muted/78">
+            <span aria-hidden="true">*</span>
+            <span>{legalBasisText}</span>
+          </p>
         </aside>
 
         <div className="min-h-[32rem] border-t border-border pt-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
@@ -538,9 +545,8 @@ export function BaustellencheckForm() {
                     >
                       Datenschutzhinweise
                     </Link>{" "}
-                    gelesen und bin damit einverstanden, dass STACKWERKHAUS
-                    meine Angaben zur Bearbeitung des Webseitechecks
-                    verarbeitet.
+                    gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage
+                    bzw. des Website-Checks verarbeitet.*
                   </span>
                 </label>
                 <label className="flex items-start gap-3 text-sm leading-6 text-muted">
@@ -598,7 +604,7 @@ export function BaustellencheckForm() {
                     )}
                   </button>
                   <FieldError visible={showValidationHint}>
-                    Bitte Name, E-Mail und Datenschutzhinweis ausfüllen.
+                    Bitte Name, E-Mail und Datenschutzhinweise ausfüllen.
                   </FieldError>
                 </div>
               </div>
