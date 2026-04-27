@@ -39,7 +39,7 @@ export function Projects({ projects }: ProjectsProps) {
     <section id="projekte" className="section-space">
       <div className="section-shell">
         <SectionHeader label="Projekte" marker="(SKWKHS® — 02)" />
-        <div className="mb-10 grid gap-8 md:mb-16 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.55fr)] lg:items-end lg:gap-14">
+        <div className="mb-10 grid gap-8 md:mb-16 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.55fr)] lg:items-center lg:gap-14">
           <div ref={scope} className="max-w-3xl space-y-4">
             <h2 className="display-lg">{renderWordMaskText(projectsIntro)}</h2>
             <p className="text-lg leading-8 text-muted">

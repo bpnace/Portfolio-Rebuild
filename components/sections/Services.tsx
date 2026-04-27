@@ -44,8 +44,19 @@ export function Services() {
         ".service-title [data-scramble-field='true']",
         root,
       );
+      const processTrack = root.querySelector<HTMLElement>(
+        "[data-process-track='true']",
+      );
+      const processProgress = root.querySelector<HTMLElement>(
+        "[data-process-progress='true']",
+      );
+      const processSteps = gsap.utils.toArray<HTMLElement>(
+        "[data-process-step='true']",
+        root,
+      );
       const activeFrames = new Map<HTMLElement, number>();
       let playedRows = new WeakSet<HTMLElement>();
+      let activeProcessIndex = -1;
 
       const stopActiveWork = () => {
         activeFrames.forEach((frameId) => {
@@ -64,6 +75,22 @@ export function Services() {
           visual.textContent = field.dataset.scrambleText ?? "";
           gsap.set(visual, { autoAlpha: visible ? 1 : 0 });
         });
+      };
+
+      const showFinalProcess = () => {
+        processSteps.forEach((step) => {
+          step.dataset.active = "true";
+        });
+        gsap.set(processSteps, {
+          autoAlpha: 1,
+          clearProps: "opacity,visibility",
+        });
+        if (processProgress) {
+          gsap.set(processProgress, {
+            scaleY: 1,
+            transformOrigin: "top center",
+          });
+        }
       };
 
       const animateTitle = safe((field: HTMLElement) => {
@@ -131,6 +158,7 @@ export function Services() {
         stopActiveWork();
         playedRows = new WeakSet<HTMLElement>();
         showFinalText(true);
+        showFinalProcess();
 
         return () => {
           stopActiveWork();
@@ -140,6 +168,147 @@ export function Services() {
       stopActiveWork();
       playedRows = new WeakSet<HTMLElement>();
       showFinalText(true);
+
+      const setActiveStep = safe((activeIndex: number) => {
+        if (activeIndex === activeProcessIndex) {
+          return;
+        }
+
+        activeProcessIndex = activeIndex;
+
+        processSteps.forEach((step, index) => {
+          const isActive = index <= activeIndex;
+          step.dataset.active = isActive ? "true" : "false";
+          gsap.to(step, {
+            autoAlpha: isActive ? 1 : 0.52,
+            duration: 0.35,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        });
+      });
+
+      const syncProcessWithLine = safe((lineProgress: number) => {
+        if (!processTrack || !processSteps.length) {
+          return;
+        }
+
+        const trackRect = processTrack.getBoundingClientRect();
+        const lineBottom = trackRect.top + trackRect.height * lineProgress;
+        const activeIndex = processSteps.reduce((latest, step, index) => {
+          const marker = step.querySelector<HTMLElement>(
+            "[data-process-marker='true']",
+          );
+
+          if (!marker) {
+            return latest;
+          }
+
+          const markerRect = marker.getBoundingClientRect();
+          const markerTrigger = markerRect.top;
+
+          return lineBottom >= markerTrigger ? index : latest;
+        }, -1);
+
+        setActiveStep(activeIndex);
+      });
+
+      if (processSteps.length) {
+        gsap.set(processSteps, { autoAlpha: 0.52 });
+        processSteps.forEach((step) => {
+          step.dataset.active = "false";
+        });
+      }
+
+      if (processProgress && processTrack) {
+        const readProcessLineProgress = () => {
+          const lineProgress = Number(
+            gsap.getProperty(processProgress, "scaleY"),
+          );
+
+          return Number.isFinite(lineProgress) ? lineProgress : 0;
+        };
+        const updateProcessFromLine = () => {
+          syncProcessWithLine(readProcessLineProgress());
+        };
+        const getProcessLineStops = () => {
+          const trackRect = processTrack.getBoundingClientRect();
+          const markerStops = processSteps.flatMap((step) => {
+            const marker = step.querySelector<HTMLElement>(
+              "[data-process-marker='true']",
+            );
+
+            if (!marker || trackRect.height <= 0) {
+              return [];
+            }
+
+            const markerRect = marker.getBoundingClientRect();
+
+            return gsap.utils.clamp(
+              0,
+              1,
+              (markerRect.top - trackRect.top) / trackRect.height,
+            );
+          });
+          const stops = [0, ...markerStops, 1].sort((a, b) => a - b);
+
+          return stops.filter((stop, index) => {
+            const previousStop = stops[index - 1];
+
+            return index === 0 || stop - previousStop > 0.001;
+          });
+        };
+        let processLineTimeline: ReturnType<typeof gsap.timeline> | null = null;
+        const buildProcessLineTimeline = (
+          timeline: ReturnType<typeof gsap.timeline>,
+        ) => {
+          const stops = getProcessLineStops();
+
+          timeline.clear();
+          gsap.set(processProgress, {
+            scaleY: 0,
+            transformOrigin: "top center",
+          });
+
+          stops.slice(1).forEach((stop, index) => {
+            const previousStop = stops[index] ?? 0;
+            const duration = Math.max(stop - previousStop, 0.04);
+
+            timeline.to(processProgress, {
+              scaleY: stop,
+              duration,
+              ease: "power2.inOut",
+            });
+          });
+        };
+
+        gsap.set(processProgress, {
+          scaleY: 0,
+          transformOrigin: "top center",
+        });
+        processLineTimeline = gsap.timeline({
+          onUpdate: updateProcessFromLine,
+          scrollTrigger: {
+            trigger: processTrack,
+            start: "top 72%",
+            end: "bottom 48%",
+            scrub: 0.45,
+            invalidateOnRefresh: true,
+            onRefresh: () => {
+              if (!processLineTimeline) {
+                return;
+              }
+
+              const progress = processLineTimeline.progress();
+
+              buildProcessLineTimeline(processLineTimeline);
+              processLineTimeline.progress(progress);
+              updateProcessFromLine();
+            },
+          },
+        });
+        buildProcessLineTimeline(processLineTimeline);
+      }
 
       rows.forEach((row) => {
         ScrollTrigger.create({
@@ -218,9 +387,9 @@ export function Services() {
         <div className="mt-16 grid gap-10 border-t border-white/14 pt-10 md:mt-24 md:pt-14 lg:grid-cols-[minmax(280px,0.45fr)_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-28 lg:self-start">
             <div className="max-w-3xl space-y-5">
-              <div className="eyebrow">Baufolge</div>
+              <div className="eyebrow">Bauleitung</div>
               <h3 className="display-md max-w-[12ch]">
-                Vom ersten Riss bis zur Bauabnahme
+                Von der Planung bis zur Bauabnahme
               </h3>
               <p className="text-lg leading-8 text-muted">
                 Keine wilde Baustelle ohne Plan. Bei Stackwerkhaus läuft jedes
@@ -228,7 +397,6 @@ export function Services() {
                 und sauber übergeben.
               </p>
             </div>
-
             <div className="mt-8 flex max-w-md flex-col gap-3">
               <HashLink
                 href="/webseitecheck"
@@ -250,33 +418,55 @@ export function Services() {
             </div>
           </div>
 
-          <div className="relative border-y border-white/14">
+          <div data-process-track="true" className="relative border-y border-white/14">
             <div
-              className="pointer-events-none absolute inset-y-0 left-[2.25rem] hidden w-px bg-white/14 md:block"
+              className="pointer-events-none absolute inset-y-0 left-[2.25rem] hidden w-[2px] -translate-x-1/2 bg-white/12 md:block"
               aria-hidden="true"
-            />
+            >
+              <span
+                data-process-progress="true"
+                className="absolute inset-x-0 top-0 block h-full origin-top bg-foreground"
+                style={{ transform: "scaleY(0)" }}
+              />
+            </div>
             {serviceProcessSteps.map((step) => (
               <article
                 key={step.number}
-                className="relative grid gap-5 border-white/14 py-7 first:border-t-0 not-first:border-t md:grid-cols-[5rem_1fr] md:gap-8 md:py-8"
+                data-process-step="true"
+                data-active="false"
+                className="group/process relative grid gap-5 border-white/14 py-7 transition-colors first:border-t-0 not-first:border-t data-[active=true]:border-foreground/36 md:grid-cols-[5rem_1fr] md:gap-8 md:py-8"
               >
                 <div className="flex items-center gap-4 md:block">
-                  <span className="relative z-10 grid h-10 w-10 place-items-center border border-white/18 bg-background text-[11px] font-semibold tracking-[0.22em] text-foreground/70">
-                    {step.number}
+                  <span
+                    data-process-marker="true"
+                    className="relative z-10 grid h-10 w-10 origin-right place-items-center overflow-hidden bg-background text-[11px] font-semibold tracking-[0.22em] text-foreground/70 transition-transform duration-300 ease-out md:-translate-x-[5px] group-data-[active=true]/process:scale-[1.03]"
+                  >
+                    <span
+                      data-process-fill="true"
+                      aria-hidden="true"
+                      className="absolute inset-x-0 bottom-0 h-full translate-y-full bg-foreground transition-transform duration-[560ms] ease-[cubic-bezier(0.35,0,0.15,1)] group-data-[active=true]/process:translate-y-0 motion-reduce:transition-none"
+                    />
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-x-1 bottom-0 z-10 h-px bg-background/35 opacity-0 transition-[transform,opacity] duration-[560ms] ease-[cubic-bezier(0.35,0,0.15,1)] group-data-[active=true]/process:-translate-y-10 group-data-[active=true]/process:opacity-100 motion-reduce:hidden"
+                    />
+                    <span className="relative z-20 transition-colors delay-150 duration-200 group-data-[active=true]/process:text-background motion-reduce:delay-0">
+                      {step.number}
+                    </span>
                   </span>
                   <span className="h-px flex-1 bg-white/14 md:hidden" />
                 </div>
 
                 <div className="grid gap-5 lg:grid-cols-[minmax(220px,0.42fr)_1fr] lg:gap-10">
                   <div>
-                    <h4 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+                    <h4 className="text-2xl font-semibold tracking-tight text-foreground/72 transition-colors group-data-[active=true]/process:text-foreground md:text-3xl">
                       {step.title}
                     </h4>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {step.tags.map((tag) => (
                         <span
                           key={tag}
-                          className="border border-white/12 px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-foreground/58"
+                          className="border border-white/12 px-3 py-1.5 text-[11px] uppercase tracking-[0.24em] text-foreground/48 transition-colors group-data-[active=true]/process:border-white/24 group-data-[active=true]/process:text-foreground/72"
                         >
                           {tag}
                         </span>
@@ -284,7 +474,7 @@ export function Services() {
                     </div>
                   </div>
 
-                  <p className="max-w-2xl text-base leading-7 text-muted lg:pt-1">
+                  <p className="max-w-2xl text-base leading-7 text-muted/72 transition-colors group-data-[active=true]/process:text-muted lg:pt-1">
                     {step.description}
                   </p>
                 </div>
