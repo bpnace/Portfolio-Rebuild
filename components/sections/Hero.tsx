@@ -202,18 +202,18 @@ export function Hero() {
               </div>
             </div>
           </div>
-          <div className="mt-8 space-y-2.5 md:mt-0 md:space-y-3">
+          <h1 className="mt-8 space-y-2.5 md:mt-0 md:space-y-3">
             {heroTitleLines.map((line, index) => (
-              <div
+              <span
                 key={line}
                 className={`hero-line display-xl${
                   index === 1 ? " -mt-[0.12em] md:mt-0" : ""
                 }`}
               >
                 {renderTitleLine(line)}
-              </div>
+              </span>
             ))}
-          </div>
+          </h1>
           <div className="hero-copy mt-8 flex flex-wrap gap-x-4 gap-y-1.5 text-[10px] leading-[1.65] uppercase tracking-[0.28em] text-muted md:mt-5 md:gap-x-6 md:gap-y-2 md:text-xs md:tracking-[0.38em]">
             {heroServiceTags.map((tag) => (
               <span key={tag}>{tag}</span>

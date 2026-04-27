@@ -7,7 +7,6 @@ import { siteConfig } from "@/lib/site-config";
 const STATIC_ROUTES = [
   "/",
   "/webseitecheck",
-  "/impressum",
   "/datenschutz",
 ] as const;
 
