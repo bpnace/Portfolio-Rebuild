@@ -154,7 +154,7 @@ export const pricingTiers = [
     name: "Starter",
     price: "899",
     description:
-      "Für Dienstleister, die schnell online gehen wollen, mit fokussiertem Einstieg und klarer technischer Basis.",
+      "Für Dienstleister, die schnell online gehen wollen, mit fokussiertem Einstieg, klarer technischer Basis und sauberer Launch-Begleitung.",
     timeline: "3 Wochen",
     pages: "5 Seiten",
     features: [
@@ -164,11 +164,11 @@ export const pricingTiers = [
       { label: "Impressum & Datenschutz-Seiten", enabled: true },
       { label: "Klare Seitenstruktur & Nutzerführung", enabled: true },
       { label: "Ø 95+ Lighthouse Score", enabled: false },
-      { label: "Kontaktformular", enabled: false },
-      { label: "Deployment & Hosting-Setup", enabled: false },
-      { label: "SEO-Grundstruktur", enabled: false },
-      { label: "Google Search Console & Sitemap", enabled: false },
-      { label: "Saubere Launch-Begleitung", enabled: false },
+      { label: "Kontaktformular", enabled: true },
+      { label: "Deployment & Hosting-Setup", enabled: true },
+      { label: "SEO-Grundstruktur", enabled: true },
+      { label: "Google Search Console & Sitemap", enabled: true },
+      { label: "Saubere Launch-Begleitung", enabled: true },
     ],
   },
   {

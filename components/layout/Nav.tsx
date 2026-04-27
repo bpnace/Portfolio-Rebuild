@@ -8,7 +8,6 @@ import {
   useBodyScrollLock,
   useHomeIntroCovered,
   useHomeNavReady,
-  useNavScrolled,
 } from "@/components/layout/nav-hooks";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { HashLink } from "@/components/ui/HashLink";
@@ -51,7 +50,6 @@ export function Nav() {
   const scope = useRef<HTMLDivElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const introNavAnimated = useRef(false);
-  const scrolled = useNavScrolled(32);
   useBodyScrollLock(open);
   const homeIntroCovered = useHomeIntroCovered(pathname);
   const homeNavReady = useHomeNavReady(pathname);
@@ -190,9 +188,7 @@ export function Nav() {
           ? introCovered
             ? "bg-black/80 opacity-100 backdrop-blur-xl"
             : "bg-transparent opacity-100"
-          : scrolled
-            ? "bg-black/80 opacity-100 backdrop-blur-xl"
-          : "bg-transparent opacity-100"
+          : "bg-black/80 opacity-100 backdrop-blur-xl"
       }`}
     >
       <div className="section-shell flex h-20 items-center justify-between">

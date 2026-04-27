@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   keywords: [
     "Webdesign Berlin",
     "Website erstellen lassen",
-    "Frontend Entwicklung",
+    "Frontend-Entwicklung",
     "Website Relaunch",
     "Technisches SEO",
   ],
