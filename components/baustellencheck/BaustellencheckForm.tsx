@@ -22,8 +22,6 @@ type Status = {
 };
 
 const initialStatus: Status = { type: "idle", message: "" };
-const legalBasisText =
-  "Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf ein Angebot oder eine Zusammenarbeit gerichtet ist; in sonstigen Fällen Art. 6 Abs. 1 lit. f DSGVO.";
 
 function StepKicker({ stepIndex }: { stepIndex: number }) {
   return (
@@ -265,11 +263,6 @@ export function BaustellencheckForm() {
               </button>
             ))}
           </div>
-
-          <p className="flex max-w-sm gap-2 border-t border-border pt-4 text-xs leading-5 text-muted/78">
-            <span aria-hidden="true">*</span>
-            <span>{legalBasisText}</span>
-          </p>
         </aside>
 
         <div className="min-h-[32rem] border-t border-border pt-7 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
@@ -545,8 +538,8 @@ export function BaustellencheckForm() {
                     >
                       Datenschutzhinweise
                     </Link>{" "}
-                    gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage
-                    bzw. des Website-Checks verarbeitet.*
+                    gelesen. Meine Angaben werden zur Bearbeitung des
+                    Webseitechecks verarbeitet.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 text-sm leading-6 text-muted">

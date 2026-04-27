@@ -238,7 +238,7 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
           name="message"
           required
           minLength={12}
-          rows={9}
+          rows={4}
           value={message}
           onChange={(event) => {
             setMessage(event.target.value);
@@ -246,7 +246,7 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
               setShowValidationHint(false);
             }
           }}
-          className="mt-2 min-h-[12rem] w-full bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic md:min-h-[18rem]"
+          className="mt-2 min-h-[7.5rem] w-full bg-transparent px-0 py-3 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic md:min-h-[14rem]"
           placeholder="Worum geht es, was soll die Website leisten, und was ist der aktuelle Stand?"
         />
       </div>
@@ -270,15 +270,10 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
             <Link href="/datenschutz" className="font-semibold text-foreground">
               Datenschutzhinweise
             </Link>{" "}
-            gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage bzw.
-            des Website-Checks verarbeitet.
+            gelesen. Meine Angaben werden zur Bearbeitung meiner Anfrage
+            verarbeitet.
           </span>
         </label>
-        <p className="mt-3 pl-7 text-xs leading-5 text-muted/82">
-          Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit die Anfrage auf
-          ein Angebot oder eine Zusammenarbeit gerichtet ist; in sonstigen Fällen
-          Art. 6 Abs. 1 lit. f DSGVO.
-        </p>
       </div>
       <div className="mt-6 flex flex-col items-center gap-4 pt-6">
         <button
@@ -349,7 +344,6 @@ export function Contact() {
               realisieren damit der nächsten Schritt nicht aus dem Bauch heraus entscheiden wird.
             </p>
             <div className="space-y-3 text-sm text-muted">
-              <div>{siteConfig.location}</div>
               <a
                 href={`mailto:${siteConfig.email}`}
                 className="hover-weight-link hover:text-foreground"
