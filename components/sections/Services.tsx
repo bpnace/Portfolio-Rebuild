@@ -290,8 +290,8 @@ export function Services() {
           onUpdate: updateProcessFromLine,
           scrollTrigger: {
             trigger: processTrack,
-            start: "top 72%",
-            end: "bottom 48%",
+            start: "top 88%",
+            end: "bottom 72%",
             scrub: 0.45,
             invalidateOnRefresh: true,
             onRefresh: () => {
@@ -374,7 +374,7 @@ export function Services() {
                 </span>
                 <span className="h-px flex-1 bg-white/14 transition-colors group-hover:bg-foreground/45" />
               </div>
-              <h3 className="service-title max-w-[14ch] text-3xl font-semibold leading-tight tracking-tight [&_.experience-scramble-visual]:!opacity-100 md:text-4xl lg:text-[clamp(2.1rem,2.6vw,3.4rem)]">
+              <h3 className="service-title min-h-[3.75em] max-w-[14ch] text-3xl font-semibold leading-tight tracking-tight [&_.experience-scramble-visual]:!opacity-100 md:text-4xl lg:text-[clamp(2.1rem,2.6vw,3.4rem)]">
                 <ScrambleField text={service.title} />
               </h3>
               <p className="mt-6 max-w-md text-base leading-7 text-muted">
