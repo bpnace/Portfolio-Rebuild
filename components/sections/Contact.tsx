@@ -19,6 +19,18 @@ type Status = {
 const initialStatus: Status = { type: "idle", message: "" };
 const PRESET_LIMIT = 3;
 
+const facilityManagementPrefill = {
+  title: "Digitales Facility Management",
+  price: "ab 59 €/Monat",
+  bullets: [
+    "Monitoring",
+    "Kleine Änderungen",
+    "Search-Console-Sichtung",
+    "Backup/Updates",
+    "Monatlicher Mini-Report",
+  ],
+} as const;
+
 const offerPrefills = {
   "website-audit": {
     title: "Website Audit / Bauzustandsbericht",
@@ -29,18 +41,23 @@ const offerPrefills = {
       "Anrechnung bei Projektbuchung",
     ],
   },
-  "wartung-wachstum": {
-    title: "Wartung & Wachstum",
-    price: "ab 99 €/Monat",
-    bullets: [
-      "Monitoring",
-      "Kleine Änderungen",
-      "Search-Console-Sichtung",
-      "Backup/Updates",
-      "Monatlicher Mini-Report",
-    ],
-  },
+  "facility-management": facilityManagementPrefill,
+  "wartung-wachstum": facilityManagementPrefill,
 } as const;
+
+function buildTierPriceSummary(tier: PricingTier) {
+  const base = `ab ${tier.price} €`;
+  if (!tier.originalPrice && !tier.discountLabel) {
+    return base;
+  }
+
+  const discountParts = [
+    tier.originalPrice ? `statt ${tier.originalPrice} €` : "",
+    tier.discountLabel ?? "",
+  ].filter(Boolean);
+
+  return `${base} (${discountParts.join(", ")})`;
+}
 
 function buildPackageProjectMessage(selectedPackage: string | null): string {
   const packageSlug = selectedPackage?.toLowerCase().trim();
@@ -55,16 +72,13 @@ function buildPackageProjectMessage(selectedPackage: string | null): string {
     return "";
   }
 
-  const topFeatures = tier.features
-    .filter((feature) => feature.enabled)
-    .slice(0, PRESET_LIMIT)
-    .map((feature) => feature.label);
+  const topFeatures = tier.includes.slice(0, PRESET_LIMIT);
 
   const featureText =
     topFeatures.length > 0 ? `\n\nEnthalten:\n- ${topFeatures.join("\n- ")}` : "";
 
   return `Wir interessieren uns für das Paket "${tier.name}".\n\n`
-    + `Kurz: ab ${tier.price} €, ${tier.timeline}, ${tier.pages}.`
+    + `Kurz: ${buildTierPriceSummary(tier)}.`
     + featureText
     + "\n\nErgänze bitte:\n- Dein Ziel\n- Gewünschter Umfang\n- Wann soll gestartet werden?\n\nWir freuen uns auf dein Update!";
 }

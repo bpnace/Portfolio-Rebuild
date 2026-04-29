@@ -9,22 +9,19 @@ export function PricingCard({
   price,
   originalPrice,
   discountLabel,
-  decision,
   description,
-  timeline,
-  pages,
-  features,
+  ctaLabel,
+  suitableFor,
+  includes,
+  visibleIncludes,
   highlight,
 }: PricingCardProps) {
-  const includedFeatures = features.filter((feature) => feature.enabled);
-  const excludedFeatures = features.filter((feature) => !feature.enabled);
-
   return (
     <article
-      className={`flex h-full max-w-[340px] flex-col ${
+      className={`flex h-full flex-col border-t ${
         highlight
-          ? "relative bg-foreground px-5 pb-5 pt-6 text-background shadow-[0_0_0_1px_rgba(255,255,255,0.22)] xl:-mt-4"
-          : "py-2"
+          ? "relative border-foreground bg-foreground px-5 pb-5 pt-6 text-background shadow-[0_0_0_1px_rgba(255,255,255,0.22)]"
+          : "border-border py-6"
       }`}
     >
       {highlight ? (
@@ -32,7 +29,7 @@ export function PricingCard({
           Empfehlung
         </span>
       ) : null}
-      <div className="space-y-2">
+      <div className="min-h-[8.25rem] space-y-2 md:min-h-[7.25rem]">
         <div>
           <div
             className={`eyebrow ${
@@ -42,13 +39,6 @@ export function PricingCard({
             {name}
           </div>
         </div>
-        <p
-          className={`text-xs font-black uppercase tracking-[0.18em] ${
-            highlight ? "whitespace-nowrap text-background" : "text-foreground"
-          }`}
-        >
-          {decision}
-        </p>
         <p
           className={`max-w-[35ch] text-sm leading-6 ${
             highlight ? "text-background/68" : "text-muted"
@@ -77,15 +67,12 @@ export function PricingCard({
       </div>
 
       <div
-        className={`mt-2 grid min-h-[2.125rem] content-start gap-1 text-[10px] uppercase ${
+        className={`mt-2 grid min-h-[2.125rem] content-start gap-1 text-[10px] uppercase leading-5 ${
           highlight ? "text-background/58" : "text-muted"
         }`}
       >
-        <div className="tracking-[0.22em]">
-          {pages} / {timeline}
-        </div>
         {originalPrice || discountLabel ? (
-          <div className="whitespace-nowrap tracking-[0.08em]">
+          <div className="tracking-[0.08em]">
             {originalPrice ? (
               <>
                 <span>statt </span>
@@ -116,57 +103,51 @@ export function PricingCard({
             : "bg-foreground text-background opacity-92"
         }`}
       >
-        <LinkRippleText text="Jetzt Anfragen" baseWeight={560} />
+        <LinkRippleText text={ctaLabel} baseWeight={560} />
+        <span aria-hidden>+</span>
       </HashLink>
 
-      <div className="mt-6 space-y-3 text-sm">
-        <ul className="space-y-2.5">
-          {includedFeatures.map((feature) => (
-            <li
-              key={feature.label}
-              className={`flex items-start gap-3 ${
-                highlight ? "text-background/88" : "text-foreground/92"
-              }`}
-            >
-              <span
-                className={`mt-0.5 text-sm ${
-                  highlight ? "text-background" : "text-foreground"
-                }`}
-                aria-hidden
-              >
-                +
-              </span>
-              <span>{feature.label}</span>
-            </li>
-          ))}
-        </ul>
-
-        {excludedFeatures.length > 0 ? (
-          <ul
-            className={`space-y-2.5 border-t pt-3 ${
-              highlight ? "border-background/12" : "border-border/70"
+      <div
+        className={`mt-6 grid gap-5 border-t pt-5 text-sm leading-6 ${
+          highlight
+            ? "border-background/14 text-background/78"
+            : "border-border/70 text-muted"
+        }`}
+      >
+        <div>
+          <div
+            className={`text-[10px] font-black uppercase tracking-[0.24em] ${
+              highlight ? "text-background/54" : "text-foreground/54"
             }`}
           >
-            {excludedFeatures.map((feature) => (
-              <li
-                key={feature.label}
-                className={`flex items-start gap-3 ${
-                  highlight ? "text-background/38" : "text-muted/48"
-                }`}
-              >
-                <span
-                  className={`mt-0.5 text-sm ${
-                    highlight ? "text-background/30" : "text-muted/38"
-                  }`}
-                  aria-hidden
-                >
-                  -
-                </span>
-                <span>{feature.label}</span>
+            Geeignet für
+          </div>
+          <ul className="mt-3 space-y-2">
+            {suitableFor.slice(0, 3).map((item) => (
+              <li key={item} className="flex gap-3">
+                <span aria-hidden>+</span>
+                <span>{item}</span>
               </li>
             ))}
           </ul>
-        ) : null}
+        </div>
+        <div>
+          <div
+            className={`text-[10px] font-black uppercase tracking-[0.24em] ${
+              highlight ? "text-background/54" : "text-foreground/54"
+            }`}
+          >
+            Enthält
+          </div>
+          <ul className="mt-3 space-y-2">
+            {includes.slice(0, visibleIncludes ?? 4).map((item) => (
+              <li key={item} className="flex gap-3">
+                <span aria-hidden>+</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </article>
   );
