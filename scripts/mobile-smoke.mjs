@@ -57,8 +57,18 @@ assert.match(
 const baustellencheckHtml = await fetchHtml("/webseitecheck");
 assert.match(
   baustellencheckHtml,
-  /Webseitecheck starten/,
+  /Baustellencheck starten/,
   "baustellencheck page missing primary CTA",
+);
+assert.match(
+  baustellencheckHtml,
+  /Was wir prüfen/,
+  "baustellencheck page missing focused inspection section",
+);
+assert.doesNotMatch(
+  baustellencheckHtml,
+  /Sieben Stellen/,
+  "baustellencheck page still shows old long inspection framing",
 );
 assert.match(
   baustellencheckHtml,
@@ -71,6 +81,11 @@ assert.match(
   baustellencheckDankeHtml,
   /Deine Baustelle ist eingetragen/,
   "baustellencheck thank-you page missing confirmation headline",
+);
+assert.match(
+  baustellencheckDankeHtml,
+  /Was jetzt passiert/,
+  "baustellencheck thank-you page missing next-step section",
 );
 
 const blogDetailHtml = await fetchHtml(`/blog/${pinnedBlogSlug}`);

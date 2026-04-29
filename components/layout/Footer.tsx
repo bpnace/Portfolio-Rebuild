@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { landingPages } from "@/lib/landing-pages";
 import { siteConfig } from "@/lib/site-config";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { HashLink } from "@/components/ui/HashLink";
 
@@ -57,8 +58,10 @@ export function Footer() {
                       />
                     </HashLink>
                   ))}
-                  <HashLink
+                  <TrackedHashLink
                     href="/webseitecheck"
+                    eventName="website_check_cta_click"
+                    eventParams={{ placement: "footer" }}
                     className="hover-weight-link block w-fit hover:text-black"
                   >
                     <LinkRippleText
@@ -66,7 +69,7 @@ export function Footer() {
                       baseWeight={500}
                       activeWeight={820}
                     />
-                  </HashLink>
+                  </TrackedHashLink>
                 </div>
 
                 <div className="space-y-3 pt-3 sm:space-y-4 sm:pt-4">

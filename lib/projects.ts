@@ -10,6 +10,7 @@ export type ProjectFrontmatter = {
   location: string;
   summary: string;
   teaser: string;
+  metaDescription?: string;
   featured?: boolean;
   services?: string[];
   deliverables?: string[];
@@ -45,6 +46,7 @@ async function readProjectFile(fileName: string): Promise<Project> {
     location: String(data.location ?? "Berlin"),
     summary: String(data.summary ?? ""),
     teaser: String(data.teaser ?? ""),
+    metaDescription: data.metaDescription ? String(data.metaDescription) : undefined,
     featured: Boolean(data.featured ?? true),
     services: toStringArray(data.services),
     deliverables: toStringArray(data.deliverables),

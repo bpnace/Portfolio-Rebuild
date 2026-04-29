@@ -64,6 +64,16 @@
   }
 }
 
+:where(section, main, article)[id] {
+  scroll-margin-top: 6rem;
+}
+
+@media (min-width: 768px) {
+  :where(section, main, article)[id] {
+    scroll-margin-top: 7rem;
+  }
+}
+
 @layer components {
   .section-shell {
     @apply mx-auto w-full max-w-[1400px] px-6 md:px-12;

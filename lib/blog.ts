@@ -1,7 +1,4 @@
 import { cache } from "react";
-import { promises as fs } from "node:fs";
-import path from "node:path";
-import matter from "gray-matter";
 import {
   getExcerptFromText,
   getReadingTimeFromText,
@@ -12,6 +9,7 @@ export type BlogFrontmatter = {
   title: string;
   category: string;
   excerpt: string;
+  metaDescription?: string;
   publishedAt: string;
   updatedAt?: string;
   readingTime: string;
@@ -25,25 +23,25 @@ type BlogPostBase = BlogFrontmatter & {
   slug: string;
 };
 
-export type LocalBlogPost = BlogPostBase & {
-  source: "local";
-  mdxSource: string;
-};
-
 export type DrupalBlogPost = BlogPostBase & {
   source: "drupal";
   drupalHtml: string;
   drupalPlainText: string;
 };
 
-export type BlogPost = LocalBlogPost | DrupalBlogPost;
+export type BlogPost = DrupalBlogPost;
 
-const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 const DRUPAL_CMS_URL =
   process.env.STACKWERKHAUS_CMS_URL ?? "https://cms.stackwerkhaus.de";
 const DRUPAL_ARTICLE_ENDPOINT =
   `${DRUPAL_CMS_URL}/jsonapi/node/article?include=field_image,field_tags`;
-const BLOG_SOURCE = process.env.STACKWERKHAUS_BLOG_SOURCE?.trim().toLowerCase() ?? "auto";
+
+const BLOG_META_DESCRIPTIONS: Record<string, string> = {
+  micrography:
+    "Micrography, technische Typografie und klare Markenhaltung als visuelles System für präzise digitale Auftritte.",
+  "webdesign-fur-saas":
+    "Webdesign für SaaS-Produkte mit präziser Typografie, starkem Kontrast und klarer Nutzerführung statt generischer Standard-Patterns.",
+};
 
 type DrupalArticleResponse = {
   data?: DrupalArticleResource[];
@@ -125,40 +123,6 @@ function getSlugFromAlias(alias: string | null | undefined, title: string, id: s
   return slugify(title) || id;
 }
 
-async function readPostFile(fileName: string): Promise<BlogPost> {
-  const slug = fileName.replace(/\.mdx$/, "");
-  const source = await fs.readFile(path.join(BLOG_DIR, fileName), "utf8");
-  const { data, content } = matter(source);
-
-  return {
-    slug,
-    title: String(data.title ?? slug),
-    category: String(data.category ?? "Notizen"),
-    excerpt: String(data.excerpt ?? ""),
-    publishedAt: String(data.publishedAt ?? new Date().toISOString()),
-    updatedAt: String(data.updatedAt ?? data.publishedAt ?? new Date().toISOString()),
-    readingTime: String(data.readingTime ?? "4 min"),
-    featured: Boolean(data.featured ?? true),
-    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
-    imageUrl: data.imageUrl ? String(data.imageUrl) : null,
-    imageAlt: data.imageAlt ? String(data.imageAlt) : "",
-    source: "local",
-    mdxSource: content,
-  };
-}
-
-async function getLocalPosts() {
-  const entries = await fs.readdir(BLOG_DIR);
-  const posts = await Promise.all(
-    entries.filter((entry) => entry.endsWith(".mdx")).map(readPostFile),
-  );
-
-  return posts.sort(
-    (a, b) =>
-      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime(),
-  );
-}
-
 async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
   const response = await fetch(DRUPAL_ARTICLE_ENDPOINT, {
     headers: {
@@ -203,6 +167,7 @@ async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
       const publishedAt = item.attributes?.created ?? new Date().toISOString();
       const updatedAt = item.attributes?.changed ?? publishedAt;
       const slug = getSlugFromAlias(item.attributes?.path?.alias, title, item.id);
+      const excerpt = getExcerptFromText(summary, drupalPlainText);
       const imageId = item.relationships?.field_image?.data?.id;
       const imageFile = imageId ? filesById.get(imageId) : undefined;
       const imageUrl = imageFile?.attributes?.uri?.url
@@ -218,7 +183,7 @@ async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
         slug,
         title,
         category,
-        excerpt: getExcerptFromText(summary, drupalPlainText),
+        excerpt,
         publishedAt,
         updatedAt,
         readingTime: getReadingTimeFromText(drupalPlainText),
@@ -226,6 +191,7 @@ async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
         imageUrl,
         imageAlt,
         tags,
+        metaDescription: BLOG_META_DESCRIPTIONS[slug],
         source: "drupal" as const,
         drupalHtml,
         drupalPlainText,
@@ -237,26 +203,7 @@ async function getDrupalPosts(): Promise<DrupalBlogPost[]> {
     );
 }
 
-export const getAllPosts = cache(async () => {
-  if (BLOG_SOURCE === "local") {
-    return getLocalPosts();
-  }
-
-  try {
-    const drupalPosts = await getDrupalPosts();
-    if (drupalPosts.length > 0) {
-      return drupalPosts;
-    }
-  } catch (error) {
-    if (BLOG_SOURCE === "drupal") {
-      throw error;
-    }
-
-    console.error("Failed to fetch Drupal posts", error);
-  }
-
-  return getLocalPosts();
-});
+export const getAllPosts = cache(async () => getDrupalPosts());
 
 export async function getLatestPosts(limit = 4) {
   const posts = await getAllPosts();

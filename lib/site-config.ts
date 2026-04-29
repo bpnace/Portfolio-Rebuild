@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "STACKWERKHAUS",
   title: "STACKWERKHAUS | Webdesign und Full Stack Development mit Stil.",
   description:
-    "Wir bauen Websites, Web Apps und digitale Auftritte, bei denen Fassade, Grundriss und Technik zusammenpassen. Für Unternehmen, die online nicht nach einem Rohbau aussehen wollen.",
+    "Stackwerkhaus baut Websites, Web Apps und digitale Auftritte mit klarem Design, sauberer Technik und starker Nutzerführung für kleine Unternehmen.",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://stackwerkhaus.de",
   email: "info@stackwerkhaus.de",
   location: "Berlin / Remote",
@@ -20,7 +20,7 @@ export const siteConfig = {
   navigation: [
     { label: "Projekte", href: "/#projekte" },
     { label: "Leistungen", href: "/#leistungen" },
-    { label: "Pricing", href: "/#pricing" },
+    { label: "Pakete", href: "/#pricing" },
     { label: "Kontakt", href: "/#kontakt" },
   ],
 } as const;

@@ -134,44 +134,18 @@ export const testimonials = [
   },
 ] as const;
 
-export type PricingFeature = {
-  label: string;
-  enabled: boolean;
-};
-
 export type PricingTier = {
   name: string;
   price: string;
   originalPrice?: string;
   discountLabel?: string;
-  decision: string;
   description: string;
-  timeline: string;
-  pages: string;
-  features: readonly PricingFeature[];
+  ctaLabel: string;
+  suitableFor: readonly string[];
+  includes: readonly string[];
+  visibleIncludes?: number;
   highlight?: boolean;
 };
-
-const pricingFeatureLabels = [
-  "Mobiloptimiertes Design",
-  "Rechtliches Setup",
-  "Kontaktformular und Hosting",
-  "SEO-Basis und Indexieren",
-  "CMS für eigene Inhalte",
-  "Blog und Auswertung",
-  "Custom-Funktionen",
-  "Buchungssystem",
-  "Newsletter-Automation",
-  "CRM oder n8n-Anbindung",
-  "Performance und QA",
-  "Brand-System und Ausbau-Support",
-] as const;
-
-const pricingFeaturesUntil = (includedCount: number) =>
-  pricingFeatureLabels.map((label, index) => ({
-    label,
-    enabled: index < includedCount,
-  }));
 
 export const pricingTiers = [
   {
@@ -179,40 +153,80 @@ export const pricingTiers = [
     price: "799",
     originalPrice: "899",
     discountLabel: "11 % Rabatt für Neukunden",
-    decision: "schnell online",
-    description:
-      "Für neue Websites oder sehr schwache bestehende Seiten.",
-    timeline: "3 Wochen",
-    pages: "5 Seiten",
-    features: pricingFeaturesUntil(4),
+    description: "Für neue Websites, die schnell und stabil stehen sollen.",
+    ctaLabel: "Rohbau anfragen",
+    suitableFor: [
+      "Neue Unternehmen",
+      "Dienstleister",
+      "Portfolio-Seiten",
+      "einfache Landingpages",
+    ],
+    includes: [
+      "Seitenstruktur",
+      "Webdesign",
+      "Responsive Umsetzung",
+      "Kontaktformular",
+      "SEO-Basis",
+      "Launch-Unterstützung",
+    ],
   },
   {
     name: "Sanierung",
     price: "1.499",
-    decision: "Relaunch mit Ausbau",
-    description:
-      "Für Relaunches, bei denen Struktur, Design und Technik neu sortiert werden.",
-    timeline: "4 Wochen",
-    pages: "bis 8 Seiten",
+    description: "Für Websites, die noch stehen, aber nicht mehr richtig tragen.",
+    ctaLabel: "Sanierung planen",
+    suitableFor: [
+      "Website Relaunch",
+      "veraltete Seiten",
+      "unklare Angebote",
+      "schwache Kontaktwege",
+      "Unternehmen mit Wachstum",
+    ],
+    includes: [
+      "Website Analyse",
+      "neuer Grundriss",
+      "UI/UX Überarbeitung",
+      "Frontend Umsetzung",
+      "Performance & Optimierung",
+      "SEO Basis",
+      "Launch-Check",
+    ],
+    visibleIncludes: 6,
     highlight: true,
-    features: pricingFeaturesUntil(7),
   },
   {
     name: "Bauwerk",
     price: "2.499",
-    decision: "Website + Automatisierungen",
     description:
-      "Für Websites, Web Apps und komplexere Full Stack Projekte.",
-    timeline: "5–6 Wochen",
-    pages: "10+ Seiten",
-    features: pricingFeaturesUntil(pricingFeatureLabels.length),
+      "Für intelligente digitale Bauwerke, bei denen nicht nur die Fassade stimmen muss.",
+    ctaLabel: "Bauwerk besprechen",
+    suitableFor: [
+      "Web Apps",
+      "Plattformen",
+      "Dashboards",
+      "KI-Workflows",
+      "individuelle Funktionen",
+      "technische Produktideen",
+    ],
+    includes: [
+      "technische Planung",
+      "Full Stack Development",
+      "Frontend und Backend",
+      "API Anbindungen",
+      "KI- und Automatisierungslogik",
+      "Testing",
+      "Launch und Übergabe",
+    ],
+    visibleIncludes: 6,
   },
 ] satisfies readonly PricingTier[];
 
 export const maintenanceOffer = {
-  title: "Nach dem Launch: Wartung & Wachstum ab 59 €/Monat",
+  title: "Digitales Facility Management",
+  price: "ab 59 €/Monat",
   description:
-    "Für Websites, die nach dem Go-live nicht einfach liegen bleiben sollen. Wir halten den Heizungskeller im Blick und liefern kleine Verbesserungen, bevor aus Kleinkram wieder Baustelle wird.",
+    "Damit dein digitales Bauwerk nach dem Launch nicht wieder zur Baustelle wird.",
+  ctaLabel: "Facility Management einplanen",
   features: [
     "Monitoring",
     "Kleine Änderungen",
@@ -236,7 +250,7 @@ export type Faq = {
 export const faqs: readonly Faq[] = [
   {
     q: "Was kostet eine professionelle Website für ein kleines Unternehmen?",
-    a: "Fokussierte Projekte starten ab 799 €. Der genaue Preis hängt vom Seitenumfang, den Inhalten und den Integrationen ab. Für Neukunden kann bei Buchung ein Rabatt angerechnet werden.",
+    a: "Der Rohbau startet mit 11 % Neukundenrabatt ab 799 € statt 899 €. Der genaue Preis hängt vom Seitenumfang, den Inhalten und den Integrationen ab.",
     links: [
       {
         label: "Website erstellen lassen",
