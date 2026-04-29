@@ -4,11 +4,11 @@ import Image from "next/image";
 import { ViewTransition } from "react";
 import { notFound } from "next/navigation";
 import { renderDrupalRichText } from "@/components/DrupalRichText";
-import { CustomMDX } from "@/components/mdx";
 import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { getDrupalPlainTextParagraphs } from "@/lib/drupal-rich-text.mjs";
 import { getAllPosts, getPostBySlug } from "@/lib/blog";
+import { toMetaDescription } from "@/lib/meta-description";
 
 type BlogPostPageProps = {
   params: Promise<{ slug: string }>;
@@ -31,16 +31,21 @@ export async function generateMetadata({
     };
   }
 
+  const metaDescription = toMetaDescription(
+    post.metaDescription ?? post.excerpt,
+    post.drupalPlainText,
+  );
+
   return {
     title: post.title,
-    description: post.excerpt,
+    description: metaDescription,
     alternates: {
       canonical: `/blog/${post.slug}`,
     },
     openGraph: {
       url: `/blog/${post.slug}`,
       title: `${post.title} | STACKWERKHAUS`,
-      description: post.excerpt,
+      description: metaDescription,
     },
   };
 }
@@ -61,16 +66,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const heroImage = post.imageUrl || "/blog/blog-section-hero.jpg";
   let drupalContent: ReactNode = null;
 
-  if (post.source === "drupal") {
-    try {
-      drupalContent = renderDrupalRichText(post.drupalHtml);
-    } catch (error) {
-      console.error(`Failed to render rich text"${post.slug}"`, error);
-      const paragraphs = getDrupalPlainTextParagraphs(post.drupalPlainText);
-      drupalContent = paragraphs.map((paragraph: string, index: number) => (
-        <p key={`${post.slug}-fallback-${index}`}>{paragraph}</p>
-      ));
-    }
+  try {
+    drupalContent = renderDrupalRichText(post.drupalHtml);
+  } catch (error) {
+    console.error(`Failed to render rich text for "${post.slug}"`, error);
+    const paragraphs = getDrupalPlainTextParagraphs(post.drupalPlainText);
+    drupalContent = paragraphs.map((paragraph: string, index: number) => (
+      <p key={`${post.slug}-fallback-${index}`}>{paragraph}</p>
+    ));
   }
 
   return (
@@ -132,11 +135,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             <p className="text-lg leading-8 text-muted">{post.excerpt}</p>
           </div>
           <div className="mt-14 pb-10">
-            {post.source === "drupal" ? (
-              <div className="mdx-body">{drupalContent}</div>
-            ) : (
-              <CustomMDX source={post.mdxSource} />
-            )}
+            <div className="mdx-body">{drupalContent}</div>
           </div>
         </article>
       </ViewTransition>

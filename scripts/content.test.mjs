@@ -45,19 +45,6 @@ async function readCollection(dirName) {
   );
 }
 
-test("blog content has required frontmatter", async () => {
-  const posts = await readCollection("blog");
-  assert.ok(posts.length >= 4);
-
-  for (const post of posts) {
-    assert.ok(post.data.title, `${post.entry} missing title`);
-    assert.ok(post.data.category, `${post.entry} missing category`);
-    assert.ok(post.data.excerpt, `${post.entry} missing excerpt`);
-    assert.ok(post.data.publishedAt, `${post.entry} missing publishedAt`);
-    assert.ok(post.content.trim().length > 60, `${post.entry} content too short`);
-  }
-});
-
 test("project content has required frontmatter", async () => {
   const projects = await readCollection("projects");
   assert.ok(projects.length >= 6);
@@ -88,4 +75,17 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
   for (const signal of outdatedLlmsSignals) {
     assert.ok(!source.includes(signal), `llms.txt contains outdated signal: ${signal}`);
   }
+
+  assert.ok(
+    source.includes("https://stackwerkhaus.de/blog/micrography"),
+    "llms.txt missing Drupal blog article: micrography",
+  );
+  assert.ok(
+    source.includes("https://stackwerkhaus.de/blog/webdesign-fur-saas"),
+    "llms.txt missing Drupal blog article: webdesign-fur-saas",
+  );
+  assert.ok(
+    !source.includes("https://stackwerkhaus.de/blog/website-relaunch-kmu-leitfaden"),
+    "llms.txt still contains removed local test blog article",
+  );
 });

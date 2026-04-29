@@ -15,7 +15,7 @@ This repository is not a generic starter. It is a content-driven production site
 
 - a custom homepage and section-based marketing layout
 - routed blog and project detail pages
-- local MDX content collections for editorial and portfolio content
+- Drupal-backed blog publishing plus local MDX project entries
 - technical SEO primitives such as metadata, `robots.ts`, and `sitemap.ts`
 - motion-enhanced UI with reduced-motion-safe GSAP client islands
 - a contact endpoint that can run in preview mode without live email delivery
@@ -27,7 +27,7 @@ This repository is not a generic starter. It is a content-driven production site
 - `TypeScript`
 - `Tailwind CSS v4`
 - `GSAP` and `@gsap/react`
-- `next-mdx-remote` for local MDX content rendering
+- `next-mdx-remote` for local project MDX rendering
 - `Resend` for contact email delivery
 
 ## Project Structure
@@ -35,7 +35,7 @@ This repository is not a generic starter. It is a content-driven production site
 ```text
 app/            App Router pages, metadata routes, and API handlers
 components/     Layout, section, UI, and MDX rendering components
-content/        Local MDX content for blog posts and project entries
+content/        Local MDX content for project entries
 lib/            Site config, content loaders, animation helpers, utilities
 public/         Static images, icons, logos, and project assets
 scripts/        Content and smoke test scripts
@@ -89,19 +89,17 @@ Copy `.env.example` to `.env.local` and provide only what you need for the curre
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Enables analytics integration when set |
 | `RESEND_API_KEY` | Enables live contact email delivery |
 | `CONTACT_TO_EMAIL` | Override recipient for inbound contact submissions |
-| `STACKWERKHAUS_BLOG_SOURCE` | `auto` by default, `local` for hermetic local verification |
 | `SMOKE_BASE_URL` | Base URL for local smoke and Lighthouse validation |
-| `SMOKE_BLOG_SLUG` | Deterministic local blog detail slug for verification |
+| `SMOKE_BLOG_SLUG` | Deterministic Drupal blog detail slug for verification |
 
 ### Runtime Behavior
 
 - If `RESEND_API_KEY` is missing, the contact API stays in validation-only preview mode and returns a successful non-sending response.
 - If `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is missing, analytics remains disabled in local and preview environments.
-- If `STACKWERKHAUS_BLOG_SOURCE=local`, blog loaders skip Drupal and read only local MDX content.
 
-## Hermetic Local Verification
+## Local Verification
 
-Use `.env.local.test` for all local signoff work. It pins canonicals to `http://127.0.0.1:3000`, forces blog content to local MDX, and gives the smoke/Lighthouse scripts deterministic route inputs.
+Use `.env.local.test` for all local signoff work. It pins canonicals to `http://127.0.0.1:3000` and gives the smoke/Lighthouse scripts deterministic route inputs.
 
 ```bash
 set -a
@@ -127,9 +125,9 @@ The Lighthouse runner enforces full budgets for the blog and project detail rout
 
 ## Content Workflow
 
-- Blog posts live in `content/blog`
+- Blog posts are published through Drupal JSON:API
 - Project entries live in `content/projects`
-- Routed detail pages are generated from local content loaders in `lib/`
+- Routed detail pages are generated from content loaders in `lib/`
 - The default site language and marketing copy are German
 
 ## Notes for Development

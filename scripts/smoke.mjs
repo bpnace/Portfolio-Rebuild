@@ -31,6 +31,23 @@ function escapeRegExp(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function decodeHtmlAttribute(value) {
+  return value
+    .replace(/&quot;/g, "\"")
+    .replace(/&#x27;/g, "'")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function getMetaDescription(html) {
+  const match =
+    html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i) ||
+    html.match(/<meta\s+content=["']([^"']*)["']\s+name=["']description["']/i);
+
+  return match ? decodeHtmlAttribute(match[1]).trim() : "";
+}
+
 async function assertRedirect(pathname, expectedPathname) {
   const response = await fetch(new URL(pathname, baseUrl), {
     redirect: "manual",
@@ -60,6 +77,11 @@ async function assertSitemapRoutes() {
     sitemap,
     /\/baustellencheck<\/loc>/,
     "sitemap still contains /baustellencheck",
+  );
+  assert.doesNotMatch(
+    sitemap,
+    /\/llms\.txt<\/loc>/,
+    "sitemap should not include non-HTML llms.txt",
   );
   assert.doesNotMatch(
     sitemap,
@@ -132,6 +154,25 @@ async function assertLandingPages() {
   }
 }
 
+async function assertMetaDescriptions() {
+  const sitemapResponse = await fetch(new URL("/sitemap.xml", baseUrl));
+  assert.equal(sitemapResponse.status, 200, `/sitemap.xml returned ${sitemapResponse.status}`);
+  const sitemap = await sitemapResponse.text();
+  const sitemapPaths = [...sitemap.matchAll(/<loc>https?:\/\/[^/]+([^<]*)<\/loc>/g)]
+    .map((match) => match[1] || "/")
+    .filter((pathname) => !pathname.includes("."));
+  const paths = [...new Set([...sitemapPaths, "/impressum", "/webseitecheck/danke"])];
+
+  for (const pathname of paths) {
+    const response = await fetch(new URL(pathname, baseUrl));
+    assert.equal(response.status, 200, `${pathname} returned ${response.status}`);
+    const description = getMetaDescription(await response.text());
+
+    assert.ok(description.length >= 25, `${pathname} meta description too short: ${description.length}`);
+    assert.ok(description.length <= 160, `${pathname} meta description too long: ${description.length}`);
+  }
+}
+
 const checks = [
   ["/", "Deine digitalen"],
   ["/webseitecheck", "Kostenloser Kurzcheck für Websites"],
@@ -171,6 +212,7 @@ await assertRedirect("/baustellencheck/danke", "/webseitecheck/danke");
 await assertSitemapRoutes();
 await assertRobotsAllowsAiSearch();
 await assertLandingPages();
+await assertMetaDescriptions();
 
 const baustellencheckResponse = await fetch(new URL("/webseitecheck", baseUrl));
 assert.equal(

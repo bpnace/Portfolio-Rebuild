@@ -1,8 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
 
-const siteUrl = new URL(siteConfig.url);
-
 const AI_USER_AGENTS = [
   "OAI-SearchBot",
   "GPTBot",
@@ -26,6 +24,5 @@ export default function robots(): MetadataRoute.Robots {
       })),
     ],
     sitemap: `${siteConfig.url}/sitemap.xml`,
-    host: siteUrl.host,
   };
 }

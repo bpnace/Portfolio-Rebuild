@@ -3,6 +3,8 @@ import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export const metadata: Metadata = {
   title: "Datenschutz",
+  description:
+    "Datenschutzerklärung von STACKWERKHAUS mit Angaben zu Hosting, Kontaktaufnahme, Cookies, externen Diensten und deinen Rechten.",
   alternates: {
     canonical: "/datenschutz",
   },

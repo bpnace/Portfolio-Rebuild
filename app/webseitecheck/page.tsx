@@ -12,7 +12,7 @@ const pagePath = "/webseitecheck";
 const pageUrl = `${siteConfig.url}${pagePath}`;
 const pageTitle = "Website Check | STACKWERKHAUS Baustellencheck";
 const pageDescription =
-  "Der STACKWERKHAUS Baustellencheck prüft deine Website auf Fundament, Grundriss, Fassade und Technik und zeigt, ob dein digitaler Auftritt Penthouse, Plattenbau oder Rohbau ist.";
+  "Der STACKWERKHAUS Baustellencheck prüft Fundament, Struktur, Design und Technik deiner Website und zeigt konkrete nächste Schritte.";
 const pageImage = "/og-baustellencheck.png";
 
 export const metadata: Metadata = {

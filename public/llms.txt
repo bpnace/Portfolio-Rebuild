@@ -39,10 +39,8 @@ Last updated: 2026-04-29.
 
 ## Blog and guidance
 
-- [Was kostet eine Website 2026?](https://stackwerkhaus.de/blog/was-kostet-eine-website-2026): Orientierung zu Kostenblöcken, Umfang und realistischer Budgetplanung für Website-Projekte.
-- [Website Relaunch für KMU](https://stackwerkhaus.de/blog/website-relaunch-kmu-leitfaden): Leitfaden für Relaunch-Projekte kleiner und mittlerer Unternehmen.
-- [Website erstellen lassen für Coaches](https://stackwerkhaus.de/blog/website-erstellen-lassen-coaches): Hinweise zu Vertrauen, Kontaktführung und Technik für Coach-Websites.
-- [Framer vs. WordPress](https://stackwerkhaus.de/blog/framer-vs-wordpress-vergleich): Einordnung von Plattformentscheidungen für kleinere Website-Projekte.
+- [Micrography für Marken](https://stackwerkhaus.de/blog/micrography): Visuelles System aus Micrography, technischer Typografie und klarer Markenhaltung für präzise digitale Auftritte.
+- [Webdesign für SaaS](https://stackwerkhaus.de/blog/webdesign-fur-saas): Einordnung, warum Typografie, Kontrast und Rhythmus für glaubwürdige SaaS-Websites stärker wirken als Standard-Patterns.
 
 ## Technical discovery
 

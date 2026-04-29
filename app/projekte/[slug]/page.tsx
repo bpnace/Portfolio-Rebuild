@@ -7,6 +7,7 @@ import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { getAllProjects, getProjectBySlug } from "@/lib/projects";
 import { getProjectMedia } from "@/lib/project-media";
+import { toMetaDescription } from "@/lib/meta-description";
 
 type ProjectPageProps = {
   params: Promise<{ slug: string }>;
@@ -29,9 +30,10 @@ export async function generateMetadata({
     };
   }
 
-  const metaDescription = [project.summary, project.teaser]
-    .filter(Boolean)
-    .join(" ");
+  const metaDescription = toMetaDescription(
+    project.metaDescription ||
+      [project.summary, project.teaser].filter(Boolean).join(" "),
+  );
 
   return {
     title: `${project.title} – ${project.category} Projekt`,
