@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { serviceProcessSteps, services } from "@/lib/site-data";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -408,8 +409,10 @@ export function Services() {
               </p>
             </div>
             <div className="mt-8 flex max-w-md flex-col gap-3">
-              <HashLink
+              <TrackedHashLink
                 href="/webseitecheck"
+                eventName="website_check_cta_click"
+                eventParams={{ placement: "services_process" }}
                 className="link-arrow w-full justify-between bg-foreground px-5 py-4 text-background"
               >
                 <LinkRippleText
@@ -417,7 +420,7 @@ export function Services() {
                   baseWeight={760}
                 />
                 <span aria-hidden>+</span>
-              </HashLink>
+              </TrackedHashLink>
               <HashLink
                 href="/#kontakt"
                 className="link-arrow w-full justify-between border border-white/14 px-5 py-4 text-foreground hover:border-foreground/45"

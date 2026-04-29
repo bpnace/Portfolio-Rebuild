@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
 import { siteConfig } from "@/lib/site-config";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { StaggeredCycle } from "@/components/ui/StaggeredCycle";
@@ -224,27 +225,28 @@ export function Hero() {
               <StaggeredCycle words={["Planen.", "Bauen.", "Liefern."]} />
             </div>
             <div className="grid w-full max-w-[360px] grid-cols-1 gap-4 justify-self-center md:gap-3">
-              <HashLink
+              <TrackedHashLink
                 href="/webseitecheck"
+                eventName="website_check_cta_click"
+                eventParams={{ placement: "home_hero_primary" }}
                 className="hero-action link-arrow w-full justify-between gap-2 border border-foreground bg-foreground px-3 py-4 text-left text-[9px] leading-[1.35] tracking-[0.2em] text-background hover:bg-foreground/90 md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.24em]"
               >
                 <span className="md:hidden">
-                  Der Stackwerkhaus
-                  <br />
-                  Webseitecheck
+                  Website checken
                 </span>
                 <span className="hidden md:inline">
                   <LinkRippleText
-                    text="Der Stackwerkhaus Webseitecheck"
+                    text="Website checken"
                     baseWeight={560}
                   />
                 </span>{" "}
-              </HashLink>
+                <span aria-hidden>✚</span>
+              </TrackedHashLink>
               <HashLink
                 href="/#leistungen"
                 className="hero-action link-arrow w-full justify-between gap-2 whitespace-nowrap px-3 py-4 text-[9px] tracking-[0.2em] text-muted hover:text-foreground md:w-auto md:justify-start md:gap-3 md:px-6 md:text-[11px] md:tracking-[0.34em] md:whitespace-normal"
               >
-                <LinkRippleText text="Unsere Bauwerke" baseWeight={560} />{" "}
+                <LinkRippleText text="Bauplan ansehen" baseWeight={560} />{" "}
                 <span aria-hidden>✚</span>
               </HashLink>
             </div>

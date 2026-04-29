@@ -14,6 +14,9 @@ type BaustellencheckPayload = {
   message?: string;
   terms?: boolean | string | number | null;
   newsletterOptIn?: boolean | string | number | null;
+  source?: string;
+  privacy_accepted_at?: string;
+  newsletter_opt_in_at?: string;
   website?: string;
   submitted_at?: string;
   origin?: string;
@@ -59,7 +62,7 @@ function getDefaultWebhookMessage(status: number) {
     case 429:
       return "Zu viele Anfragen in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut.";
     default:
-      return "Der Webseitecheck konnte gerade nicht weitergeleitet werden. Bitte versuche es erneut.";
+      return "Der Baustellencheck konnte gerade nicht weitergeleitet werden. Bitte versuche es erneut.";
   }
 }
 
@@ -98,7 +101,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message:
-          "Der Webseitecheck konnte gerade nicht weitergeleitet werden. Die Webhook-Authentifizierung ist nicht vollständig konfiguriert.",
+          "Der Baustellencheck konnte gerade nicht weitergeleitet werden. Die Webhook-Authentifizierung ist nicht vollständig konfiguriert.",
       },
       { status: 500 },
     );
@@ -162,6 +165,6 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
-    message: "Dein Webseitecheck ist eingetragen.",
+    message: "Dein Baustellencheck ist eingetragen.",
   });
 }

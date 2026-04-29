@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { currentStateOptions, goalOptions } from "@/lib/baustellencheck.mjs";
+import { trackAnalyticsEvent } from "@/lib/analytics-events";
 import { siteConfig } from "@/lib/site-config";
 import type { BaustellencheckStep } from "@/components/baustellencheck/form-state";
 import {
@@ -51,6 +52,7 @@ function FieldError({
 
 export function BaustellencheckForm() {
   const router = useRouter();
+  const formStarted = useRef(false);
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showValidationHint, setShowValidationHint] = useState(false);
@@ -78,8 +80,17 @@ export function BaustellencheckForm() {
     ? "Wird eingetragen ..."
     : status.type !== "idle"
       ? status.message
-      : "Webseitecheck anfragen";
+      : "Baustellencheck absenden";
   const showSubmitResponseText = isSubmitting || status.type !== "idle";
+
+  function markFormStarted(step: string) {
+    if (formStarted.current) {
+      return;
+    }
+
+    formStarted.current = true;
+    trackAnalyticsEvent("website_check_form_start", { step });
+  }
 
   function resetValidationHint() {
     if (showValidationHint) {
@@ -125,6 +136,7 @@ export function BaustellencheckForm() {
   }
 
   function chooseCurrentState(value: string) {
+    markFormStarted("current_state");
     setCurrentState(value);
     setShowValidationHint(false);
     setStatus(initialStatus);
@@ -132,6 +144,7 @@ export function BaustellencheckForm() {
   }
 
   function toggleGoal(goal: string) {
+    markFormStarted("goals");
     setGoals((currentGoals) =>
       currentGoals.includes(goal)
         ? currentGoals.filter((entry) => entry !== goal)
@@ -165,6 +178,9 @@ export function BaustellencheckForm() {
       message,
       terms: termsAccepted ? "on" : "",
       newsletterOptIn: newsletterOptIn ? "on" : "",
+      source: "STACKWERKHAUS Baustellencheck",
+      privacy_accepted_at: termsAccepted ? new Date().toISOString() : "",
+      newsletter_opt_in_at: newsletterOptIn ? new Date().toISOString() : "",
       website: String(formData.get("website") ?? ""),
       submitted_at: new Date().toISOString(),
       page_url: window.location.href,
@@ -173,7 +189,7 @@ export function BaustellencheckForm() {
       user_agent: navigator.userAgent,
       language: navigator.language,
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone ?? "",
-      origin: `${siteConfig.name} Webseitecheck`,
+      origin: `${siteConfig.name} Baustellencheck`,
     };
 
     try {
@@ -187,10 +203,14 @@ export function BaustellencheckForm() {
 
       if (!response.ok) {
         throw new Error(
-          result.message || "Der Webseitecheck konnte nicht gesendet werden.",
+          result.message || "Der Baustellencheck konnte nicht gesendet werden.",
         );
       }
 
+      trackAnalyticsEvent("website_check_form_submit", {
+        goals_count: goals.length,
+        newsletter_opt_in: newsletterOptIn,
+      });
       setIsSubmitting(false);
       setStatus({
         type: "success",
@@ -204,7 +224,7 @@ export function BaustellencheckForm() {
         message:
           error instanceof Error
             ? error.message
-            : "Der Webseitecheck konnte nicht gesendet werden.",
+            : "Der Baustellencheck konnte nicht gesendet werden.",
       });
     } finally {
       setIsSubmitting(false);
@@ -222,7 +242,7 @@ export function BaustellencheckForm() {
             </h2>
             <p className="mt-4 max-w-md text-sm leading-6 text-muted md:text-base md:leading-7">
               Erst Selbstcheck, dann schauen wir gezielt auf Fundament,
-              Grundriss, Fassade und Kontaktwege.
+              Grundriss, Fassade und Eingang.
             </p>
           </div>
 
@@ -240,8 +260,8 @@ export function BaustellencheckForm() {
                 02 Befund
               </span>
               <span className="mt-2 block">
-                Danach kommt eine konkrete Einschätzung statt generischer
-                Prozentzahl.
+                Danach kommt eine konkrete Bauaufnahme statt generischer
+                Prozentzahl oder Scanner-Show.
               </span>
             </div>
           </div>
@@ -288,6 +308,7 @@ export function BaustellencheckForm() {
                   autoComplete="url"
                   value={websiteUrl}
                   onChange={(event) => {
+                    markFormStarted("website_url");
                     setWebsiteUrl(event.target.value);
                     resetValidationHint();
                   }}
@@ -370,8 +391,8 @@ export function BaustellencheckForm() {
                   Was soll die Website besser können?
                 </legend>
                 <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-                  Mehrfachauswahl ist okay. Wenn alles knirscht, darf auch
-                  „Alles davon“ rein.
+                  Mehrfachauswahl ist okay. Wähle nur aus, was wirklich wichtig
+                  ist.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {goalOptions.map((option) => (
@@ -446,6 +467,7 @@ export function BaustellencheckForm() {
                     autoComplete="name"
                     value={name}
                     onChange={(event) => {
+                      markFormStarted("name");
                       setName(event.target.value);
                       resetValidationHint();
                     }}
@@ -465,6 +487,7 @@ export function BaustellencheckForm() {
                     autoComplete="email"
                     value={email}
                     onChange={(event) => {
+                      markFormStarted("email");
                       setEmail(event.target.value);
                       resetValidationHint();
                     }}
@@ -485,7 +508,10 @@ export function BaustellencheckForm() {
                     name="company"
                     autoComplete="organization"
                     value={company}
-                    onChange={(event) => setCompany(event.target.value)}
+                    onChange={(event) => {
+                      markFormStarted("company");
+                      setCompany(event.target.value);
+                    }}
                     className="mt-3 w-full rounded-none border-b border-border bg-transparent px-0 py-4 text-lg outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
                     placeholder="Falls relevant"
                   />
@@ -500,7 +526,10 @@ export function BaustellencheckForm() {
                     name="message"
                     rows={3}
                     value={message}
-                    onChange={(event) => setMessage(event.target.value)}
+                    onChange={(event) => {
+                      markFormStarted("message");
+                      setMessage(event.target.value);
+                    }}
                     className="mt-3 min-h-[7rem] w-full rounded-none border-b border-border bg-transparent px-0 py-4 outline-none transition focus:border-foreground placeholder:text-white/35 placeholder:italic"
                     placeholder="Was nervt dich aktuell am meisten?"
                   />
@@ -524,6 +553,7 @@ export function BaustellencheckForm() {
                     name="terms"
                     checked={termsAccepted}
                     onChange={(event) => {
+                      markFormStarted("privacy");
                       setTermsAccepted(event.target.checked);
                       resetValidationHint();
                     }}
@@ -538,8 +568,9 @@ export function BaustellencheckForm() {
                     >
                       Datenschutzhinweise
                     </Link>{" "}
-                    gelesen. Meine Angaben werden zur Bearbeitung des
-                    Webseitechecks verarbeitet.
+                    gelesen. STACKWERKHAUS verarbeitet meine Angaben zur
+                    Bearbeitung des Webseitenchecks und zur Kontaktaufnahme im
+                    Zusammenhang mit meiner Anfrage.
                   </span>
                 </label>
                 <label className="flex items-start gap-3 text-sm leading-6 text-muted">
@@ -547,9 +578,10 @@ export function BaustellencheckForm() {
                     type="checkbox"
                     name="newsletterOptIn"
                     checked={newsletterOptIn}
-                    onChange={(event) =>
-                      setNewsletterOptIn(event.target.checked)
-                    }
+                    onChange={(event) => {
+                      markFormStarted("newsletter");
+                      setNewsletterOptIn(event.target.checked);
+                    }}
                     className="mt-1 h-4 w-4 shrink-0 accent-foreground"
                   />
                   <span>

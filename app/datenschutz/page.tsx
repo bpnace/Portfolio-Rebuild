@@ -155,10 +155,10 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              5. Stackwerkhaus Webseitecheck
+              5. Stackwerkhaus Baustellencheck
             </h2>
             <p className="mt-3">
-              Wenn du den Webseitecheck nutzt, verarbeiten wir die von dir
+              Wenn du den Baustellencheck nutzt, verarbeiten wir die von dir
               eingegebenen Angaben, insbesondere Website-URL, Einschätzung zum
               aktuellen Website-Zustand, ausgewählte Ziele, Name,
               E-Mail-Adresse, freiwillige Unternehmensangaben, optionale
@@ -169,13 +169,13 @@ export default function DatenschutzPage() {
             </p>
             <p className="mt-2">
               <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
-              6 Abs. 1 lit. b DSGVO, wenn der Webseitecheck auf ein Angebot,
+              6 Abs. 1 lit. b DSGVO, wenn der Baustellencheck auf ein Angebot,
               eine Zusammenarbeit oder vorvertragliche Schritte gerichtet ist,
               sowie Art. 6 Abs. 1 lit. f DSGVO bei allgemeinen Anfragen,
               Missbrauchs- und Spam-Abwehr
               <br />
               <strong className="text-foreground">Zweck:</strong> Bearbeitung
-              des Webseitechecks, Einordnung deiner Website und Rückmeldung
+              des Baustellenchecks, Einordnung deiner Website und Rückmeldung
               per E-Mail
               <br />
               <strong className="text-foreground">Speicherdauer:</strong> Bis
@@ -184,7 +184,7 @@ export default function DatenschutzPage() {
             </p>
             <p className="mt-2">
               Wenn du die optionale Newsletter-Einwilligung auswählst, speichern
-              wir diese Auswahl getrennt vom Pflichtteil des Webseitechecks.
+              wir diese Auswahl getrennt vom Pflichtteil des Baustellenchecks.
               Eine Anmeldung zu Tipps rund um Webdesign, Development und
               digitale Bauwerke erfolgt nur auf Grundlage deiner freiwilligen
               Einwilligung und kann jederzeit widerrufen werden.

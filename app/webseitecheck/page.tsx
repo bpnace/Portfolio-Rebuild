@@ -1,18 +1,18 @@
 import Image from "next/image";
 import type { Metadata } from "next";
-import { buildingResults, inspectionFields } from "@/lib/baustellencheck.mjs";
+import { buildingResults, publicInspectionFields } from "@/lib/baustellencheck.mjs";
 import { siteConfig } from "@/lib/site-config";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { AuditOffer } from "@/components/baustellencheck/AuditOffer";
 import { BaustellencheckForm } from "@/components/baustellencheck/BaustellencheckForm";
-import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 
 const pagePath = "/webseitecheck";
 const pageUrl = `${siteConfig.url}${pagePath}`;
-const pageTitle = "Webseitecheck für Webdesign und Relaunch | STACKWERKHAUS";
+const pageTitle = "Website Check | STACKWERKHAUS Baustellencheck";
 const pageDescription =
-  "Prüfe deine Website mit dem Stackwerkhaus Webseitecheck. Wir bewerten Struktur, Design, Technik und Kontaktwege für Relaunch, Webdesign und bessere Anfragen.";
+  "Der STACKWERKHAUS Baustellencheck prüft deine Website auf Fundament, Grundriss, Fassade und Technik und zeigt, ob dein digitaler Auftritt Penthouse, Plattenbau oder Rohbau ist.";
 const pageImage = "/og-baustellencheck.png";
 
 export const metadata: Metadata = {
@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   keywords: [
     "Webseitecheck",
     "Website Check",
+    "Baustellencheck",
     "Website Relaunch",
     "Webdesign Berlin",
     "Technisches SEO",
@@ -35,16 +36,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "de_DE",
-    url: pagePath,
+    url: pageUrl,
     siteName: siteConfig.name,
-    title: pageTitle,
-    description: pageDescription,
+    title: "Penthouse, Plattenbau oder Rohbau?",
+    description:
+      "Prüfe den Bauzustand deiner Website mit dem STACKWERKHAUS Baustellencheck.",
     images: [
       {
         url: pageImage,
         width: 1200,
         height: 630,
-        alt: "Stackwerkhaus Webseitecheck als digitale Bauzustandsprüfung",
+        alt: "Stackwerkhaus Baustellencheck als digitale Bauzustandsprüfung",
       },
     ],
   },
@@ -82,10 +84,10 @@ const structuredData = {
     {
       "@type": "Service",
       "@id": `${pageUrl}#service`,
-      name: "Stackwerkhaus Webseitecheck",
+      name: "STACKWERKHAUS Baustellencheck",
       serviceType: "Website Check für Webdesign, Relaunch und technische Website-Prüfung",
       description:
-        "Der Stackwerkhaus Webseitecheck prüft Struktur, Design, Technik und Kontaktwege einer Website und ordnet den digitalen Bauzustand ein.",
+        "Der STACKWERKHAUS Baustellencheck prüft Fundament, Grundriss, Fassade und Technik einer Website und ordnet den digitalen Bauzustand ein.",
       provider: {
         "@type": "Organization",
         "@id": `${siteConfig.url}#organization`,
@@ -100,7 +102,7 @@ const structuredData = {
       potentialAction: {
         "@type": "RegisterAction",
         target: `${pageUrl}#webseitecheck-form`,
-        name: "Webseitecheck anfragen",
+        name: "Baustellencheck starten",
       },
     },
     {
@@ -116,7 +118,7 @@ const structuredData = {
         {
           "@type": "ListItem",
           position: 2,
-          name: "Webseitecheck",
+          name: "Website Check",
           item: pageUrl,
         },
       ],
@@ -135,7 +137,7 @@ export default function BaustellencheckPage() {
         <div className="section-shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
           <div className="space-y-8">
             <div className="eyebrow text-foreground/75">
-              Der Stackwerkhaus Webseitecheck
+              Der Stackwerkhaus Baustellencheck
             </div>
             <div className="space-y-6">
               <h1 className="max-w-[12ch] font-display text-[clamp(3.4rem,8vw,8rem)] font-black leading-[0.9] tracking-[-0.055em] md:max-w-[13.5ch] md:text-[clamp(4.2rem,7vw,7.2rem)] xl:max-w-[15ch]">
@@ -144,37 +146,49 @@ export default function BaustellencheckPage() {
                 <span className="block">Plattenbau</span>
                 <span className="block">oder Rohbau?</span>
               </h1>
+              <div className="flex max-w-3xl flex-wrap items-center justify-between gap-x-4 gap-y-2 text-[length:var(--label)] uppercase tracking-[0.24em] text-muted sm:tracking-[0.35em]">
+                <span>© Baustellencheck</span>
+                <span>(CHECK — 01)</span>
+              </div>
               <p className="max-w-3xl text-lg leading-8 text-muted md:text-xl md:leading-9">
                 Wir prüfen Fundament, Grundriss, Fassade und Technik deines
                 digitalen Auftritts und zeigen dir, wo dein Online-Bauwerk trägt
                 und wo noch Baustelle ist.
               </p>
+              <p className="max-w-2xl text-sm leading-6 text-muted">
+                Kostenloser Kurzcheck für Websites, Web Apps und digitale
+                Auftritte.
+              </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              <HashLink
+              <TrackedHashLink
                 href="/webseitecheck#webseitecheck-form"
+                eventName="website_check_cta_click"
+                eventParams={{ placement: "checker_hero_primary" }}
                 className="link-arrow w-full justify-between bg-foreground px-5 py-4 text-background sm:w-fit"
               >
                 <LinkRippleText
-                  text="Webseitecheck starten"
+                  text="Baustellencheck starten"
                   baseWeight={760}
                 />
                 <span aria-hidden>+</span>
-              </HashLink>
-              <HashLink
-                href="/webseitecheck#bauzustand"
+              </TrackedHashLink>
+              <TrackedHashLink
+                href="/webseitecheck#bauaufnahme"
+                eventName="website_check_cta_click"
+                eventParams={{ placement: "checker_hero_secondary" }}
                 className="link-arrow w-full justify-between py-4 pr-5 pl-16 text-muted hover:text-foreground sm:w-fit sm:px-5"
               >
                 <LinkRippleText
-                  text="Gebäudeklassen ansehen"
+                  text="Digitale Bauaufnahme"
                   baseWeight={560}
                 />
                 <span aria-hidden>+</span>
-              </HashLink>
+              </TrackedHashLink>
             </div>
           </div>
 
-          <div className="relative aspect-[941/1672] w-full max-w-[24rem] justify-self-center overflow-hidden bg-surface md:max-w-[26rem] lg:-mt-4 lg:w-[21rem] lg:max-w-none lg:justify-self-end xl:-mt-6 xl:w-[23rem]">
+          <div className="relative hidden aspect-[941/1672] w-full max-w-[24rem] justify-self-center overflow-hidden bg-surface md:block md:max-w-[26rem] lg:-mt-4 lg:w-[21rem] lg:max-w-none lg:justify-self-end xl:-mt-6 xl:w-[23rem]">
             <Image
               src="/pagecheck1.png"
               alt="Stackwerkhaus Architekturkonzept als Bauplan-Grafik"
@@ -191,34 +205,29 @@ export default function BaustellencheckPage() {
         </div>
       </section>
 
-      <section id="webseitecheck-form" className="section-space">
+      <section id="webseitecheck-form">
         <div className="section-shell">
-          <SectionHeader label="Webseitecheck" marker="(CHECK — 01)" />
           <BaustellencheckForm />
+          <div className="mt-10 md:mt-14">
+            <AuditOffer variant="inverted" />
+          </div>
         </div>
       </section>
 
-      <section>
+      <section id="bauaufnahme" className="section-space">
         <div className="section-shell">
-          <AuditOffer />
-        </div>
-      </section>
-
-      <section className="section-space">
-        <div className="section-shell">
-          <SectionHeader label="Prüffelder" marker="(CHECK — 02)" />
+          <SectionHeader label="Digitale Bauaufnahme" marker="(CHECK — 02)" />
           <div className="mb-10 max-w-4xl space-y-4 md:mb-14">
             <h2 className="display-md">
-              Sieben Stellen, an denen Websites gern knirschen.
+              Was wir prüfen.
             </h2>
             <p className="text-lg leading-8 text-muted">
-              Nicht jede Website braucht den Abrissbagger. Manchmal reicht ein
-              besserer Grundriss, manchmal muss der Heizungskeller aufgeräumt
-              werden.
+              Vier Bereiche reichen für die erste Bauaufnahme. Intern schauen
+              wir später tiefer, aber der Einstieg bleibt kurz und verständlich.
             </p>
           </div>
-          <div className="grid gap-x-10 gap-y-8 md:grid-cols-2 xl:grid-cols-3">
-            {inspectionFields.map((field, index) => (
+          <div className="grid gap-x-10 gap-y-8 md:grid-cols-2 xl:grid-cols-4">
+            {publicInspectionFields.map((field, index) => (
               <article
                 key={field.title}
                 className="border-t border-border pt-5"
@@ -252,18 +261,18 @@ export default function BaustellencheckPage() {
 
       <section
         id="bauzustand"
-        className="section-space bg-[#f4eee5] text-[#111111]"
+        className="section-space"
       >
         <div className="section-shell">
-          <div className="mb-10 flex items-center justify-between gap-4 text-[length:var(--label)] uppercase tracking-[0.35em] text-black/52 md:mb-14">
+          <div className="mb-10 flex items-center justify-between gap-4 text-[length:var(--label)] uppercase tracking-[0.35em] text-muted md:mb-14">
             <span>© Gebäudeklassen</span>
             <span>(CHECK — 03)</span>
           </div>
           <div className="mb-10 max-w-4xl space-y-4 md:mb-14">
-            <h2 className="display-md text-[#111111]">
+            <h2 className="display-md">
               Kein trockener Score. Ein Bauzustand.
             </h2>
-            <p className="text-lg leading-8 text-black/62">
+            <p className="text-lg leading-8 text-muted">
               Am Ende steht keine Prozentzahl, sondern eine Einordnung, die du
               verstehst: Feinschliff, Ausbau, Relaunch oder Neubau.
             </p>
@@ -272,18 +281,18 @@ export default function BaustellencheckPage() {
             {buildingResults.map((result) => (
               <article
                 key={result.title}
-                className="border-t border-black/18 pt-6"
+                className="border-t border-border pt-6"
               >
-                <div className="text-[11px] uppercase tracking-[0.3em] text-black/48">
+                <div className="text-[11px] uppercase tracking-[0.3em] text-muted">
                   {result.meaning}
                 </div>
                 <h3 className="mt-4 text-3xl font-black tracking-[-0.05em] md:text-5xl">
                   {result.title}
                 </h3>
-                <p className="mt-5 max-w-2xl text-base leading-7 text-black/64">
+                <p className="mt-5 max-w-2xl text-base leading-7 text-muted">
                   {result.text}
                 </p>
-                <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-[11px] uppercase tracking-[0.24em] text-black/64">
+                <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 text-[11px] uppercase tracking-[0.24em] text-foreground/72">
                   {result.recommendations.map((recommendation) => (
                     <span key={recommendation}>{recommendation}</span>
                   ))}

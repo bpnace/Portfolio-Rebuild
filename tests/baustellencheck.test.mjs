@@ -72,8 +72,10 @@ test("builds a compact summary and structured webhook payload", () => {
   assert.equal(validation.ok, true);
 
   const summary = buildBaustellencheckSummary(validation.data);
-  assert.match(summary, /Stackwerkhaus Webseitecheck/);
+  assert.match(summary, /STACKWERKHAUS Baustellencheck/);
   assert.match(summary, /Zustand: Sie ist alt und müsste saniert werden/);
+  assert.match(summary, /Status: Neu eingegangen/);
+  assert.match(summary, /Empfohlener nächster Schritt: Offen/);
   assert.match(summary, /Newsletter: Ja/);
 
   const forwardedPayload = buildForwardedBaustellencheckPayload(
@@ -81,21 +83,41 @@ test("builds a compact summary and structured webhook payload", () => {
     {
       submitted_at: "2026-04-25T12:00:00.000Z",
       page_url: "https://stackwerkhaus.de/webseitecheck",
-      page_title: "Website Check für Webdesign und Relaunch | STACKWERKHAUS",
-      origin: "STACKWERKHAUS Webseitecheck",
+      page_title: "Website Check | STACKWERKHAUS Baustellencheck",
+      source: "STACKWERKHAUS Baustellencheck",
+      privacy_accepted_at: "2026-04-25T12:00:01.000Z",
+      newsletter_opt_in_at: "2026-04-25T12:00:02.000Z",
     },
   );
   assert.equal(forwardedPayload.lead_type, "baustellencheck");
+  assert.equal(forwardedPayload.source, "STACKWERKHAUS Baustellencheck");
+  assert.equal(forwardedPayload.status, "Neu eingegangen");
+  assert.equal(forwardedPayload.bauzustand, "");
+  assert.equal(forwardedPayload.recommended_next_step, "");
+  assert.equal(forwardedPayload.next_action, "Website prüfen und Bauzustand einordnen");
+  assert.equal(forwardedPayload.last_contact, "2026-04-25T12:00:00.000Z");
   assert.equal(forwardedPayload.website_url, "https://stackwerkhaus.de");
   assert.equal(forwardedPayload.website, "");
-  assert.match(forwardedPayload.message, /Stackwerkhaus Webseitecheck/);
+  assert.match(forwardedPayload.message, /STACKWERKHAUS Baustellencheck/);
   assert.match(forwardedPayload.visitor_message, /Startseite wirkt/);
   assert.equal(forwardedPayload.newsletter_opt_in, true);
+  assert.equal(
+    forwardedPayload.privacy_accepted_at,
+    "2026-04-25T12:00:01.000Z",
+  );
+  assert.equal(
+    forwardedPayload.newsletter_opt_in_at,
+    "2026-04-25T12:00:02.000Z",
+  );
   assert.deepEqual(forwardedPayload.goals, [
     "more-inquiries",
     "clear-offers",
   ]);
   assert.match(forwardedPayload.summary, /Angebote klarer erklären/);
+  assert.equal(
+    forwardedPayload.confirmation_email.subject,
+    "Dein Stackwerkhaus Baustellencheck ist eingegangen",
+  );
 });
 
 test("forwards a contact-style message even when visitors leave the note empty", () => {
@@ -109,7 +131,16 @@ test("forwards a contact-style message even when visitors leave the note empty",
     validation.data,
   );
 
-  assert.match(forwardedPayload.message, /Stackwerkhaus Webseitecheck/);
+  assert.match(forwardedPayload.message, /STACKWERKHAUS Baustellencheck/);
   assert.match(forwardedPayload.message, /Website: https:\/\/stackwerkhaus.de/);
   assert.equal(forwardedPayload.visitor_message, "");
+});
+
+test("keeps the public landing-page inspection fields focused", async () => {
+  const { publicInspectionFields } = await import("../lib/baustellencheck.mjs");
+
+  assert.deepEqual(
+    publicInspectionFields.map((field) => field.title),
+    ["Fundament", "Grundriss", "Fassade", "Eingang"],
+  );
 });

@@ -17,7 +17,7 @@ Last updated: 2026-04-29.
 ## Core pages
 
 - [Startseite](https://stackwerkhaus.de): Überblick zu Stackwerkhaus, Leistungen, Projekten, Paketen und Kontakt.
-- [Webseitecheck](https://stackwerkhaus.de/webseitecheck): Website-Check für Struktur, Design, Technik und Kontaktwege.
+- [Baustellencheck](https://stackwerkhaus.de/webseitecheck): Website-Check für Fundament, Grundriss, Fassade und Kontaktwege.
 - [Kontaktbereich](https://stackwerkhaus.de/#kontakt): Direkter Anfrageweg für Website-Projekte, Relaunches und technische Umsetzung.
 
 ## Service pages

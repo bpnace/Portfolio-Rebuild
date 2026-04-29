@@ -134,7 +134,7 @@ async function assertLandingPages() {
 
 const checks = [
   ["/", "Deine digitalen"],
-  ["/webseitecheck", "Ist deine Website"],
+  ["/webseitecheck", "Kostenloser Kurzcheck für Websites"],
   ["/webseitecheck/danke", "Deine Baustelle ist eingetragen"],
   [`/blog/${pinnedBlogSlug}`, "class=\"mdx-body\""],
   [`/projekte/${DEFAULT_PROJECT_SLUG}`, "class=\"section-shell\""],
@@ -171,6 +171,57 @@ await assertRedirect("/baustellencheck/danke", "/webseitecheck/danke");
 await assertSitemapRoutes();
 await assertRobotsAllowsAiSearch();
 await assertLandingPages();
+
+const baustellencheckResponse = await fetch(new URL("/webseitecheck", baseUrl));
+assert.equal(
+  baustellencheckResponse.status,
+  200,
+  `/webseitecheck returned ${baustellencheckResponse.status}`,
+);
+const baustellencheckHtml = await baustellencheckResponse.text();
+assert.match(
+  baustellencheckHtml,
+  /Baustellencheck starten/,
+  "/webseitecheck missing updated primary CTA",
+);
+assert.match(
+  baustellencheckHtml,
+  /Was wir prüfen/,
+  "/webseitecheck missing focused inspection section",
+);
+assert.doesNotMatch(
+  baustellencheckHtml,
+  /Sieben Stellen/,
+  "/webseitecheck still exposes the old long inspection framing",
+);
+assert.match(
+  baustellencheckHtml,
+  /Website Check \| STACKWERKHAUS Baustellencheck/,
+  "/webseitecheck missing updated metadata title",
+);
+
+const dankeResponse = await fetch(new URL("/webseitecheck/danke", baseUrl));
+assert.equal(
+  dankeResponse.status,
+  200,
+  `/webseitecheck/danke returned ${dankeResponse.status}`,
+);
+const dankeHtml = await dankeResponse.text();
+assert.match(
+  dankeHtml,
+  /Was jetzt passiert/,
+  "/webseitecheck/danke missing next-step framing",
+);
+assert.match(
+  dankeHtml,
+  /Wir ordnen den Bauzustand ein/,
+  "/webseitecheck/danke missing Bauzustand step",
+);
+assert.doesNotMatch(
+  dankeHtml,
+  /Willst du den vollständigen Befund/,
+  "/webseitecheck/danke still leads with audit upsell",
+);
 
 console.log(
   "Smoke test passed for",

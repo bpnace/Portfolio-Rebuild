@@ -1,4 +1,5 @@
 import { maintenanceOffer, pricingTiers } from "@/lib/site-data";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { PricingCard } from "@/components/ui/PricingCard";
 import { HashLink } from "@/components/ui/HashLink";
@@ -69,13 +70,15 @@ export function Pricing() {
               trägt, knirscht oder neu sortiert werden sollte.
             </p>
           </div>
-          <HashLink
+          <TrackedHashLink
             href="/webseitecheck"
+            eventName="website_check_cta_click"
+            eventParams={{ placement: "pricing_fit_cta" }}
             className="link-arrow w-full justify-between bg-foreground px-4 py-4 text-background hover:bg-foreground/90 sm:w-fit"
           >
             <LinkRippleText text="Website Check starten" baseWeight={760} />
             <span aria-hidden>+</span>
-          </HashLink>
+          </TrackedHashLink>
         </div>
       </div>
     </section>

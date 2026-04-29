@@ -6,8 +6,8 @@ import { useSearchParams } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { pricingTiers } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
+import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
-import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import type { PricingTier } from "@/lib/site-data";
 
@@ -37,7 +37,7 @@ const offerPrefills = {
     price: "249 €",
     bullets: [
       "48h Lieferung",
-      "5–8 Seiten oder Loom",
+      "5–8 Seiten",
       "Anrechnung bei Projektbuchung",
     ],
   },
@@ -371,13 +371,15 @@ export function Contact() {
                 dir zuerst, wo dein Auftritt trägt, knirscht oder neu sortiert
                 werden sollte.
               </p>
-              <HashLink
+              <TrackedHashLink
                 href="/webseitecheck"
+                eventName="website_check_cta_click"
+                eventParams={{ placement: "contact_alt_cta" }}
                 className="link-arrow mt-5 w-fit text-foreground"
               >
                 <LinkRippleText text="Website Check starten" baseWeight={700} />
                 <span aria-hidden>+</span>
-              </HashLink>
+              </TrackedHashLink>
             </div>
           </div>
         </div>
