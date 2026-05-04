@@ -32,6 +32,10 @@ const requiredLlmsUrls = [
   "https://stackwerkhaus.de/projekte/bloom",
   "https://stackwerkhaus.de/projekte/codariq",
   "https://stackwerkhaus.de/projekte/uncloud",
+  "https://stackwerkhaus.de/projekte/praxis-fuer-mentale-gesundheit",
+  "https://stackwerkhaus.de/projekte/zahnraum-berlin",
+  "https://stackwerkhaus.de/projekte/signalnest",
+  "https://stackwerkhaus.de/projekte/foerderraum",
 ];
 
 const outdatedLlmsSignals = [
@@ -59,7 +63,7 @@ async function readCollection(dirName) {
 
 test("project content has required frontmatter", async () => {
   const projects = await readCollection("projects");
-  assert.ok(projects.length >= 6);
+  assert.ok(projects.length >= 10);
 
   for (const project of projects) {
     assert.ok(project.data.title, `${project.entry} missing title`);
@@ -68,6 +72,33 @@ test("project content has required frontmatter", async () => {
     assert.ok(project.data.summary, `${project.entry} missing summary`);
     assert.ok(Array.isArray(project.data.services), `${project.entry} missing services`);
     assert.ok(project.content.trim().length > 60, `${project.entry} content too short`);
+  }
+});
+
+test("archive case studies stay off the homepage project feed", async () => {
+  const projects = await readCollection("projects");
+  const homeSource = await fs.readFile(path.join(root, "app", "page.tsx"), "utf8");
+  const archiveIndexSource = await fs.readFile(path.join(root, "app", "projekte", "page.tsx"), "utf8");
+  const archiveCaseSlugs = [
+    "praxis-fuer-mentale-gesundheit",
+    "zahnraum-berlin",
+    "signalnest",
+    "foerderraum",
+  ];
+
+  assert.ok(
+    homeSource.includes("getFeaturedProjects(6)"),
+    "homepage should keep using the featured project feed",
+  );
+  assert.ok(
+    archiveIndexSource.includes("getAllProjects()"),
+    "project archive should render the full project collection",
+  );
+
+  for (const slug of archiveCaseSlugs) {
+    const project = projects.find((entry) => entry.entry === `${slug}.mdx`);
+    assert.ok(project, `missing archive case study ${slug}`);
+    assert.equal(project.data.featured, false, `${slug} should not appear on the homepage`);
   }
 });
 

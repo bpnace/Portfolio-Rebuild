@@ -34,6 +34,11 @@ const PROJECT_MEDIA: Record<string, ProjectMedia> = {
     alt: "Projektvorschau der Immo Pal Immobilienplattform",
     objectPosition: "center 50%",
   },
+  "praxis-fuer-mentale-gesundheit": {
+    src: "/projekte/small/nordlichtSmall.webp",
+    alt: "Projektvorschau der Praxis für mentale Gesundheit Praxiswebsite",
+    objectPosition: "center 50%",
+  },
   uncloud: {
     src: "/projekte/small/uncloudSmall.webp",
     alt: "Projektvorschau des uncloud App-Konzepts",

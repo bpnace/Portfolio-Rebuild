@@ -95,6 +95,10 @@ Stand der kuratierten Service-Landingpages: 2026-05-04. Last updated: 2026-05-04
 - [Bloom](https://stackwerkhaus.de/projekte/bloom): Produktseite und Webdesign für Health-Software mit sensibler Tonalität, reduzierter Ästhetik und klarer Vertrauensführung.
 - [Codariq](https://stackwerkhaus.de/projekte/codariq): Relaunch und Rebuild einer Software-Marke mit stärkerer Systematik, technischer Glaubwürdigkeit und sauberer B2B-Conversion-Strecke.
 - [uncloud](https://stackwerkhaus.de/projekte/uncloud): UI/UX-Konzept für eine Mental-Health-App mit ruhiger Nutzerführung, sensiblem Interface-System und vertrauensbildender Produktstruktur.
+- [Praxis für mentale Gesundheit](https://stackwerkhaus.de/projekte/praxis-fuer-mentale-gesundheit): Archiv-Case für eine therapeutische Praxiswebsite mit Terminorientierung, Datenschutz-Basis, FAQ und lokaler Sichtbarkeit in Berlin.
+- [Zahnraum Berlin](https://stackwerkhaus.de/projekte/zahnraum-berlin): Archiv-Case für eine Zahnarztpraxis-Website mit Leistungsstruktur, Team-Vertrauen, Local SEO und besserer Terminführung.
+- [Signalnest](https://stackwerkhaus.de/projekte/signalnest): Archiv-Case für eine Pre-Seed-SaaS-Landingpage mit Produktthese, Demo-Anfrage, Pricing-Orientierung und Tracking-Basis.
+- [Förderraum](https://stackwerkhaus.de/projekte/foerderraum): Archiv-Case für Digitalisierungs- und Förderorientierung mit realistischer Leistungsabgrenzung, FAQ-Struktur und Anfrage-Strecke.
 
 ## Blog and guidance
 
