@@ -100,10 +100,12 @@ export function Profile() {
               {renderProfileName(siteConfig.founder)}
             </div>
             <p className="text-base leading-7 text-muted md:text-lg md:leading-8">
-              Webdesigner und Frontend-Entwickler aus Berlin. Stackwerkhaus
+              Digital Designer und Full-Stack-Entwickler aus Berlin. Stackwerkhaus
               verbindet Positionierung, Inhaltsführung, Design und technische
               Umsetzung, damit Websites nicht nur präsent sind, sondern präziser
-              führen.
+              führen. Wir glauben, dass eine starke Online-Präsenz mehr ist als nur eine
+              Visitenkarte. Sie ist ein strategisches Werkzeug, um die richtigen
+              Menschen zu erreichen und zu begeistern.
             </p>
             {githubUsername ? (
               <a

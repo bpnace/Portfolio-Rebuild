@@ -8,11 +8,23 @@ const root = process.cwd();
 
 const requiredLlmsUrls = [
   "https://stackwerkhaus.de",
+  "https://stackwerkhaus.de/blog",
+  "https://stackwerkhaus.de/projekte",
   "https://stackwerkhaus.de/website-erstellen-lassen-deutschland",
   "https://stackwerkhaus.de/webdesign-kleine-unternehmen",
   "https://stackwerkhaus.de/landingpage-erstellen-lassen",
   "https://stackwerkhaus.de/nextjs-website-erstellen-lassen",
   "https://stackwerkhaus.de/ki-website-automatisierung",
+  "https://stackwerkhaus.de/webdesign-therapeuten-berlin",
+  "https://stackwerkhaus.de/webdesign-coaching-praxis",
+  "https://stackwerkhaus.de/webdesign-saas-startup",
+  "https://stackwerkhaus.de/webdesign-zahnarztpraxis-berlin",
+  "https://stackwerkhaus.de/landingpage-pre-seed",
+  "https://stackwerkhaus.de/webdesign-handwerk-berlin",
+  "https://stackwerkhaus.de/webdesign-immobilienmarkler",
+  "https://stackwerkhaus.de/website-foerderung-digitalisierung",
+  "https://stackwerkhaus.de/webdesign-berlin-wilmersdorf",
+  "https://stackwerkhaus.de/website-foerderung-berlin",
   "https://stackwerkhaus.de/webseitecheck",
   "https://stackwerkhaus.de/projekte/immo-pal",
   "https://stackwerkhaus.de/projekte/zynapse",
@@ -20,6 +32,10 @@ const requiredLlmsUrls = [
   "https://stackwerkhaus.de/projekte/bloom",
   "https://stackwerkhaus.de/projekte/codariq",
   "https://stackwerkhaus.de/projekte/uncloud",
+  "https://stackwerkhaus.de/projekte/praxis-fuer-mentale-gesundheit",
+  "https://stackwerkhaus.de/projekte/zahnraum-berlin",
+  "https://stackwerkhaus.de/projekte/signalnest",
+  "https://stackwerkhaus.de/projekte/foerderraum",
 ];
 
 const outdatedLlmsSignals = [
@@ -47,7 +63,7 @@ async function readCollection(dirName) {
 
 test("project content has required frontmatter", async () => {
   const projects = await readCollection("projects");
-  assert.ok(projects.length >= 6);
+  assert.ok(projects.length >= 10);
 
   for (const project of projects) {
     assert.ok(project.data.title, `${project.entry} missing title`);
@@ -56,6 +72,33 @@ test("project content has required frontmatter", async () => {
     assert.ok(project.data.summary, `${project.entry} missing summary`);
     assert.ok(Array.isArray(project.data.services), `${project.entry} missing services`);
     assert.ok(project.content.trim().length > 60, `${project.entry} content too short`);
+  }
+});
+
+test("archive case studies stay off the homepage project feed", async () => {
+  const projects = await readCollection("projects");
+  const homeSource = await fs.readFile(path.join(root, "app", "page.tsx"), "utf8");
+  const archiveIndexSource = await fs.readFile(path.join(root, "app", "projekte", "page.tsx"), "utf8");
+  const archiveCaseSlugs = [
+    "praxis-fuer-mentale-gesundheit",
+    "zahnraum-berlin",
+    "signalnest",
+    "foerderraum",
+  ];
+
+  assert.ok(
+    homeSource.includes("getFeaturedProjects(6)"),
+    "homepage should keep using the featured project feed",
+  );
+  assert.ok(
+    archiveIndexSource.includes("getAllProjects()"),
+    "project archive should render the full project collection",
+  );
+
+  for (const slug of archiveCaseSlugs) {
+    const project = projects.find((entry) => entry.entry === `${slug}.mdx`);
+    assert.ok(project, `missing archive case study ${slug}`);
+    assert.equal(project.data.featured, false, `${slug} should not appear on the homepage`);
   }
 });
 
@@ -88,4 +131,144 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
     !source.includes("https://stackwerkhaus.de/blog/website-relaunch-kmu-leitfaden"),
     "llms.txt still contains removed local test blog article",
   );
+});
+
+test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
+  const sitemapSource = await fs.readFile(path.join(root, "app", "sitemap.ts"), "utf8");
+  const robotsSource = await fs.readFile(path.join(root, "app", "robots.ts"), "utf8");
+  const analyticsSource = await fs.readFile(path.join(root, "components", "layout", "Analytics.tsx"), "utf8");
+
+  assert.ok(sitemapSource.includes('"/blog"'), "sitemap missing /blog hub");
+  assert.ok(sitemapSource.includes('"/projekte"'), "sitemap missing /projekte hub");
+  assert.ok(robotsSource.includes('"/api/"'), "robots policy should disallow API routes");
+
+  await fs.access(path.join(root, "app", "blog", "page.tsx"));
+  await fs.access(path.join(root, "app", "projekte", "page.tsx"));
+  await fs.access(path.join(root, "app", "[slug]", "page.tsx"));
+
+  assert.ok(analyticsSource.includes("usePathname"), "analytics missing route-change tracking");
+  assert.ok(analyticsSource.includes("page_path"), "analytics missing GA4 page_path tracking");
+});
+
+test("vertical landing pages stay discoverable and schema-backed", async () => {
+  const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+  const verticalSource = await fs.readFile(path.join(root, "lib", "vertical-landing-pages.ts"), "utf8");
+  const dynamicRouteSource = await fs.readFile(path.join(root, "app", "[slug]", "page.tsx"), "utf8");
+
+  const requiredSlugs = [
+    "webdesign-therapeuten-berlin",
+    "webdesign-coaching-praxis",
+    "webdesign-saas-startup",
+    "webdesign-zahnarztpraxis-berlin",
+    "landingpage-pre-seed",
+    "webdesign-handwerk-berlin",
+    "webdesign-immobilienmarkler",
+    "website-foerderung-digitalisierung",
+    "webdesign-berlin-wilmersdorf",
+    "website-foerderung-berlin",
+  ];
+
+  for (const slug of requiredSlugs) {
+    assert.ok(verticalSource.includes(`slug: "${slug}"`), `missing vertical landing page ${slug}`);
+    assert.ok(verticalSource.includes(`/${slug}`) || dynamicRouteSource.includes("generateStaticParams"), `missing route support for ${slug}`);
+  }
+
+  assert.ok(landingSource.includes('["ProfessionalService", "LocalBusiness"]'), "landing schema missing LocalBusiness provider");
+  assert.ok(landingSource.includes('"@type": "Service"'), "landing schema missing Service markup");
+  assert.ok(landingSource.includes('"@type": "FAQPage"'), "landing schema missing FAQPage markup");
+  assert.ok(landingSource.includes('"@type": "Review"'), "landing schema missing visible Review markup support");
+  assert.ok(verticalSource.includes("Preisrahmen"), "vertical pages missing visible price framing");
+  assert.ok(verticalSource.includes("Caseteaser"), "vertical pages missing case teaser framing");
+});
+
+test("core landing pages link into vertical topic hubs", async () => {
+  const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+
+  assert.ok(
+    landingSource.includes("Passende Spezialisierungen"),
+    "core landing pages missing hub section",
+  );
+
+  for (const slug of [
+    "webdesign-therapeuten-berlin",
+    "webdesign-handwerk-berlin",
+    "webdesign-saas-startup",
+    "landingpage-pre-seed",
+    "website-foerderung-digitalisierung",
+  ]) {
+    assert.ok(
+      landingSource.includes(`/${slug}`),
+      `core landing pages missing hub link to ${slug}`,
+    );
+  }
+});
+
+test("footer keeps landing page links focused on strongest core pages", async () => {
+  const footerSource = await fs.readFile(path.join(root, "components", "layout", "Footer.tsx"), "utf8");
+
+  const expectedFooterPaths = [
+    "/website-erstellen-lassen-deutschland",
+    "/webdesign-kleine-unternehmen",
+    "/landingpage-erstellen-lassen",
+    "/nextjs-website-erstellen-lassen",
+    "/ki-website-automatisierung",
+  ];
+
+  assert.ok(
+    footerSource.includes("footerLandingPagePaths"),
+    "footer should use an explicit curated landing page list",
+  );
+  assert.ok(
+    footerSource.includes("footerLandingPages.map"),
+    "footer should render the curated landing page list",
+  );
+  assert.ok(
+    !footerSource.includes("landingPages.map"),
+    "footer should not render every landing page automatically",
+  );
+
+  for (const footerPath of expectedFooterPaths) {
+    assert.ok(
+      footerSource.includes(footerPath),
+      `footer missing curated landing page ${footerPath}`,
+    );
+  }
+});
+
+test("landing page copy avoids avoidable German wording artifacts", async () => {
+  const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+  const verticalSource = await fs.readFile(path.join(root, "lib", "vertical-landing-pages.ts"), "utf8");
+  const combinedSource = `${landingSource}\n${verticalSource}`;
+
+  for (const artifact of [
+    "Website-Seite",
+    "Indexieren und interne Verlinkung",
+    "AI-Antwort",
+    "Programmcaveats",
+    "Coaching Teams",
+    "Pre-Seed Startups",
+    "Pre-Seed Startup",
+    "Förderung von digitalisierung",
+  ]) {
+    assert.ok(
+      !combinedSource.includes(artifact),
+      `landing page copy contains avoidable wording artifact: ${artifact}`,
+    );
+  }
+});
+
+test("Drupal blog SEO fields stay wired into blog rendering", async () => {
+  const blogSource = await fs.readFile(path.join(root, "lib", "blog.ts"), "utf8");
+  const blogPageSource = await fs.readFile(path.join(root, "app", "blog", "[slug]", "page.tsx"), "utf8");
+
+  for (const field of ["field_answer_box", "field_experience_note", "field_sources"]) {
+    assert.ok(blogSource.includes(field), `blog data mapper missing ${field}`);
+  }
+
+  assert.ok(blogPageSource.includes("Kurzantwort"), "blog detail page missing answer-box output");
+  assert.ok(blogPageSource.includes("Aus Projektpraxis"), "blog detail page missing project-experience badge");
+  assert.ok(blogPageSource.includes("Quellen und Belege"), "blog detail page missing sources output");
+  assert.ok(blogPageSource.includes("abstract: post.answerBox"), "BlogPosting JSON-LD missing answer-box abstract");
+  assert.ok(blogPageSource.includes("citation: citations"), "BlogPosting JSON-LD missing source citations");
+  assert.ok(blogPageSource.includes('"@type": "CreativeWork"'), "BlogPosting citation should preserve source labels");
 });
