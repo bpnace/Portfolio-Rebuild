@@ -15,6 +15,24 @@ const archiveLinks = [
   { label: "Blog", href: "/blog" },
 ] as const;
 
+const footerLandingPagePaths = [
+  "/website-erstellen-lassen-deutschland",
+  "/webdesign-kleine-unternehmen",
+  "/landingpage-erstellen-lassen",
+  "/nextjs-website-erstellen-lassen",
+  "/ki-website-automatisierung",
+] as const;
+
+const footerLandingPages = footerLandingPagePaths.map((path) => {
+  const page = landingPages.find((landingPage) => landingPage.path === path);
+
+  if (!page) {
+    throw new Error(`Footer landing page not found: ${path}`);
+  }
+
+  return page;
+});
+
 export function Footer() {
   const githubUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME?.trim();
   const githubProfileUrl = githubUsername
@@ -117,7 +135,7 @@ export function Footer() {
                   Fachbereiche
                 </div>
                 <div className="space-y-2 text-[11px] uppercase tracking-[0.16em] text-black/48 sm:space-y-3 sm:text-sm sm:tracking-[0.22em]">
-                  {landingPages.map((page) => (
+                  {footerLandingPages.map((page) => (
                     <HashLink
                       key={page.path}
                       href={page.path}

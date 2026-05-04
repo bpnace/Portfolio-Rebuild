@@ -172,6 +172,38 @@ test("core landing pages link into vertical topic hubs", async () => {
   }
 });
 
+test("footer keeps landing page links focused on strongest core pages", async () => {
+  const footerSource = await fs.readFile(path.join(root, "components", "layout", "Footer.tsx"), "utf8");
+
+  const expectedFooterPaths = [
+    "/website-erstellen-lassen-deutschland",
+    "/webdesign-kleine-unternehmen",
+    "/landingpage-erstellen-lassen",
+    "/nextjs-website-erstellen-lassen",
+    "/ki-website-automatisierung",
+  ];
+
+  assert.ok(
+    footerSource.includes("footerLandingPagePaths"),
+    "footer should use an explicit curated landing page list",
+  );
+  assert.ok(
+    footerSource.includes("footerLandingPages.map"),
+    "footer should render the curated landing page list",
+  );
+  assert.ok(
+    !footerSource.includes("landingPages.map"),
+    "footer should not render every landing page automatically",
+  );
+
+  for (const footerPath of expectedFooterPaths) {
+    assert.ok(
+      footerSource.includes(footerPath),
+      `footer missing curated landing page ${footerPath}`,
+    );
+  }
+});
+
 test("landing page copy avoids avoidable German wording artifacts", async () => {
   const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
   const verticalSource = await fs.readFile(path.join(root, "lib", "vertical-landing-pages.ts"), "utf8");
