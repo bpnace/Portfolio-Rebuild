@@ -103,3 +103,21 @@ test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
   await fs.access(path.join(root, "app", "blog", "page.tsx"));
   await fs.access(path.join(root, "app", "projekte", "page.tsx"));
 });
+
+test("Drupal blog SEO fields stay wired into blog rendering", async () => {
+  const docsSource = await fs.readFile(path.join(root, "docs", "drupal-blog-seo-fields.md"), "utf8");
+  const blogSource = await fs.readFile(path.join(root, "lib", "blog.ts"), "utf8");
+  const blogPageSource = await fs.readFile(path.join(root, "app", "blog", "[slug]", "page.tsx"), "utf8");
+
+  for (const field of ["field_answer_box", "field_experience_note", "field_sources"]) {
+    assert.ok(docsSource.includes(field), `Drupal SEO docs missing ${field}`);
+    assert.ok(blogSource.includes(field), `blog data mapper missing ${field}`);
+  }
+
+  assert.ok(blogPageSource.includes("Kurzantwort"), "blog detail page missing answer-box output");
+  assert.ok(blogPageSource.includes("Aus Projektpraxis"), "blog detail page missing project-experience badge");
+  assert.ok(blogPageSource.includes("Quellen und Belege"), "blog detail page missing sources output");
+  assert.ok(blogPageSource.includes("abstract: post.answerBox"), "BlogPosting JSON-LD missing answer-box abstract");
+  assert.ok(blogPageSource.includes("citation: citations"), "BlogPosting JSON-LD missing source citations");
+  assert.ok(blogPageSource.includes('"@type": "CreativeWork"'), "BlogPosting citation should preserve source labels");
+});

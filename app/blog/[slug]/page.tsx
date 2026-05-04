@@ -85,6 +85,11 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     post.metaDescription ?? post.excerpt,
     post.drupalPlainText,
   );
+  const citations = post.sources?.map((source) => ({
+    "@type": "CreativeWork",
+    name: source.label,
+    url: toAbsoluteUrl(source.href),
+  }));
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -110,7 +115,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         headline: post.title,
         description: metaDescription,
         abstract: post.answerBox,
-        citation: post.sources?.map((source) => toAbsoluteUrl(source.href)),
+        citation: citations,
         image: [heroImageUrl],
         datePublished: post.publishedAt,
         dateModified: post.updatedAt ?? post.publishedAt,
