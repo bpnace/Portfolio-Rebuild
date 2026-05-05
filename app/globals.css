@@ -64,13 +64,17 @@
   }
 }
 
-:where(section, main, article)[id] {
-  scroll-margin-top: 6rem;
+:root {
+  --anchor-scroll-offset: 5.75rem;
+}
+
+:where(section, main, article, [data-scroll-anchor])[id] {
+  scroll-margin-top: var(--anchor-scroll-offset);
 }
 
 @media (min-width: 768px) {
-  :where(section, main, article)[id] {
-    scroll-margin-top: 7rem;
+  :root {
+    --anchor-scroll-offset: 6rem;
   }
 }
 
@@ -308,6 +312,18 @@
   .group:hover .project-preview-image {
     transform: scale(1.1);
     filter: saturate(0.96) contrast(1.1) brightness(0.74);
+  }
+
+  .project-hover-preview-image {
+    object-fit: cover;
+    border-radius: 0 !important;
+    filter: saturate(0.95) contrast(1.08) brightness(0.78);
+    transform: none;
+    transition: filter 320ms ease;
+  }
+
+  .group:hover .project-hover-preview-image {
+    filter: saturate(0.96) contrast(1.1) brightness(0.84);
   }
 
   .project-preview-scrim {

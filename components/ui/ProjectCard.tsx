@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
 import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
 import { ViewTransition } from "react";
-import { getProjectMedia } from "@/lib/project-media";
+import { getProjectPreviewMedia } from "@/lib/project-media";
 
 type ProjectCardProps = {
   index: number;
@@ -40,7 +40,8 @@ function getProjectPreviewTitleStyle(title: string) {
 export function ProjectCard({ index, project }: ProjectCardProps) {
   const scope = useRef<HTMLAnchorElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
-  const previewMedia = getProjectMedia(project);
+  const [isPreviewImageMounted, setIsPreviewImageMounted] = useState(false);
+  const previewMedia = getProjectPreviewMedia(project);
   const previewTitleStyle = getProjectPreviewTitleStyle(project.title);
 
   useGSAP(
@@ -125,6 +126,7 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
         }
 
         firstEnter = true;
+        setIsPreviewImageMounted(true);
         fade.play();
         startFollow();
         align(event);
@@ -152,25 +154,28 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
       ref={scope}
       href={`/projekte/${project.slug}`}
       transitionTypes={["nav-forward"]}
+      onMouseEnter={() => setIsPreviewImageMounted(true)}
       className="group grid gap-4 border-b border-border py-6 transition-colors hover:border-foreground/40 md:grid-cols-[72px_1.2fr_110px_1fr_40px] md:items-center"
     >
       <div
         ref={previewRef}
-        className="project-preview-card pointer-events-none fixed left-0 top-0 z-40 hidden aspect-[700/467] w-[360px] overflow-hidden border border-white/12 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:block"
+        className="project-preview-card pointer-events-none fixed left-0 top-0 z-40 hidden aspect-[700/467] w-[320px] overflow-hidden border border-white/12 opacity-0 shadow-[0_24px_80px_rgba(0,0,0,0.45)] md:block"
         aria-hidden="true"
       >
         <ViewTransition
           name={`project-image-${project.slug}`}
           share="project-image-morph"
         >
-          <Image
-            src={previewMedia.src}
-            alt={previewMedia.alt}
-            fill
-            sizes="360px"
-            className="project-preview-image"
-            style={{ objectPosition: previewMedia.objectPosition }}
-          />
+          {isPreviewImageMounted ? (
+            <Image
+              src={previewMedia.src}
+              alt={previewMedia.alt}
+              fill
+              sizes="320px"
+              className="project-hover-preview-image"
+              style={{ objectPosition: previewMedia.objectPosition }}
+            />
+          ) : null}
         </ViewTransition>
         <div className="project-preview-scrim" aria-hidden />
         <ViewTransition

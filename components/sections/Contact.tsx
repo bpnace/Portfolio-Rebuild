@@ -346,10 +346,10 @@ function ContactFormWithSearchParams() {
 
 export function Contact() {
   return (
-    <section id="kontakt" className="section-space">
+    <section className="section-space">
       <div className="section-shell grid gap-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] xl:gap-20">
         <div>
-          <SectionHeader label="Kontakt" marker="(SKWKHS® — 10)" />
+          <SectionHeader id="kontakt" label="Kontakt" marker="(SKWKHS® — 10)" />
           <div className="space-y-6">
             <h2 className="display-lg">Lass uns was einzigartiges bauen.</h2>
             <p className="max-w-4xl text-lg leading-8 text-muted">
