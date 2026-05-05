@@ -308,6 +308,7 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
 test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
   const sitemapSource = await fs.readFile(path.join(root, "app", "sitemap.ts"), "utf8");
   const robotsSource = await fs.readFile(path.join(root, "app", "robots.ts"), "utf8");
+  const layoutSource = await fs.readFile(path.join(root, "app", "layout.tsx"), "utf8");
   const analyticsSource = await fs.readFile(path.join(root, "components", "layout", "Analytics.tsx"), "utf8");
   const indexNowKeyPath = path.join(root, "public", "76db8d4465364afabab5ebf1d9e89aaa.txt");
 
@@ -326,6 +327,8 @@ test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
 
   assert.ok(analyticsSource.includes("usePathname"), "analytics missing route-change tracking");
   assert.ok(analyticsSource.includes("page_path"), "analytics missing GA4 page_path tracking");
+  assert.ok(layoutSource.includes("microsoft-clarity"), "layout missing Microsoft Clarity script");
+  assert.ok(layoutSource.includes("wmex88aqgx"), "layout missing Microsoft Clarity project id");
 });
 
 test("vertical landing pages stay discoverable and schema-backed", async () => {

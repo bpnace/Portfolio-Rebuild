@@ -257,7 +257,46 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              8. Social-Media-Links
+              8. Microsoft Clarity
+            </h2>
+            <p className="mt-3">
+              Wir verwenden Microsoft Clarity zur Analyse der Nutzung dieser
+              Website und zur Verbesserung der Benutzerführung. Dabei können
+              insbesondere Seitenaufrufe, Klicks, Scrollverhalten,
+              technische Informationen zu Browser und Gerät sowie
+              Referrer-Daten verarbeitet werden.
+            </p>
+            <p className="mt-2">
+              <strong className="text-foreground">Anbieter:</strong>{" "}
+              Microsoft Ireland Operations Limited, One Microsoft Place, South
+              County Business Park, Leopardstown, Dublin 18, D18 P521, Irland.
+            </p>
+            <p className="mt-2">
+              <strong className="text-foreground">Rechtsgrundlage:</strong> Art.
+              6 Abs. 1 lit. a DSGVO sowie § 25 Abs. 1 TDDDG, soweit du über das
+              Consent-Management in die Analyse eingewilligt hast
+              <br />
+              <strong className="text-foreground">
+                Datenübermittlung:
+              </strong>{" "}
+              Eine Verarbeitung durch Microsoft kann auch außerhalb der EU
+              erfolgen. Maßgeblich sind die von Microsoft bereitgestellten
+              Datenschutzinformationen und ggf. zusätzliche vertragliche
+              Garantien.
+              <br />
+              <strong className="text-foreground">Weitere Informationen:</strong>{" "}
+              <a
+                href="https://www.microsoft.com/privacy/privacystatement"
+                className="hover-weight-link hover:text-foreground"
+              >
+                <LinkRippleText text="Microsoft Privacy Statement" />
+              </a>
+            </p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
+              9. Social-Media-Links
             </h2>
             <p className="mt-3">
               Auf der Website sind nur Links zu Instagram und LinkedIn
@@ -268,7 +307,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              9. Deine Rechte
+              10. Deine Rechte
             </h2>
             <p className="mt-3">
               Du hast das Recht auf Auskunft, Berichtigung, Löschung,
@@ -279,7 +318,7 @@ export default function DatenschutzPage() {
 
           <div>
             <h2 className="text-lg font-semibold uppercase tracking-[0.18em] text-foreground">
-              10. Beschwerderecht
+              11. Beschwerderecht
             </h2>
             <p className="mt-3">
               <strong className="text-foreground">
@@ -301,7 +340,7 @@ export default function DatenschutzPage() {
           </div>
 
           <p>
-            <strong className="text-foreground">Stand:</strong> April 2026
+            <strong className="text-foreground">Stand:</strong> Mai 2026
           </p>
         </section>
       </div>
