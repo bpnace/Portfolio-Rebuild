@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import { ProjectCard } from "@/components/ui/ProjectCard";
+import { LoopingScrambleText } from "@/components/ui/LoopingScrambleText";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import type { Project } from "@/lib/projects";
 import {
@@ -14,11 +15,11 @@ const projectsIntro = "Sieht gut aus. Funktioniert noch besser.";
 
 const projectPillars = [
   {
-    title: "Fundament",
+    title: "Planung",
     text: "Full Stack Development, Performance, saubere technische Struktur und eine Basis, die nicht beim ersten Umbau bröckelt.",
   },
   {
-    title: "Grundriss",
+    title: "Konstruktion",
     text: "Klare Seitenstruktur, verständliche Nutzerführung und Inhalte, die Besucher nicht durch verwinkelte Flure schicken.",
   },
   {
@@ -83,7 +84,12 @@ export function Projects({ projects }: ProjectsProps) {
             className="group grid gap-4 border-b border-border py-6 transition-colors hover:border-foreground/40 md:grid-cols-[72px_1.2fr_110px_1fr_40px] md:items-center"
           >
             <span className="eyebrow text-foreground/80">
-              {String(projects.length + 1).padStart(2, "0")}
+              <LoopingScrambleText
+                className="tabular-nums"
+                delayMs={180}
+                text={String(projects.length + 1).padStart(2, "0")}
+                updateMs={96}
+              />
             </span>
             <div>
               <div className="text-2xl font-semibold tracking-tight">
@@ -94,7 +100,13 @@ export function Projects({ projects }: ProjectsProps) {
               </p>
             </div>
             <span className="text-sm text-muted">Archiv</span>
-            <div className="text-sm text-muted">Projektarchiv</div>
+            <div className="text-sm text-muted">
+              <LoopingScrambleText
+                delayMs={420}
+                text="Projektarchiv"
+                updateMs={84}
+              />
+            </div>
             <span className="text-right text-xl text-muted transition-transform group-hover:translate-x-1 group-hover:text-foreground">
               →
             </span>

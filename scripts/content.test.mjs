@@ -114,6 +114,10 @@ test("project media references existing public image assets", async () => {
     projectCardSource.includes("isPreviewImageMounted"),
     "project hover images should mount only after pointer hover",
   );
+  assert.ok(
+    projectCardSource.includes('loading="eager"'),
+    "mounted project hover images should load eagerly to avoid dev LCP warnings",
+  );
   assert.match(
     globalStylesSource,
     /\.project-hover-preview-image\s*{[^}]*object-fit:\s*cover;/s,
@@ -163,6 +167,10 @@ test("project navigation links homepage feed to archive and returns details to a
     path.join(root, "components", "sections", "Projects.tsx"),
     "utf8",
   );
+  const loopingScrambleSource = await fs.readFile(
+    path.join(root, "components", "ui", "LoopingScrambleText.tsx"),
+    "utf8",
+  );
   const projectDetailSource = await fs.readFile(
     path.join(root, "app", "projekte", "[slug]", "page.tsx"),
     "utf8",
@@ -175,6 +183,21 @@ test("project navigation links homepage feed to archive and returns details to a
   assert.ok(
     projectsSectionSource.includes("Weitere Projekte ansehen"),
     "homepage project section missing archive CTA label",
+  );
+  assert.ok(
+    projectsSectionSource.includes("LoopingScrambleText") &&
+      projectsSectionSource.includes('text="Projektarchiv"'),
+    "homepage archive CTA should keep the project archive label in a looping scramble state",
+  );
+  assert.ok(
+    loopingScrambleSource.includes("data-looping-scramble-visual") &&
+      loopingScrambleSource.includes("prefers-reduced-motion: reduce"),
+    "looping archive scramble should expose a stable visual target and respect reduced motion",
+  );
+  assert.ok(
+    loopingScrambleSource.includes("getContinuousScrambleText") &&
+      !loopingScrambleSource.includes("getScrambleFrameText"),
+    "looping archive scramble should keep changing without resolving to the final label",
   );
   assert.ok(
     !projectDetailSource.includes('href="/#projekte"'),
@@ -224,6 +247,31 @@ test("home hash anchors align visible section headers", async () => {
     assert.ok(source.includes(`SectionHeader id="${id}"`), `${id} should target its visible section header`);
     assert.ok(!source.includes(`<section id="${id}"`), `${id} should not target the padded section wrapper`);
   }
+});
+
+test("contact title uses the shared word-mask reveal", async () => {
+  const contactSource = await fs.readFile(
+    path.join(root, "components", "sections", "Contact.tsx"),
+    "utf8",
+  );
+  const wordMaskSource = await fs.readFile(
+    path.join(root, "lib", "word-mask-heading.tsx"),
+    "utf8",
+  );
+
+  assert.ok(
+    contactSource.includes('renderWordMaskText("Lass uns was einzigartiges bauen.")'),
+    "contact title should render through the shared word-mask title helper",
+  );
+  assert.ok(
+    contactSource.includes('trigger: "scroll"'),
+    "contact title reveal should wait until the contact section enters the viewport",
+  );
+  assert.ok(
+    wordMaskSource.includes('paused: options.trigger === "scroll"') &&
+      wordMaskSource.includes("ScrollTrigger.create"),
+    "word-mask reveal helper should support scroll-triggered title reveals",
+  );
 });
 
 test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => {

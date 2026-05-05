@@ -163,6 +163,8 @@
     inset: 0 0 0.16em 0;
     z-index: 2;
     background: var(--text);
+    opacity: 0;
+    transform: scaleX(0);
     transform-origin: left center;
     pointer-events: none;
     will-change: transform;
@@ -640,23 +642,25 @@
       white-space: nowrap;
     }
 
-    [data-hero-intro="loading"] .hero-char,
-    [data-hero-intro="loading"] .hero-copy,
-    [data-hero-intro="loading"] .hero-action {
-      opacity: 0;
-    }
-
-    [data-hero-intro="loading"] .hero-word-mask {
-      opacity: 1;
-      transform: scaleX(0);
-    }
-
     .link-ripple-static {
       display: inline;
     }
 
     .link-ripple-visual {
       display: none;
+    }
+
+    .mobile-deferred-section {
+      content-visibility: auto;
+      contain-intrinsic-size: 0 900px;
+    }
+
+    .mobile-deferred-section[data-mobile-deferred-size="compact"] {
+      contain-intrinsic-size: 0 420px;
+    }
+
+    .mobile-deferred-section[data-mobile-deferred-size="large"] {
+      contain-intrinsic-size: 0 1200px;
     }
   }
 

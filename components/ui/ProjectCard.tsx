@@ -3,9 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Project } from "@/lib/projects";
-import { ensureGsap, gsap, shouldReduceMotion, useGSAP } from "@/lib/gsap";
 import { ViewTransition } from "react";
 import { getProjectPreviewMedia } from "@/lib/project-media";
 
@@ -13,6 +12,23 @@ type ProjectCardProps = {
   index: number;
   project: Project;
 };
+
+type PreviewFade = {
+  play: () => void;
+  reverse: () => void;
+  kill: () => void;
+};
+
+type QuickSetter = (value: number, startValue?: number) => void;
+
+function canUseMousePreview() {
+  return (
+    window.matchMedia(
+      "(min-width: 768px) and (hover: hover) and (pointer: fine)",
+    ).matches &&
+    !window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
 
 function getProjectPreviewTitleStyle(title: string) {
   const characterCount = title.replace(/\s+/g, "").length;
@@ -44,43 +60,30 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
   const previewMedia = getProjectPreviewMedia(project);
   const previewTitleStyle = getProjectPreviewTitleStyle(project.title);
 
-  useGSAP(
-    () => {
-      ensureGsap();
-
+  useEffect(() => {
       const trigger = scope.current;
       const preview = previewRef.current;
       if (!trigger || !preview) {
         return;
       }
 
-      const canUseMousePreview = window.matchMedia(
-        "(min-width: 768px) and (hover: hover) and (pointer: fine)",
-      ).matches;
-
-      if (!canUseMousePreview || shouldReduceMotion()) {
-        gsap.set(preview, { autoAlpha: 0 });
+      if (!canUseMousePreview()) {
+        preview.style.opacity = "0";
+        preview.style.visibility = "hidden";
         return;
       }
 
-      gsap.set(preview, {
-        xPercent: 0,
-        yPercent: 0,
-        autoAlpha: 0,
-      });
-
-      const setX = gsap.quickTo(preview, "x", {
-        duration: 0.4,
-        ease: "power3.out",
-      });
-      const setY = gsap.quickTo(preview, "y", {
-        duration: 0.4,
-        ease: "power3.out",
-      });
-
+      let fade: PreviewFade | null = null;
+      let setX: QuickSetter | null = null;
+      let setY: QuickSetter | null = null;
       let firstEnter = true;
+      let cancelled = false;
 
       const align = (event: MouseEvent | PointerEvent) => {
+        if (!setX || !setY) {
+          return;
+        }
+
         const width = preview.offsetWidth;
         const height = preview.offsetHeight;
         const margin = 24;
@@ -112,16 +115,8 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
         document.removeEventListener("mousemove", align);
       };
 
-      const fade = gsap.to(preview, {
-        autoAlpha: 1,
-        ease: "none",
-        paused: true,
-        duration: 0.12,
-        onReverseComplete: stopFollow,
-      });
-
       const handleEnter = (event: PointerEvent) => {
-        if (event.pointerType !== "mouse") {
+        if (event.pointerType !== "mouse" || !fade) {
           return;
         }
 
@@ -133,21 +128,51 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
       };
 
       const handleLeave = () => {
-        fade.reverse();
+        fade?.reverse();
       };
 
-      trigger.addEventListener("pointerenter", handleEnter);
-      trigger.addEventListener("pointerleave", handleLeave);
+      void import("@/lib/gsap").then(({ ensureGsap, gsap }) => {
+        if (cancelled) {
+          return;
+        }
+
+        ensureGsap();
+
+        gsap.set(preview, {
+          xPercent: 0,
+          yPercent: 0,
+          autoAlpha: 0,
+        });
+
+        setX = gsap.quickTo(preview, "x", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+        setY = gsap.quickTo(preview, "y", {
+          duration: 0.4,
+          ease: "power3.out",
+        });
+
+        fade = gsap.to(preview, {
+          autoAlpha: 1,
+          ease: "none",
+          paused: true,
+          duration: 0.12,
+          onReverseComplete: stopFollow,
+        });
+
+        trigger.addEventListener("pointerenter", handleEnter);
+        trigger.addEventListener("pointerleave", handleLeave);
+      });
 
       return () => {
-        fade.kill();
+        cancelled = true;
+        fade?.kill();
         stopFollow();
         trigger.removeEventListener("pointerenter", handleEnter);
         trigger.removeEventListener("pointerleave", handleLeave);
       };
-    },
-    { scope, revertOnUpdate: true },
-  );
+  }, []);
 
   return (
     <Link
@@ -171,6 +196,7 @@ export function ProjectCard({ index, project }: ProjectCardProps) {
               src={previewMedia.src}
               alt={previewMedia.alt}
               fill
+              loading="eager"
               sizes="320px"
               className="project-hover-preview-image"
               style={{ objectPosition: previewMedia.objectPosition }}
