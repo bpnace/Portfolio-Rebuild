@@ -1,4 +1,4 @@
-# Stackwerkhaus Portfolio Rebuild
+# Stackwerkhaus Website
 
 [![CI](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/ci.yml)
 [![Deploy](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/deploy.yml)
@@ -12,10 +12,35 @@
 [![pnpm](https://img.shields.io/badge/pnpm-lockfile_v9-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![GSAP](https://img.shields.io/badge/GSAP-motion-88CE02?logo=greensock&logoColor=000000)](https://gsap.com/)
 
-Modern App Router rebuild of the Stackwerkhaus marketing site. The project is
-the current portfolio and business website, focused on German-first service
-positioning, case studies, blog publishing, conversion-oriented landing content,
-and a lightweight contact pipeline.
+![Stackwerkhaus live homepage](public/readme/stackwerkhaus-home.png)
+
+Current production website for Stackwerkhaus. The project is the public business
+site for a German-first web and automation studio, combining service
+positioning, case-study content, Drupal-backed publishing, conversion-oriented
+landing sections, and a lightweight contact pipeline.
+
+## Case study
+
+### Problem
+Stackwerkhaus needed more than a personal portfolio: the site has to explain the
+offer, show credible project work, publish content, and convert qualified
+inquiries without feeling like a generic agency template.
+
+### Solution
+I built a content-driven Next.js 16 site with a sharp German positioning layer,
+routed service and project pages, Drupal blog publishing, local MDX case
+studies, technical SEO primitives, and reduced-motion-safe GSAP islands.
+
+### Engineering decisions
+- Use App Router metadata routes for sitemap, robots, and canonical structure
+- Keep motion isolated in client components so content and SEO stay server-first
+- Support local preview mode when live email credentials are not available
+- Separate Drupal blog content from local project case studies
+- Keep verification scripts close to the publishing and smoke-test paths
+
+### Outcome
+The repository now represents the live Stackwerkhaus website and should be read
+as a current production case, not an old portfolio rebuild experiment.
 
 ## What this shows
 
