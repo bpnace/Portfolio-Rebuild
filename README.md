@@ -1,13 +1,26 @@
-# Stackwerkhaus
+# Stackwerkhaus Portfolio Rebuild
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.3-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.4-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![pnpm](https://img.shields.io/badge/pnpm-workspace-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
-[![Status](https://img.shields.io/badge/status-active_development-1F2937)](#)
+[![GSAP](https://img.shields.io/badge/GSAP-motion-88CE02?logo=greensock&logoColor=000000)](https://gsap.com/)
+[![Status](https://img.shields.io/badge/status-production_rebuild-1F2937)](#)
 
-Modern App Router rebuild of the Stackwerkhaus marketing site. The project is a German-first business website focused on service positioning, case studies, blog publishing, conversion-oriented landing content, and a lightweight contact pipeline.
+Modern App Router rebuild of the Stackwerkhaus marketing site. The project is
+the current portfolio and business website, focused on German-first service
+positioning, case studies, blog publishing, conversion-oriented landing content,
+and a lightweight contact pipeline.
+
+## What this shows
+
+- Production-oriented Next.js 16 / React 19 implementation
+- German-first content architecture for services, case studies, and landing pages
+- Drupal-backed blog publishing plus local MDX project content
+- SEO primitives, sitemap generation, robots handling, and metadata structure
+- Motion-enhanced UI with reduced-motion-safe GSAP client islands
+- Contact flow that can run locally without live email delivery
 
 ## Overview
 
