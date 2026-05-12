@@ -1,12 +1,16 @@
 # Stackwerkhaus Portfolio Rebuild
 
+[![CI](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/ci.yml)
+[![Deploy](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/deploy.yml/badge.svg?branch=main)](https://github.com/bpnace/Portfolio-Rebuild/actions/workflows/deploy.yml)
+![Version](https://img.shields.io/badge/version-0.1.0-2563EB?style=flat-square)
+![Status](https://img.shields.io/badge/status-current_showcase-1F2937?style=flat-square)
 [![Next.js](https://img.shields.io/badge/Next.js-16.2.3-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.4-149ECA?logo=react&logoColor=white)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![pnpm](https://img.shields.io/badge/pnpm-workspace-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
+[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D22.19-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![pnpm](https://img.shields.io/badge/pnpm-lockfile_v9-F69220?logo=pnpm&logoColor=white)](https://pnpm.io/)
 [![GSAP](https://img.shields.io/badge/GSAP-motion-88CE02?logo=greensock&logoColor=000000)](https://gsap.com/)
-[![Status](https://img.shields.io/badge/status-production_rebuild-1F2937)](#)
 
 Modern App Router rebuild of the Stackwerkhaus marketing site. The project is
 the current portfolio and business website, focused on German-first service
