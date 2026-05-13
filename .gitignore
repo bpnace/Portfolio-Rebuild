@@ -40,6 +40,7 @@ yarn-error.log*
 
 # env files (do not commit)
 .env*
+!.env.example
 
 # vercel
 .vercel

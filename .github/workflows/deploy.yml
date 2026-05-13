@@ -8,9 +8,22 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: stackwerkhaus-production
+  cancel-in-progress: false
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: production
+    env:
+      VPS_APP_DIR: ${{ vars.VPS_APP_DIR }}
+      VPS_APP_IMAGE: ${{ vars.VPS_APP_IMAGE }}
+      VPS_APP_CONTAINER: ${{ vars.VPS_APP_CONTAINER }}
+      VPS_DOCKER_NETWORK: ${{ vars.VPS_DOCKER_NETWORK }}
+      VPS_ENV_FILE: ${{ vars.VPS_ENV_FILE }}
+      VPS_GIT_KEY_PATH: ${{ vars.VPS_GIT_KEY_PATH }}
+      VPS_PORT: ${{ vars.VPS_PORT }}
 
     steps:
       - name: Checkout Repo
@@ -18,6 +31,7 @@ jobs:
 
       - name: Setup SSH key
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
           echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
@@ -25,17 +39,41 @@ jobs:
 
       - name: Deploy on VPS
         run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} '
-            set -e
-            cd /home/tarik/apps/stackwerkhaus
-            GIT_SSH_COMMAND="ssh -i ~/.ssh/github_stackwerkhaus -o IdentitiesOnly=yes" git fetch origin
+          set -euo pipefail
+          : "${VPS_APP_DIR:?Missing VPS_APP_DIR repository variable}"
+          : "${VPS_APP_IMAGE:?Missing VPS_APP_IMAGE repository variable}"
+          : "${VPS_APP_CONTAINER:?Missing VPS_APP_CONTAINER repository variable}"
+          : "${VPS_DOCKER_NETWORK:?Missing VPS_DOCKER_NETWORK repository variable}"
+          : "${VPS_GIT_KEY_PATH:?Missing VPS_GIT_KEY_PATH repository variable}"
+          : "${VPS_PORT:?Missing VPS_PORT repository variable}"
+
+          printf -v app_dir_q '%q' "$VPS_APP_DIR"
+          printf -v app_image_q '%q' "$VPS_APP_IMAGE"
+          printf -v app_container_q '%q' "$VPS_APP_CONTAINER"
+          printf -v app_network_q '%q' "$VPS_DOCKER_NETWORK"
+          printf -v env_file_q '%q' "$VPS_ENV_FILE"
+          printf -v git_key_q '%q' "$VPS_GIT_KEY_PATH"
+          printf -v app_port_q '%q' "$VPS_PORT"
+
+          ssh -i ~/.ssh/id_ed25519 \
+            -o IdentitiesOnly=yes \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "APP_DIR=$app_dir_q APP_IMAGE=$app_image_q APP_CONTAINER=$app_container_q APP_NETWORK=$app_network_q APP_ENV_FILE=$env_file_q GIT_KEY_PATH=$git_key_q APP_PORT=$app_port_q bash -se" <<'REMOTE'
+            set -euo pipefail
+            cd "$APP_DIR"
+            GIT_SSH_COMMAND="ssh -i ${GIT_KEY_PATH} -o IdentitiesOnly=yes" git fetch origin main
             git reset --hard origin/main
-            docker build -t stackwerkhaus-next:latest .
-            docker rm -f stackwerkhaus-next || true
+            docker build -t "$APP_IMAGE" .
+            docker rm -f "$APP_CONTAINER" || true
+            env_file_args=()
+            if [ -n "${APP_ENV_FILE:-}" ]; then
+              env_file_args=(--env-file "$APP_ENV_FILE")
+            fi
             docker run -d \
-              --name stackwerkhaus-next \
+              --name "$APP_CONTAINER" \
               --restart unless-stopped \
-              --network proxy-net \
-              -p 3001:3000 \
-              stackwerkhaus-next:latest
-          '
+              "${env_file_args[@]}" \
+              --network "$APP_NETWORK" \
+              -p "${APP_PORT}:3000" \
+              "$APP_IMAGE"
+          REMOTE

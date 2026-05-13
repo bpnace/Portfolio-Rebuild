@@ -24,9 +24,6 @@ type WebhookResult = {
   httpStatus?: number;
 };
 
-const CONTACT_WEBHOOK_URL =
-  "https://automation.codariq.de/webhook/b522a240-8690-4526-b30b-2d5c3f7afc09";
-
 function isValidEmail(value: string) {
   if (value.length > 254 || value !== value.trim()) {
     return false;
@@ -86,6 +83,21 @@ function getDefaultWebhookMessage(status: number) {
       return "Zu viele Anfragen in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut.";
     default:
       return "Die Anfrage konnte gerade nicht weitergeleitet werden. Bitte versuche es erneut.";
+  }
+}
+
+function resolveContactWebhookUrl() {
+  const webhookUrl = process.env.CONTACT_WEBHOOK_URL?.trim();
+
+  if (!webhookUrl) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(webhookUrl);
+    return parsedUrl.protocol === "https:" ? parsedUrl.toString() : null;
+  } catch {
+    return null;
   }
 }
 
@@ -165,18 +177,19 @@ export async function POST(request: Request) {
 
   const webhookUsername = process.env.CONTACT_WEBHOOK_USERNAME?.trim();
   const webhookPassword = process.env.CONTACT_WEBHOOK_PASSWORD?.trim();
+  const webhookUrl = resolveContactWebhookUrl();
 
-  if (!webhookUsername || !webhookPassword) {
+  if (!webhookUrl || !webhookUsername || !webhookPassword) {
     return NextResponse.json(
       {
         message:
-          "Die Anfrage konnte gerade nicht weitergeleitet werden. Die Webhook-Authentifizierung ist nicht vollständig konfiguriert.",
+          "Die Anfrage konnte gerade nicht weitergeleitet werden. Die Webhook-Konfiguration ist nicht vollständig.",
       },
       { status: 500 },
     );
   }
 
-  const webhookResponse = await fetch(CONTACT_WEBHOOK_URL, {
+  const webhookResponse = await fetch(webhookUrl, {
     method: "POST",
     headers: {
       Authorization: `Basic ${Buffer.from(
@@ -204,11 +217,7 @@ export async function POST(request: Request) {
   if (!webhookResponse.ok) {
     return NextResponse.json(
       {
-        message:
-          upstreamMessage ||
-          getDefaultWebhookMessage(upstreamStatus),
-        webhookStatus: upstreamStatus,
-        webhookResult,
+        message: getDefaultWebhookMessage(upstreamStatus),
       },
       { status: upstreamStatus >= 400 ? upstreamStatus : 502 },
     );

@@ -36,23 +36,6 @@ type WebhookResult = {
   httpStatus?: number;
 };
 
-const CONTACT_WEBHOOK_URL =
-  "https://automation.codariq.de/webhook/b522a240-8690-4526-b30b-2d5c3f7afc09";
-
-function getWebhookMessage(result: WebhookResult | null) {
-  const message = String(result?.message ?? "").trim();
-  if (message) {
-    return message;
-  }
-
-  const reason = String(result?.reason ?? "").trim();
-  if (reason) {
-    return reason;
-  }
-
-  return null;
-}
-
 function getDefaultWebhookMessage(status: number) {
   switch (status) {
     case 400:
@@ -63,6 +46,21 @@ function getDefaultWebhookMessage(status: number) {
       return "Zu viele Anfragen in kurzer Zeit. Bitte versuche es in ein paar Minuten erneut.";
     default:
       return "Der Baustellencheck konnte gerade nicht weitergeleitet werden. Bitte versuche es erneut.";
+  }
+}
+
+function resolveContactWebhookUrl() {
+  const webhookUrl = process.env.CONTACT_WEBHOOK_URL?.trim();
+
+  if (!webhookUrl) {
+    return null;
+  }
+
+  try {
+    const parsedUrl = new URL(webhookUrl);
+    return parsedUrl.protocol === "https:" ? parsedUrl.toString() : null;
+  } catch {
+    return null;
   }
 }
 
@@ -96,12 +94,13 @@ export async function POST(request: Request) {
 
   const webhookUsername = process.env.CONTACT_WEBHOOK_USERNAME?.trim();
   const webhookPassword = process.env.CONTACT_WEBHOOK_PASSWORD?.trim();
+  const webhookUrl = resolveContactWebhookUrl();
 
-  if (!webhookUsername || !webhookPassword) {
+  if (!webhookUrl || !webhookUsername || !webhookPassword) {
     return NextResponse.json(
       {
         message:
-          "Der Baustellencheck konnte gerade nicht weitergeleitet werden. Die Webhook-Authentifizierung ist nicht vollständig konfiguriert.",
+          "Der Baustellencheck konnte gerade nicht weitergeleitet werden. Die Webhook-Konfiguration ist nicht vollständig.",
       },
       { status: 500 },
     );
@@ -110,7 +109,7 @@ export async function POST(request: Request) {
   let webhookResponse: Response;
 
   try {
-    webhookResponse = await fetch(CONTACT_WEBHOOK_URL, {
+    webhookResponse = await fetch(webhookUrl, {
       method: "POST",
       headers: {
         Authorization: `Basic ${Buffer.from(
@@ -131,8 +130,6 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: getDefaultWebhookMessage(502),
-        webhookStatus: 502,
-        webhookResult: null,
       },
       { status: 502 },
     );
@@ -149,16 +146,11 @@ export async function POST(request: Request) {
     typeof webhookResult?.httpStatus === "number"
       ? webhookResult.httpStatus
       : webhookResponse.status;
-  const upstreamMessage = getWebhookMessage(webhookResult);
 
   if (!webhookResponse.ok) {
     return NextResponse.json(
       {
-        message:
-          upstreamMessage ||
-          getDefaultWebhookMessage(upstreamStatus),
-        webhookStatus: upstreamStatus,
-        webhookResult,
+        message: getDefaultWebhookMessage(upstreamStatus),
       },
       { status: upstreamStatus >= 400 ? upstreamStatus : 502 },
     );
