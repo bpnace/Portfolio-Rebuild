@@ -28,7 +28,27 @@ const CONTACT_WEBHOOK_URL =
   "https://automation.codariq.de/webhook/b522a240-8690-4526-b30b-2d5c3f7afc09";
 
 function isValidEmail(value: string) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+  if (value.length > 254 || value !== value.trim()) {
+    return false;
+  }
+
+  const atIndex = value.indexOf("@");
+  if (atIndex <= 0 || atIndex !== value.lastIndexOf("@")) {
+    return false;
+  }
+
+  const localPart = value.slice(0, atIndex);
+  const domain = value.slice(atIndex + 1);
+  if (!localPart || !domain || domain.startsWith(".") || domain.endsWith(".")) {
+    return false;
+  }
+
+  const domainLabels = domain.split(".");
+  return (
+    domainLabels.length >= 2 &&
+    !domainLabels.some((label) => label.length === 0) &&
+    !Array.from(value).some((character) => character.trim().length === 0)
+  );
 }
 
 function isTermsAccepted(value: ContactPayload["terms"]) {

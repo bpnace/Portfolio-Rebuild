@@ -47,6 +47,25 @@ const outdatedLlmsSignals = [
   "€4,500",
 ];
 
+function extractUrls(source) {
+  const urls = new Set();
+
+  for (const part of source.split("(").slice(1)) {
+    const candidate = part.split(")")[0].trim();
+
+    try {
+      const url = new URL(candidate);
+      if (url.hostname === "stackwerkhaus.de") {
+        urls.add(url.toString().replace(/\/$/, ""));
+      }
+    } catch {
+      // Not every parenthesized value in Markdown is a URL.
+    }
+  }
+
+  return urls;
+}
+
 async function readCollection(dirName) {
   const dir = path.join(root, "content", dirName);
   const entries = await fs.readdir(dir);
@@ -276,6 +295,7 @@ test("contact title uses the shared word-mask reveal", async () => {
 
 test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => {
   const source = await fs.readFile(path.join(root, "public", "llms.txt"), "utf8");
+  const llmsUrls = extractUrls(source);
 
   assert.match(source, /^# STACKWERKHAUS\n/);
   assert.match(source, /\n> STACKWERKHAUS ist /);
@@ -284,7 +304,7 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
   assert.match(source, /info@stackwerkhaus\.de/);
 
   for (const url of requiredLlmsUrls) {
-    assert.ok(source.includes(url), `llms.txt missing ${url}`);
+    assert.ok(llmsUrls.has(url), `llms.txt missing ${url}`);
   }
 
   for (const signal of outdatedLlmsSignals) {
@@ -292,15 +312,15 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
   }
 
   assert.ok(
-    source.includes("https://stackwerkhaus.de/blog/micrography"),
+    llmsUrls.has("https://stackwerkhaus.de/blog/micrography"),
     "llms.txt missing Drupal blog article: micrography",
   );
   assert.ok(
-    source.includes("https://stackwerkhaus.de/blog/webdesign-fur-saas"),
+    llmsUrls.has("https://stackwerkhaus.de/blog/webdesign-fur-saas"),
     "llms.txt missing Drupal blog article: webdesign-fur-saas",
   );
   assert.ok(
-    !source.includes("https://stackwerkhaus.de/blog/website-relaunch-kmu-leitfaden"),
+    !llmsUrls.has("https://stackwerkhaus.de/blog/website-relaunch-kmu-leitfaden"),
     "llms.txt still contains removed local test blog article",
   );
 });

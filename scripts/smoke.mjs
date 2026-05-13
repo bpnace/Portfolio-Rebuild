@@ -32,12 +32,17 @@ function escapeRegExp(value) {
 }
 
 function decodeHtmlAttribute(value) {
-  return value
-    .replace(/&quot;/g, "\"")
-    .replace(/&#x27;/g, "'")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">");
+  const entities = {
+    "#x27": "'",
+    amp: "&",
+    gt: ">",
+    lt: "<",
+    quot: "\"",
+  };
+
+  return value.replace(/&(quot|#x27|amp|lt|gt);/g, (match, entity) => {
+    return entities[entity] ?? match;
+  });
 }
 
 function getMetaDescription(html) {
