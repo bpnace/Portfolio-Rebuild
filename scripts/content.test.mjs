@@ -325,6 +325,155 @@ test("llms.txt provides canonical AI-facing Stackwerkhaus context", async () => 
   );
 });
 
+test("public pricing is subscription-first with Stripe link configuration", async () => {
+  const pricingSources = await Promise.all(
+    [
+      ".env.example",
+      "components/sections/Contact.tsx",
+      "components/sections/Pricing.tsx",
+      "components/ui/PricingCard.tsx",
+      "lib/landing-pages.ts",
+      "lib/site-data.ts",
+      "lib/vertical-landing-pages.ts",
+      "public/llms.txt",
+    ].map(async (filePath) => [
+      filePath,
+      await fs.readFile(path.join(root, filePath), "utf8"),
+    ]),
+  );
+  const combinedPricingSource = pricingSources
+    .map(([filePath, source]) => `\n${filePath}\n${source}`)
+    .join("\n");
+
+  for (const expectedSignal of [
+    'monthlyPrice: "29"',
+    'monthlyPrice: "69"',
+    'monthlyPrice: "89"',
+    'monthlyPrice: "199"',
+    "Template Start",
+    "Website Individuell",
+    "Shop & Blog",
+    "System & Wachstum",
+    "pricingAddOns",
+    "secondaryPrice",
+    "Wähle deinen Einstieg",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
+    'stripePaymentLink ? `${name} starten` : ctaLabel',
+    "ab 149 €/Monat",
+    "priceSpecification",
+    'unitText: "Monat"',
+  ]) {
+    assert.ok(
+      combinedPricingSource.includes(expectedSignal),
+      `pricing source missing subscription-first signal: ${expectedSignal}`,
+    );
+  }
+
+  for (const outdatedSignal of [
+    'monthlyPrice: "79"',
+    'monthlyPrice: "249"',
+    "59 €/Monat",
+    "Digitales Facility Management",
+    "Starter-Paket",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_CARE",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_GROWTH",
+    "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_ABO",
+    "Audit für 249",
+    "Website-Abo: ab 149",
+    "Care: ab 79",
+    "Growth: ab 249",
+    "name: page.schema.offer.name,\n            price: page.schema.offer.price",
+  ]) {
+    assert.ok(
+      !combinedPricingSource.includes(outdatedSignal),
+      `pricing source contains outdated signal: ${outdatedSignal}`,
+    );
+  }
+});
+
+test("pricing data exposes exact public offer rows and monthly schema semantics", async () => {
+  const siteDataSource = await fs.readFile(path.join(root, "lib", "site-data.ts"), "utf8");
+  const pricingSource = await fs.readFile(
+    path.join(root, "components", "sections", "Pricing.tsx"),
+    "utf8",
+  );
+  const contactSource = await fs.readFile(
+    path.join(root, "components", "sections", "Contact.tsx"),
+    "utf8",
+  );
+  const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+
+  for (const [slug, name, price] of [
+    ["template-start", "Template Start", "29"],
+    ["website-individuell", "Website Individuell", "69"],
+    ["shop-blog", "Shop & Blog", "89"],
+    ["system-wachstum", "System & Wachstum", "199"],
+  ]) {
+    assert.match(
+      siteDataSource,
+      new RegExp(`slug: "${slug}"[\\s\\S]*?name: "${name}"[\\s\\S]*?monthlyPrice: "${price}"`),
+      `${name} tier should expose ${price} €/Monat`,
+    );
+  }
+
+  for (const [name, price] of [
+    ["Lokale SEO-Einträge", "+9 €/Monat"],
+    ["SEO & Content Ausbau", "ab 149 €/Monat"],
+    ["Zusätzliche Sprache", "ab 19 €/Monat"],
+    ["Zusätzliche Domain", "+3 €/Monat"],
+    ["Zusätzliches E-Mail-Postfach", "+2 €/Monat"],
+  ]) {
+    assert.match(
+      siteDataSource,
+      new RegExp(`name: "${name}"[\\s\\S]*?price: "${price.replace("+", "\\+")}"`),
+      `${name} add-on should expose ${price}`,
+    );
+  }
+
+  assert.ok(
+    siteDataSource.includes('secondaryPrice: "19 €/Monat standalone"'),
+    "local SEO standalone price should be a first-class visible add-on price",
+  );
+
+  for (const [slug, name, price] of [
+    ["website-check", "Website Check", "99 €"],
+    ["rohbau", "Rohbau", "ab 799 €"],
+    ["sanierung", "Sanierung", "ab 1.499 €"],
+    ["bauwerk", "Bauwerk", "ab 2.499 €"],
+  ]) {
+    assert.match(
+      siteDataSource,
+      new RegExp(`slug: "${slug}"[\\s\\S]*?name: "${name}"[\\s\\S]*?price: "${price}"`),
+      `${name} fixed-price alternative should expose ${price}`,
+    );
+  }
+
+  assert.ok(
+    !pricingSource.includes("fixedPriceAlternatives") &&
+      !pricingSource.includes("Festpreise"),
+    "pricing should keep the main selection focused on subscriptions and add-ons",
+  );
+  assert.ok(
+    contactSource.includes('"website-audit": "website-check"'),
+    "legacy website-audit links should resolve to the new Website Check prefill",
+  );
+  assert.ok(
+    contactSource.includes("buildOfferProjectMessage(selectedPackage)"),
+    "legacy fixed-price paket links should still resolve to contact prefills",
+  );
+  assert.ok(
+    landingSource.includes("priceSpecification") &&
+      landingSource.includes('unitText: "Monat"') &&
+      !landingSource.includes(
+        "name: page.schema.offer.name,\n            price: page.schema.offer.price",
+      ),
+    "landing JSON-LD should express offer prices as monthly unit prices",
+  );
+});
+
 test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
   const sitemapSource = await fs.readFile(path.join(root, "app", "sitemap.ts"), "utf8");
   const robotsSource = await fs.readFile(path.join(root, "app", "robots.ts"), "utf8");

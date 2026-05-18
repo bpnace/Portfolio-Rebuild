@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { findOffer, type Offer } from "@/lib/offers";
+import { fixedPriceAlternatives, pricingTiers } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
 import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
+import type { FixedPriceAlternative, PricingTier } from "@/lib/site-data";
 import {
   renderWordMaskText,
   useWordMaskHeadingReveal,
@@ -21,44 +21,111 @@ type Status = {
 const initialStatus: Status = { type: "idle", message: "" };
 const PRESET_LIMIT = 3;
 
-function buildOfferPriceSummary(offer: Offer) {
-  const priceParts = [
-    offer.priceLabel,
-    offer.minimumTerm ? offer.minimumTerm : "",
-  ].filter(Boolean);
+const offerPrefills = {
+  "website-check": {
+    title: "Website Check",
+    price: "99 €",
+    bullets: [
+      "für Neukunden",
+      "Anrechnung bei anschließendem Abo oder Festpreis-Paket",
+      "konkrete Einschätzung mit nächsten Schritten",
+    ],
+  },
+} as const;
 
-  return priceParts.join(", ");
-}
+const legacyOfferAliases = {
+  care: "website-individuell",
+  growth: "system-wachstum",
+  "website-abo": "template-start",
+  "facility-management": "website-individuell",
+  "wartung-wachstum": "system-wachstum",
+  "website-audit": "website-check",
+} as const;
 
-function buildOfferProjectMessage(selectedValue: string | null): string {
-  const offer = findOffer(selectedValue);
-  if (!offer) {
+function normalizeOfferSlug(value: string | null) {
+  const slug = value?.toLowerCase().trim();
+  if (!slug) {
     return "";
   }
 
-  const isProjectLike = offer.category === "project" || offer.billingType === "one_time";
-  const topFeatures = offer.includes.slice(0, PRESET_LIMIT);
-  const scopeText =
-    offer.scopeLimits.length > 0
-      ? `\n\nRahmen:\n- ${offer.scopeLimits.join("\n- ")}`
-      : "";
-  const featureText =
-    topFeatures.length > 0
-      ? `\n\nEnthalten:\n- ${topFeatures.join("\n- ")}`
-      : "";
-  const questions =
-    offer.nextQuestions.length > 0
-      ? `- ${offer.nextQuestions.join("\n- ")}`
-      : "- Website URL oder aktueller Stand\n- Gewünschter Umfang\n- Wann soll gestartet werden?";
+  return legacyOfferAliases[slug as keyof typeof legacyOfferAliases] ?? slug;
+}
 
-  return (
-    `Ich interessiere mich für: ${offer.name}.\n\n` +
-    `Preisart: ${isProjectLike ? "Projekt" : "laufende Betreuung"}.\n` +
-    `Kurz: ${buildOfferPriceSummary(offer)}.` +
-    featureText +
-    scopeText +
-    `\n\nErgänze bitte:\n${questions}\n\nWir freuen uns auf dein Update!`
+function buildTierPriceSummary(tier: PricingTier) {
+  const oneTimeSummary = tier.oneTimePrice
+    ? ` Kleine Festpreis-Alternative: ${tier.oneTimeLabel ?? "einmalig"} ${tier.oneTimePrice}.`
+    : "";
+
+  return `ab ${tier.monthlyPrice} ${tier.monthlySuffix} (${tier.monthlyNote}).${oneTimeSummary}`;
+}
+
+function findPricingTier(selectedPackage: string | null, selectedOffer: string | null) {
+  const offerSlug = normalizeOfferSlug(selectedOffer);
+  const packageSlug = normalizeOfferSlug(selectedPackage);
+  const requestedSlug = offerSlug || packageSlug;
+
+  if (!requestedSlug) {
+    return undefined;
+  }
+
+  return pricingTiers.find(
+    (entry: PricingTier) =>
+      entry.slug === requestedSlug ||
+      entry.name.toLowerCase() === requestedSlug,
   );
+}
+
+function findFixedPriceAlternative(
+  selectedOffer: string | null,
+): FixedPriceAlternative | undefined {
+  const offerSlug = normalizeOfferSlug(selectedOffer);
+
+  if (!offerSlug) {
+    return undefined;
+  }
+
+  return fixedPriceAlternatives.find((entry) => entry.slug === offerSlug);
+}
+
+function buildPricingProjectMessage(
+  selectedPackage: string | null,
+  selectedOffer: string | null,
+): string {
+  const tier = findPricingTier(selectedPackage, selectedOffer);
+  if (!tier) {
+    return "";
+  }
+
+  const topFeatures = tier.includes.slice(0, PRESET_LIMIT);
+
+  const featureText =
+    topFeatures.length > 0 ? `\n\nEnthalten:\n- ${topFeatures.join("\n- ")}` : "";
+
+  return `Wir interessieren uns für das Abo "${tier.name}".\n\n`
+    + `Kurz: ${buildTierPriceSummary(tier)}`
+    + featureText
+    + "\n\nErgänze bitte:\n- Dein Ziel\n- aktueller Website-Stand\n- gewünschter Start\n- ob Stripe-Abo oder erst Beratung besser passt";
+}
+
+function buildOfferProjectMessage(selectedOffer: string | null): string {
+  const offerSlug = normalizeOfferSlug(selectedOffer);
+  const fixedPriceOffer = findFixedPriceAlternative(selectedOffer);
+
+  if (fixedPriceOffer) {
+    return `Ich interessiere mich für: ${fixedPriceOffer.name} (${fixedPriceOffer.price}).\n\n`
+      + `Kurz: ${fixedPriceOffer.description}`
+      + "\n\nErgänze bitte:\n- Website URL\n- Aktuelle Frage oder Ziel\n- Gewünschter Start";
+  }
+
+  if (!offerSlug || !(offerSlug in offerPrefills)) {
+    return "";
+  }
+
+  const offer = offerPrefills[offerSlug as keyof typeof offerPrefills];
+
+  return `Ich interessiere mich für: ${offer.title} (${offer.price}).\n\n`
+    + `Eckpunkte:\n- ${offer.bullets.join("\n- ")}`
+    + "\n\nErgänze bitte:\n- Website URL\n- Aktuelle Frage oder Ziel\n- Gewünschter Start";
 }
 
 type ContactFormProps = {
@@ -66,23 +133,79 @@ type ContactFormProps = {
   selectedOffer: string | null;
 };
 
+type UrlSelection = {
+  selectedPackage: string | null;
+  selectedOffer: string | null;
+};
+
+function readUrlSelection(
+  selectedPackage: string | null,
+  selectedOffer: string | null,
+): UrlSelection {
+  if (typeof window === "undefined") {
+    return { selectedPackage, selectedOffer };
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const packageParam = params.get("paket");
+  const offerParam = params.get("angebot");
+
+  return {
+    selectedPackage: packageParam ?? selectedPackage,
+    selectedOffer: offerParam ?? selectedOffer,
+  };
+}
+
+function buildInitialProjectMessage(
+  selectedPackage: string | null,
+  selectedOffer: string | null,
+) {
+  return (
+    buildPricingProjectMessage(selectedPackage, selectedOffer) ||
+    buildOfferProjectMessage(selectedOffer) ||
+    buildOfferProjectMessage(selectedPackage)
+  );
+}
+
 function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
   const [status, setStatus] = useState<Status>(initialStatus);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showValidationHint, setShowValidationHint] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState(() =>
+    buildInitialProjectMessage(selectedPackage, selectedOffer),
+  );
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [urlSelection, setUrlSelection] = useState<UrlSelection>(() => ({
+    selectedPackage,
+    selectedOffer,
+  }));
 
   useEffect(() => {
-    const prefill =
-      buildOfferProjectMessage(selectedPackage) ||
-      buildOfferProjectMessage(selectedOffer);
+    function updateUrlSelection() {
+      setUrlSelection(readUrlSelection(selectedPackage, selectedOffer));
+    }
+
+    updateUrlSelection();
+    window.addEventListener("popstate", updateUrlSelection);
+    window.addEventListener("stackwerkhaus:urlchange", updateUrlSelection);
+
+    return () => {
+      window.removeEventListener("popstate", updateUrlSelection);
+      window.removeEventListener("stackwerkhaus:urlchange", updateUrlSelection);
+    };
+  }, [selectedPackage, selectedOffer]);
+
+  useEffect(() => {
+    const prefill = buildInitialProjectMessage(
+      urlSelection.selectedPackage,
+      urlSelection.selectedOffer,
+    );
     if (prefill) {
       setMessage(prefill);
     }
-  }, [selectedPackage, selectedOffer]);
+  }, [urlSelection.selectedPackage, urlSelection.selectedOffer]);
 
   const isNameValid = name.trim().length >= 2;
   const isEmailReady = email.trim().length > 0;
@@ -130,9 +253,7 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
       const result = (await response.json()) as { message?: string };
 
       if (!response.ok) {
-        throw new Error(
-          result.message || "Die Anfrage konnte nicht gesendet werden.",
-        );
+        throw new Error(result.message || "Die Anfrage konnte nicht gesendet werden.");
       }
 
       setStatus({
@@ -203,7 +324,12 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
       </div>
       <div className="sr-only" aria-hidden="true">
         <label htmlFor="website">Website</label>
-        <input id="website" name="website" tabIndex={-1} autoComplete="off" />
+        <input
+          id="website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
       <div className="mt-6">
         <label htmlFor="message" className="eyebrow text-white">
@@ -296,17 +422,10 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
   );
 }
 
-function ContactFormWithSearchParams() {
-  const searchParams = useSearchParams();
-  return (
-    <ContactForm
-      selectedPackage={searchParams.get("paket")}
-      selectedOffer={searchParams.get("angebot")}
-    />
-  );
-}
-
-export function Contact() {
+export function Contact({
+  selectedPackage = null,
+  selectedOffer = null,
+}: Partial<ContactFormProps>) {
   const titleScope = useRef<HTMLDivElement | null>(null);
 
   useWordMaskHeadingReveal(titleScope, [], {
@@ -324,10 +443,9 @@ export function Contact() {
               {renderWordMaskText("Lass uns was einzigartiges bauen.")}
             </h2>
             <p className="max-w-4xl text-lg leading-8 text-muted">
-              Wir klären gemeinsam, worum’s geht, was gerade bremst und was als
-              Nächstes Priorität hat. Angebot schärfen, Zielgruppe sauber
-              einordnen und Projektumfang realisieren damit der nächsten Schritt
-              nicht aus dem Bauch heraus entscheiden wird.
+              Wir klären gemeinsam, worum’s geht, was gerade bremst und was als Nächstes
+              Priorität hat. Angebot schärfen, Zielgruppe sauber einordnen und Projektumfang
+              realisieren damit der nächsten Schritt nicht aus dem Bauch heraus entscheiden wird.
             </p>
             <div className="space-y-3 text-sm text-muted">
               <a
@@ -355,12 +473,10 @@ export function Contact() {
             </div>
           </div>
         </div>
-
-        <Suspense
-          fallback={<ContactForm selectedPackage={null} selectedOffer={null} />}
-        >
-          <ContactFormWithSearchParams />
-        </Suspense>
+        <ContactForm
+          selectedPackage={selectedPackage}
+          selectedOffer={selectedOffer}
+        />
       </div>
     </section>
   );

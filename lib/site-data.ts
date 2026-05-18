@@ -1,5 +1,3 @@
-import { retainerOffers, type Offer } from "@/lib/offers";
-
 export const tickerItems = [
   "Technisches SEO",
   "Informationsarchitektur",
@@ -136,17 +134,241 @@ export const testimonials = [
   },
 ] as const;
 
-export type PricingTier = Offer;
+export type PricingTier = {
+  slug: string;
+  name: string;
+  label: string;
+  monthlyPrice: string;
+  monthlySuffix: string;
+  monthlyNote: string;
+  oneTimePrice?: string;
+  oneTimeLabel?: string;
+  stripePaymentLink?: string;
+  stripePaymentLinkEnvKey: string;
+  minimumTerm?: string;
+  description: string;
+  ctaLabel: string;
+  suitableFor: readonly string[];
+  includes: readonly string[];
+  visibleIncludes?: number;
+  highlight?: boolean;
+};
 
-const careOffer = retainerOffers.find((offer) => offer.slug === "care") ?? retainerOffers[0];
+export type PricingAddOn = {
+  name: string;
+  price: string;
+  secondaryPrice?: string;
+  description: string;
+};
 
-export const maintenanceOffer = {
-  title: careOffer.name,
-  price: careOffer.priceLabel,
-  description: careOffer.description,
-  ctaLabel: careOffer.ctaLabel,
-  features: careOffer.includes,
+export type FixedPriceAlternative = {
+  slug: string;
+  name: string;
+  price: string;
+  description: string;
+};
+
+const stripePaymentLinks = {
+  templateStart:
+    process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START?.trim() ?? "",
+  websiteIndividuell:
+    process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL?.trim() ??
+    "",
+  shopBlog:
+    process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG?.trim() ?? "",
+  systemWachstum:
+    process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM?.trim() ?? "",
 } as const;
+
+export const pricingTiers = [
+  {
+    slug: "template-start",
+    name: "Template Start",
+    label: "Vorlagen-Einstieg",
+    monthlyPrice: "29",
+    monthlySuffix: "€/Monat",
+    monthlyNote: "24 Monate Mindestlaufzeit",
+    oneTimePrice: "799 €",
+    oneTimeLabel: "Festpreis ab",
+    stripePaymentLink: stripePaymentLinks.templateStart,
+    stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
+    minimumTerm: "24 Monate",
+    description:
+      "Für einfache Websites aus einer starken Vorlage mit klar begrenztem Umfang.",
+    ctaLabel: "Start anfragen",
+    suitableFor: [
+      "lokale Dienstleister",
+      "neue Unternehmen",
+      "kleine Websites",
+      "geringe Vorab-Budgets",
+    ],
+    includes: [
+      "Vorlagen-nahe Gestaltung",
+      "wenige Seiten",
+      "Responsive Umsetzung",
+      "Kontaktformular",
+      "Hosting, SSL und E-Mail-Grundsetup",
+      "SEO-Grundsetup",
+      "ein kleiner Änderungsbatch pro Monat",
+      "transparentes Exit-Paket",
+    ],
+  },
+  {
+    slug: "website-individuell",
+    name: "Website Individuell",
+    label: "Empfohlen",
+    monthlyPrice: "69",
+    monthlySuffix: "€/Monat",
+    monthlyNote: "für individuelle Website mit SEO-Basis",
+    oneTimePrice: "1.499 €",
+    oneTimeLabel: "Festpreis ab",
+    stripePaymentLink: stripePaymentLinks.websiteIndividuell,
+    stripePaymentLinkEnvKey:
+      "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
+    description:
+      "Für kleine Unternehmen, die mehr als eine Template-Seite brauchen.",
+    ctaLabel: "Individuell anfragen",
+    suitableFor: [
+      "Dienstleister",
+      "Gründer",
+      "kleine Unternehmen",
+      "bessere Angebotsstruktur",
+    ],
+    includes: [
+      "individuelleres Webdesign",
+      "Seitenstruktur",
+      "SEO-Basis und Search Console",
+      "Launch-Setup",
+      "Pflege und kleine Änderungen",
+      "Kontaktformular",
+    ],
+    visibleIncludes: 6,
+    highlight: true,
+  },
+  {
+    slug: "shop-blog",
+    name: "Shop & Blog",
+    label: "CMS und Inhalte",
+    monthlyPrice: "89",
+    monthlySuffix: "€/Monat",
+    monthlyNote: "für WordPress, Blog oder einfachen Shop",
+    oneTimePrice: "2.499 €",
+    oneTimeLabel: "Festpreis ab",
+    stripePaymentLink: stripePaymentLinks.shopBlog,
+    stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
+    description:
+      "Für Inhalte, die du selbst pflegen willst, ohne Pagebuilder-Wildwuchs.",
+    ctaLabel: "Shop anfragen",
+    suitableFor: [
+      "Blogs",
+      "kleine Shops",
+      "WordPress",
+      "selbst pflegbare Inhalte",
+    ],
+    includes: [
+      "eigenes WordPress-Theme",
+      "Blog- oder Shop-Struktur",
+      "Hosting und Pflege",
+      "SEO-Basis",
+      "E-Mail-Grundsetup",
+      "Updates und Backups",
+    ],
+    visibleIncludes: 6,
+  },
+  {
+    slug: "system-wachstum",
+    name: "System & Wachstum",
+    label: "Automatisierung",
+    monthlyPrice: "199",
+    monthlySuffix: "€/Monat",
+    monthlyNote: "ab Preis für Ausbau, CRM und Automatisierung",
+    oneTimePrice: "2.499 €",
+    oneTimeLabel: "Projektbasis ab",
+    stripePaymentLink: stripePaymentLinks.systemWachstum,
+    stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
+    description:
+      "Für Websites, die Leads, Inhalte, CRM oder Workflows verbinden sollen.",
+    ctaLabel: "System anfragen",
+    suitableFor: [
+      "Relaunches",
+      "CRM-Anbindung",
+      "Automatisierung",
+      "Landingpages",
+      "Wachstumsprojekte",
+    ],
+    includes: [
+      "CRM- und Formularlogik",
+      "n8n, Zapier oder Custom-Flows",
+      "SEO- und Content-Ausbau",
+      "neue Landingpages",
+      "Reporting und Priorisierung",
+      "kleine Software-Flows",
+    ],
+    visibleIncludes: 6,
+  },
+] satisfies readonly PricingTier[];
+
+export const pricingAddOns = [
+  {
+    name: "Lokale SEO-Einträge",
+    price: "+9 €/Monat",
+    secondaryPrice: "19 €/Monat standalone",
+    description: "lokale Verzeichnisse und Basis-Einträge",
+  },
+  {
+    name: "SEO & Content Ausbau",
+    price: "ab 149 €/Monat",
+    description: "laufende Inhalte, Landingpages und Search-Console-Sichtung",
+  },
+  {
+    name: "Zusätzliche Sprache",
+    price: "ab 19 €/Monat",
+    description: "für mehrsprachige Seitenbereiche",
+  },
+  {
+    name: "Zusätzliche Domain",
+    price: "+3 €/Monat",
+    description: "für weitere Domain- oder Kampagnenadressen",
+  },
+  {
+    name: "Zusätzliches E-Mail-Postfach",
+    price: "+2 €/Monat",
+    description: "für weitere Postfächer im Setup",
+  },
+  {
+    name: "Sonderwünsche",
+    price: "nach Angebot",
+    description: "für Integrationen, Animationen und komplexere CMS-Logik",
+  },
+] satisfies readonly PricingAddOn[];
+
+export const fixedPriceAlternatives = [
+  {
+    slug: "website-check",
+    name: "Website Check",
+    price: "99 €",
+    description:
+      "für Neukunden, wird bei anschließendem Abo oder Festpreis-Paket angerechnet",
+  },
+  {
+    slug: "rohbau",
+    name: "Rohbau",
+    price: "ab 799 €",
+    description: "für kleine Websites, wenn du lieber einmalig startest",
+  },
+  {
+    slug: "sanierung",
+    name: "Sanierung",
+    price: "ab 1.499 €",
+    description: "für Relaunches mit neuer Struktur, Design und SEO-Basis",
+  },
+  {
+    slug: "bauwerk",
+    name: "Bauwerk",
+    price: "ab 2.499 €",
+    description: "für Plattformen, Automatisierung und technische Ausbauten",
+  },
+] satisfies readonly FixedPriceAlternative[];
 
 export type FaqLink = {
   label: string;
@@ -162,7 +384,7 @@ export type Faq = {
 export const faqs: readonly Faq[] = [
   {
     q: "Was kostet eine professionelle Website für ein kleines Unternehmen?",
-    a: "Projektangebote starten ab 799 €. Laufende Betreuung beginnt mit dem Care Retainer ab 149 €/Monat. Der genaue Preis hängt von Umfang, Seitenanzahl, Funktionen und Integrationen ab.",
+    a: "Der template-nahe Einstieg startet ab 29 € pro Monat. Die empfohlene individuelle Website liegt bei 69 € pro Monat. Wenn ein einmaliger Festpreis besser passt, startet Rohbau ab 799 €. Der genaue Umfang hängt von Seitenanzahl, Inhalten und Integrationen ab.",
     links: [
       {
         label: "Website erstellen lassen",

@@ -1,139 +1,60 @@
-import {
-  getOfferContactHref,
-  projectOffers,
-  recurringOffers,
-  resolveOfferCtaHref,
-  satelliteOffers,
-} from "@/lib/offers";
-import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
+import { pricingAddOns, pricingTiers } from "@/lib/site-data";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { PricingCard } from "@/components/ui/PricingCard";
-import { LinkRippleText } from "@/components/ui/LinkRippleText";
 
 export function Pricing() {
-  const websiteAbo = satelliteOffers[0];
-
-  if (!websiteAbo) {
-    return null;
-  }
-
   return (
     <section className="section-space">
       <div className="section-shell">
-        <SectionHeader id="pricing" label="Angebote" marker="(SKWKHS® — 07)" />
+        <SectionHeader id="pricing" label="Abos" marker="(SKWKHS® — 07)" />
         <div className="mb-8 max-w-5xl space-y-5 md:mb-10">
-          <h2 className="display-lg max-w-[10ch]">
-            Projekt zuerst. Betreuung danach.
-          </h2>
+          <h2 className="display-lg max-w-[9ch]">Wähle deinen Einstieg</h2>
           <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-            Stackwerkhaus bleibt kein Abo-Baukasten. Der Start ist ein klarer
-            Bauauftrag, danach halten Care- und Growth-Retainer das digitale
-            Bauwerk ruhig, aktuell oder gezielt in Bewegung.
+            Vier Einstiege reichen: Template, individuelle Website, Shop/Blog
+            oder Systemausbau. Add-ons kommen nur dazu, wenn sie wirklich zum
+            Projekt passen.
           </p>
         </div>
-
-        <div className="space-y-10">
-          <div>
-            <div className="mb-5 flex flex-col gap-2 border-t border-border pt-5 md:flex-row md:items-end md:justify-between">
-              <div>
-                <div className="eyebrow text-foreground/75">
-                  Projektangebote
-                </div>
-                <h3 className="mt-3 max-w-3xl text-3xl font-black leading-[0.98] tracking-[-0.045em] text-foreground md:text-5xl">
-                  Für Launch, Relaunch und technische Vorhaben
-                </h3>
-              </div>
-              <p className="max-w-md text-sm leading-6 text-muted">
-                Einmalige Projektpreise bleiben der Hauptpfad. Der genaue Rahmen
-                hängt von Seitenumfang, Inhalten, Funktionen und Integrationen
-                ab.
-              </p>
-            </div>
-            <div className="grid items-start gap-x-10 gap-y-10 md:grid-cols-2 xl:grid-cols-3">
-              {projectOffers.map((offer) => (
-                <PricingCard
-                  key={offer.id}
-                  {...offer}
-                  ctaHref={getOfferContactHref(offer)}
-                />
-              ))}
-            </div>
-            <p className="text-sm leading-6 text-muted">
-              Retainer sind standardisierte Einstiege. Wenn ein Stripe Payment
-              Link konfiguriert ist, führt der CTA dorthin. Ohne Link bleibt der
-              sichere Kontaktweg aktiv.
-            </p>
-          </div>
-
-          <div>
-            <div className="mb-5 flex flex-col gap-2 border-t border-border pt-5 md:flex-row md:items-end md:justify-between">
-              <div>
-                <div className="eyebrow text-foreground/75">
-                  Nach dem Launch
-                </div>
-                <h3 className="mt-3 max-w-3xl text-3xl font-black leading-[0.98] tracking-[-0.045em] text-foreground md:text-5xl">
-                  Laufende Betreuung mit klaren Grenzen
-                </h3>
-              </div>
-              <p className="max-w-md text-sm leading-6 text-muted">
-                Payment Links sind nur eine Phase-1-Abkürzung für
-                standardisierte Retainer. Wenn kein Link konfiguriert ist, führt
-                der CTA sicher zum Kontakt.
-              </p>
-            </div>
-            <div className="grid items-start gap-x-10 gap-y-10 md:grid-cols-2">
-              {recurringOffers.map((offer) => (
-                <PricingCard
-                  key={offer.id}
-                  {...offer}
-                  ctaHref={resolveOfferCtaHref(offer, process.env)}
-                  compact
-                />
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-8 border-y border-border py-6 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.74fr)] md:items-start">
-            <div>
-              <div className="eyebrow text-foreground/75">
-                Satellitenangebot
-              </div>
-              <h3 className="mt-4 max-w-4xl text-3xl font-black leading-[0.98] tracking-[-0.045em] text-foreground md:text-5xl">
-                Website-Abo nur für kleine, klare Fälle
-              </h3>
-              <p className="mt-5 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-                Das Abo ist kein neuer Kern des Angebots. Es passt nur, wenn
-                Umfang, Laufzeit, Gesamtkosten, Eigentum, Übergabe und
-                Exit-Paket vor Start sauber geklärt sind.
-              </p>
-            </div>
-            <PricingCard
-              {...websiteAbo}
-              ctaHref={resolveOfferCtaHref(websiteAbo, process.env)}
-              compact
-            />
-          </div>
+        <div className="grid items-start gap-x-8 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
+          {pricingTiers.map((tier) => (
+            <PricingCard key={tier.name} {...tier} />
+          ))}
         </div>
-
-        <div className="mt-8 grid gap-4 border-b border-border pb-5 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.74fr)] md:items-center md:gap-8">
+        <div className="mt-8 grid gap-8 border-y border-border py-7 md:mt-10 md:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)] md:items-start">
           <div>
-            <h3 className="text-base font-black leading-tight tracking-[-0.02em] text-foreground md:text-xl">
-              Nicht sicher, welches Angebot passt?
+            <div className="eyebrow text-foreground/75">Zusatzleistungen</div>
+            <h3 className="mt-4 max-w-xl text-3xl font-black leading-[0.98] tracking-normal text-foreground md:text-5xl">
+              Nur dazu, wenn es gebraucht wird.
             </h3>
-            <p className="mt-2 max-w-xl text-xs leading-5 text-muted md:text-sm md:leading-6">
-              Der Website Check zeigt dir zuerst, wo dein aktueller Auftritt
-              trägt, knirscht oder neu sortiert werden sollte.
+            <p className="mt-5 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
+              Die Grundpakete bleiben bewusst klar. SEO, Sprachen, Domains,
+              Postfächer und Sonderwünsche werden einzeln ergänzt.
             </p>
           </div>
-          <TrackedHashLink
-            href="/webseitecheck"
-            eventName="website_check_cta_click"
-            eventParams={{ placement: "pricing_fit_cta" }}
-            className="link-arrow w-full justify-between bg-foreground px-4 py-4 text-background hover:bg-foreground/90 sm:w-fit"
-          >
-            <LinkRippleText text="Website Check starten" baseWeight={760} />
-            <span aria-hidden>+</span>
-          </TrackedHashLink>
+          <ul className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            {pricingAddOns.map((addOn) => (
+              <li key={addOn.name} className="border-t border-border pt-4">
+                <div className="flex items-start justify-between gap-4">
+                  <h4 className="text-sm font-black leading-5 tracking-normal text-foreground">
+                    {addOn.name}
+                  </h4>
+                  <div className="shrink-0 text-right">
+                    <div className="text-sm font-black text-foreground">
+                      {addOn.price}
+                    </div>
+                    {addOn.secondaryPrice ? (
+                      <div className="mt-1 text-[10px] font-black uppercase leading-4 tracking-[0.1em] text-muted">
+                        {addOn.secondaryPrice}
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+                <p className="mt-2 text-xs leading-5 text-muted">
+                  {addOn.description}
+                </p>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </section>
