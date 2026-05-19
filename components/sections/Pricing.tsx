@@ -9,10 +9,11 @@ export function Pricing() {
         <SectionHeader id="pricing" label="Abos" marker="(SKWKHS® — 07)" />
         <div className="mb-8 max-w-5xl space-y-5 md:mb-10">
           <h2 className="display-lg max-w-[9ch]">Wähle deinen Einstieg</h2>
-          <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-            Vier Einstiege reichen: Template, individuelle Website, Shop/Blog
-            oder Systemausbau. Add-ons kommen nur dazu, wenn sie wirklich zum
-            Projekt passen.
+          <p className="max-w-4xl text-base leading-7 text-muted md:text-lg md:leading-8">
+            Vier Wege decken die meisten Website-Projekte ab. Schlank starten,
+            individueller bauen, Inhalte selbst pflegen oder ein kleines System
+            daraus machen. Was darüber hinausgeht, kommt als Zusatzleistung
+            dazu. Nicht als versteckter Paketballast.
           </p>
         </div>
         <div className="grid items-start gap-x-8 gap-y-10 md:grid-cols-2 xl:grid-cols-4">
@@ -24,11 +25,12 @@ export function Pricing() {
           <div>
             <div className="eyebrow text-foreground/75">Zusatzleistungen</div>
             <h3 className="mt-4 max-w-xl text-3xl font-black leading-[0.98] tracking-normal text-foreground md:text-5xl">
-              Nur dazu, wenn es gebraucht wird.
+              Nur dazubuchen, was deinen Bauplan besser macht.
             </h3>
             <p className="mt-5 max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-              Die Grundpakete bleiben bewusst klar. SEO, Sprachen, Domains,
-              Postfächer und Sonderwünsche werden einzeln ergänzt.
+              SEO, Sprachen, Domains, Postfächer und Sonderwünsche bleiben
+              einzeln. So bleibt der Einstieg übersichtlich und der Ausbau
+              planbar.
             </p>
           </div>
           <ul className="grid gap-x-6 gap-y-4 sm:grid-cols-2">

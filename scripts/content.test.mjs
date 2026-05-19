@@ -421,7 +421,7 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
 
   for (const [name, price] of [
     ["Lokale SEO-Einträge", "+9 €/Monat"],
-    ["SEO & Content Ausbau", "ab 149 €/Monat"],
+    ["SEO & Content-Ausbau", "ab 149 €/Monat"],
     ["Zusätzliche Sprache", "ab 19 €/Monat"],
     ["Zusätzliche Domain", "+3 €/Monat"],
     ["Zusätzliches E-Mail-Postfach", "+2 €/Monat"],
@@ -434,8 +434,8 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
   }
 
   assert.ok(
-    siteDataSource.includes('secondaryPrice: "19 €/Monat standalone"'),
-    "local SEO standalone price should be a first-class visible add-on price",
+    siteDataSource.includes('secondaryPrice: "19 €/Monat einzeln"'),
+    "local SEO individual price should be a first-class visible add-on price",
   );
 
   for (const [slug, name, price] of [

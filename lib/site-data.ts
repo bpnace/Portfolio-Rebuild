@@ -184,7 +184,7 @@ export const pricingTiers = [
   {
     slug: "template-start",
     name: "Template Start",
-    label: "Vorlagen-Einstieg",
+    label: "Schneller Einstieg",
     monthlyPrice: "29",
     monthlySuffix: "€/Monat",
     monthlyNote: "24 Monate Mindestlaufzeit",
@@ -194,7 +194,7 @@ export const pricingTiers = [
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
     minimumTerm: "24 Monate",
     description:
-      "Für einfache Websites aus einer starken Vorlage mit klar begrenztem Umfang.",
+      "Für eine kleine Website, die sauber online gehen soll, ohne direkt ein großes Projekt aufzumachen.",
     ctaLabel: "Start anfragen",
     suitableFor: [
       "lokale Dienstleister",
@@ -226,7 +226,7 @@ export const pricingTiers = [
     stripePaymentLinkEnvKey:
       "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
     description:
-      "Für kleine Unternehmen, die mehr als eine Template-Seite brauchen.",
+      "Für kleine Unternehmen, deren Angebot schnell verständlich werden muss.",
     ctaLabel: "Individuell anfragen",
     suitableFor: [
       "Dienstleister",
@@ -248,7 +248,7 @@ export const pricingTiers = [
   {
     slug: "shop-blog",
     name: "Shop & Blog",
-    label: "CMS und Inhalte",
+    label: "Inhalte selbst pflegen",
     monthlyPrice: "89",
     monthlySuffix: "€/Monat",
     monthlyNote: "für WordPress, Blog oder einfachen Shop",
@@ -257,7 +257,7 @@ export const pricingTiers = [
     stripePaymentLink: stripePaymentLinks.shopBlog,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
     description:
-      "Für Inhalte, die du selbst pflegen willst, ohne Pagebuilder-Wildwuchs.",
+      "Für Websites, bei denen Inhalte weiterleben sollen, ohne dass ein Pagebuilder alles weichknetet.",
     ctaLabel: "Shop anfragen",
     suitableFor: [
       "Blogs",
@@ -278,7 +278,7 @@ export const pricingTiers = [
   {
     slug: "system-wachstum",
     name: "System & Wachstum",
-    label: "Automatisierung",
+    label: "Abläufe verbinden",
     monthlyPrice: "199",
     monthlySuffix: "€/Monat",
     monthlyNote: "ab Preis für Ausbau, CRM und Automatisierung",
@@ -287,7 +287,7 @@ export const pricingTiers = [
     stripePaymentLink: stripePaymentLinks.systemWachstum,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
     description:
-      "Für Websites, die Leads, Inhalte, CRM oder Workflows verbinden sollen.",
+      "Für Websites, die nicht beim Formular enden. Leads, Inhalte, CRM und kleine Workflows greifen hier zusammen.",
     ctaLabel: "System anfragen",
     suitableFor: [
       "Relaunches",
@@ -298,7 +298,7 @@ export const pricingTiers = [
     ],
     includes: [
       "CRM- und Formularlogik",
-      "n8n, Zapier oder Custom-Flows",
+      "n8n, Zapier oder eigene Flows",
       "SEO- und Content-Ausbau",
       "neue Landingpages",
       "Reporting und Priorisierung",
@@ -312,33 +312,39 @@ export const pricingAddOns = [
   {
     name: "Lokale SEO-Einträge",
     price: "+9 €/Monat",
-    secondaryPrice: "19 €/Monat standalone",
-    description: "lokale Verzeichnisse und Basis-Einträge",
+    secondaryPrice: "19 €/Monat einzeln",
+    description:
+      "Verzeichnisse, Profile und Basisdaten sauber eintragen. Vor allem für lokale Dienstleister sinnvoll.",
   },
   {
-    name: "SEO & Content Ausbau",
+    name: "SEO & Content-Ausbau",
     price: "ab 149 €/Monat",
-    description: "laufende Inhalte, Landingpages und Search-Console-Sichtung",
+    description:
+      "Neue Inhalte, Landingpages und Search-Console-Blick, wenn die Seite nach dem Launch weiter wachsen soll.",
   },
   {
     name: "Zusätzliche Sprache",
     price: "ab 19 €/Monat",
-    description: "für mehrsprachige Seitenbereiche",
+    description:
+      "Für übersetzte Seitenbereiche, wenn die zweite Sprache nicht halb mitlaufen soll.",
   },
   {
     name: "Zusätzliche Domain",
     price: "+3 €/Monat",
-    description: "für weitere Domain- oder Kampagnenadressen",
+    description:
+      "Für weitere Domains, Kampagnenadressen oder saubere Weiterleitungen.",
   },
   {
     name: "Zusätzliches E-Mail-Postfach",
     price: "+2 €/Monat",
-    description: "für weitere Postfächer im Setup",
+    description:
+      "Für weitere Postfächer im Setup, ohne später im DNS-Keller zu suchen.",
   },
   {
     name: "Sonderwünsche",
     price: "nach Angebot",
-    description: "für Integrationen, Animationen und komplexere CMS-Logik",
+    description:
+      "Für Integrationen, Animationen oder CMS-Logik, die besser kurz besprochen als pauschal bepreist wird.",
   },
 ] satisfies readonly PricingAddOn[];
 
