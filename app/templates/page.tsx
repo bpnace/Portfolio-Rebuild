@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { stringifyJsonLd } from "@/lib/json-ld";
+import { getSubscriptionPricingSchemaOffer } from "@/lib/pricing-schema";
 import { siteConfig } from "@/lib/site-config";
 
 const pagePath = "/templates";
 const pageTitle = "Templates | STACKWERKHAUS";
 const pageDescription =
-  "Template Start von Stackwerkhaus: Website-Vorlagen mit angepassten Farben, Logo, Schriftbild, vorhandenen Inhalten, Kontaktformular, Hosting und SEO-Grundsetup.";
+  "Template Start von Stackwerkhaus ab 29 €/Monat: Website-Vorlagen mit Farben, Logo, Inhalten, Kontaktformular und SEO-Grundsetup.";
 const pageUrl = `${siteConfig.url}${pagePath}`;
 
 const templateIncludes = [
@@ -86,6 +87,7 @@ export default function TemplatesPage() {
             description: template.description,
           })),
         },
+        offers: [getSubscriptionPricingSchemaOffer("template-start", pageUrl)],
       },
       {
         "@type": "BreadcrumbList",
@@ -135,7 +137,7 @@ export default function TemplatesPage() {
               Startpunkt
             </div>
             <p className="mt-3 text-3xl font-black leading-[0.98] tracking-normal text-foreground md:text-5xl">
-              29 €/Monat plus Festpreis ab 799 €
+              29 €/Monat
             </p>
           </div>
         </section>
@@ -165,20 +167,6 @@ export default function TemplatesPage() {
               </li>
             ))}
           </ul>
-        </section>
-
-        <section className="mt-16">
-          <div className="max-w-4xl space-y-4">
-            <div className="eyebrow">Template-Galerie</div>
-            <h2 className="text-4xl font-black leading-[0.96] tracking-normal text-foreground md:text-6xl">
-              Drei Richtungen, Screenshots folgen.
-            </h2>
-            <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
-              Die ersten Screenshots kommen später. Die Platzhalter zeigen
-              schon, welche Einstiege vorbereitet werden.
-            </p>
-          </div>
-
           <div className="mt-10 grid gap-8 md:grid-cols-3">
             {templateCards.map((template) => (
               <article
@@ -201,7 +189,9 @@ export default function TemplatesPage() {
                     {template.description}
                   </p>
                   <HashLink
-                    href="/?angebot=template-start#kontakt"
+                    href={
+                      `/?angebot=template-start&template=${encodeURIComponent(template.title)}#kontakt`
+                    }
                     className="link-arrow mt-auto w-full justify-between border border-border px-4 py-4 text-foreground hover:border-foreground/45"
                   >
                     <LinkRippleText text="Template anfragen" baseWeight={560} />
@@ -211,6 +201,20 @@ export default function TemplatesPage() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section className="mt-16">
+          <div className="max-w-4xl space-y-4">
+            <div className="eyebrow">Template-Galerie</div>
+            <h2 className="text-4xl font-black leading-[0.96] tracking-normal text-foreground md:text-6xl">
+              Drei Richtungen, Screenshots folgen.
+            </h2>
+            <p className="max-w-2xl text-base leading-7 text-muted md:text-lg md:leading-8">
+              Die ersten Screenshots kommen später. Die Platzhalter zeigen
+              schon, welche Einstiege vorbereitet werden.
+            </p>
+          </div>
+
         </section>
       </div>
     </main>

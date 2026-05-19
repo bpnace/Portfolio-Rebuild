@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getSubscriptionPricingSchemaOffers } from "@/lib/pricing-schema";
 import { siteConfig } from "@/lib/site-config";
 import { verticalLandingPages } from "@/lib/vertical-landing-pages";
 
@@ -84,6 +85,7 @@ const commonProvider = {
   url: siteConfig.url,
   email: siteConfig.email,
   priceRange: "ab 29 EUR monatlich",
+  makesOffer: getSubscriptionPricingSchemaOffers(),
   founder: {
     "@type": "Person",
     name: siteConfig.founder,
@@ -259,7 +261,7 @@ const coreLandingPages = [
         summary:
           "Template Start beginnt bei 29 Euro pro Monat, Website Individuell bei 69 Euro pro Monat.",
         paragraphs: [
-          "Template Start beginnt bei 29 Euro pro Monat und eignet sich für eine template-nahe Website mit wenigen Seiten und begrenzter Pflege. Website Individuell startet bei 69 Euro pro Monat und ist der Standard für individuelles Design, stärkere Struktur, SEO-Basis, Search Console und Launch-Setup. Wenn ein Festpreis besser passt, beginnt der Rohbau ab 799 Euro, Sanierung ab 1.499 Euro und Bauwerk ab 2.499 Euro. Größere Websites, individuelle Funktionen, Automatisierungen, CMS-Systeme, komplexe Animationen oder zusätzliche Landingpages werden separat kalkuliert.",
+          "Template Start beginnt bei 29 Euro pro Monat und eignet sich für eine template-nahe Website mit wenigen Seiten und begrenzter Pflege. Website Individuell startet bei 69 Euro pro Monat und ist der Standard für individuelles Design, stärkere Struktur, SEO-Basis, Search Console und Launch-Setup. Shop & Blog startet bei 89 Euro pro Monat, System & Wachstum ab 199 Euro pro Monat. Größere Websites, individuelle Funktionen, Automatisierungen, CMS-Systeme, komplexe Animationen oder zusätzliche Landingpages werden separat kalkuliert.",
           "Ziel ist eine transparente Lösung, die zum Umfang und zum geschäftlichen Nutzen der Website passt. Wenn dein Projekt kleiner starten soll, bleibt der Aufbau fokussiert. Wenn später mehr Inhalte, Automatisierungen oder Landingpages gebraucht werden, kann die technische Grundlage erweitert werden.",
         ],
       },

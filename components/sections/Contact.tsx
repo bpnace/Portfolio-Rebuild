@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import Link from "next/link";
-import { fixedPriceAlternatives, pricingTiers } from "@/lib/site-data";
+import { pricingTiers, websiteCheckOffer } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
 import { TrackedHashLink } from "@/components/analytics/TrackedHashLink";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
-import type { FixedPriceAlternative, PricingTier } from "@/lib/site-data";
+import type { PricingTier } from "@/lib/site-data";
 import {
   renderWordMaskText,
   useWordMaskHeadingReveal,
@@ -23,11 +23,11 @@ const PRESET_LIMIT = 3;
 
 const offerPrefills = {
   "website-check": {
-    title: "Website Check",
-    price: "99 €",
+    title: websiteCheckOffer.name,
+    price: websiteCheckOffer.price,
     bullets: [
       "für Neukunden",
-      "Anrechnung bei anschließendem Abo oder Festpreis-Paket",
+      websiteCheckOffer.description,
       "konkrete Einschätzung mit nächsten Schritten",
     ],
   },
@@ -40,6 +40,9 @@ const legacyOfferAliases = {
   "facility-management": "website-individuell",
   "wartung-wachstum": "system-wachstum",
   "website-audit": "website-check",
+  rohbau: "template-start",
+  sanierung: "website-individuell",
+  bauwerk: "system-wachstum",
 } as const;
 
 function normalizeOfferSlug(value: string | null) {
@@ -52,11 +55,7 @@ function normalizeOfferSlug(value: string | null) {
 }
 
 function buildTierPriceSummary(tier: PricingTier) {
-  const oneTimeSummary = tier.oneTimePrice
-    ? ` Kleine Festpreis-Alternative: ${tier.oneTimeLabel ?? "einmalig"} ${tier.oneTimePrice}.`
-    : "";
-
-  return `ab ${tier.monthlyPrice} ${tier.monthlySuffix} (${tier.monthlyNote}).${oneTimeSummary}`;
+  return `ab ${tier.monthlyPrice} ${tier.monthlySuffix} (${tier.monthlyNote}).`;
 }
 
 function findPricingTier(selectedPackage: string | null, selectedOffer: string | null) {
@@ -75,21 +74,10 @@ function findPricingTier(selectedPackage: string | null, selectedOffer: string |
   );
 }
 
-function findFixedPriceAlternative(
-  selectedOffer: string | null,
-): FixedPriceAlternative | undefined {
-  const offerSlug = normalizeOfferSlug(selectedOffer);
-
-  if (!offerSlug) {
-    return undefined;
-  }
-
-  return fixedPriceAlternatives.find((entry) => entry.slug === offerSlug);
-}
-
 function buildPricingProjectMessage(
   selectedPackage: string | null,
   selectedOffer: string | null,
+  selectedTemplate: string | null = null,
 ): string {
   const tier = findPricingTier(selectedPackage, selectedOffer);
   if (!tier) {
@@ -100,22 +88,20 @@ function buildPricingProjectMessage(
 
   const featureText =
     topFeatures.length > 0 ? `\n\nEnthalten:\n- ${topFeatures.join("\n- ")}` : "";
+  const templateText =
+    tier.slug === "template-start" && selectedTemplate
+      ? `\n\nGewähltes Template: ${selectedTemplate}`
+      : "";
 
   return `Wir interessieren uns für das Abo "${tier.name}".\n\n`
     + `Kurz: ${buildTierPriceSummary(tier)}`
+    + templateText
     + featureText
     + "\n\nErgänze bitte:\n- Dein Ziel\n- aktueller Website-Stand\n- gewünschter Start\n- ob Stripe-Abo oder erst Beratung besser passt";
 }
 
 function buildOfferProjectMessage(selectedOffer: string | null): string {
   const offerSlug = normalizeOfferSlug(selectedOffer);
-  const fixedPriceOffer = findFixedPriceAlternative(selectedOffer);
-
-  if (fixedPriceOffer) {
-    return `Ich interessiere mich für: ${fixedPriceOffer.name} (${fixedPriceOffer.price}).\n\n`
-      + `Kurz: ${fixedPriceOffer.description}`
-      + "\n\nErgänze bitte:\n- Website URL\n- Aktuelle Frage oder Ziel\n- Gewünschter Start";
-  }
 
   if (!offerSlug || !(offerSlug in offerPrefills)) {
     return "";
@@ -136,6 +122,7 @@ type ContactFormProps = {
 type UrlSelection = {
   selectedPackage: string | null;
   selectedOffer: string | null;
+  selectedTemplate: string | null;
 };
 
 function readUrlSelection(
@@ -143,25 +130,32 @@ function readUrlSelection(
   selectedOffer: string | null,
 ): UrlSelection {
   if (typeof window === "undefined") {
-    return { selectedPackage, selectedOffer };
+    return { selectedPackage, selectedOffer, selectedTemplate: null };
   }
 
   const params = new URLSearchParams(window.location.search);
   const packageParam = params.get("paket");
   const offerParam = params.get("angebot");
+  const templateParam = params.get("template");
 
   return {
     selectedPackage: packageParam ?? selectedPackage,
     selectedOffer: offerParam ?? selectedOffer,
+    selectedTemplate: templateParam,
   };
 }
 
 function buildInitialProjectMessage(
   selectedPackage: string | null,
   selectedOffer: string | null,
+  selectedTemplate: string | null = null,
 ) {
   return (
-    buildPricingProjectMessage(selectedPackage, selectedOffer) ||
+    buildPricingProjectMessage(
+      selectedPackage,
+      selectedOffer,
+      selectedTemplate,
+    ) ||
     buildOfferProjectMessage(selectedOffer) ||
     buildOfferProjectMessage(selectedPackage)
   );
@@ -180,6 +174,7 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
   const [urlSelection, setUrlSelection] = useState<UrlSelection>(() => ({
     selectedPackage,
     selectedOffer,
+    selectedTemplate: null,
   }));
 
   useEffect(() => {
@@ -201,11 +196,16 @@ function ContactForm({ selectedPackage, selectedOffer }: ContactFormProps) {
     const prefill = buildInitialProjectMessage(
       urlSelection.selectedPackage,
       urlSelection.selectedOffer,
+      urlSelection.selectedTemplate,
     );
     if (prefill) {
       setMessage(prefill);
     }
-  }, [urlSelection.selectedPackage, urlSelection.selectedOffer]);
+  }, [
+    urlSelection.selectedPackage,
+    urlSelection.selectedOffer,
+    urlSelection.selectedTemplate,
+  ]);
 
   const isNameValid = name.trim().length >= 2;
   const isEmailReady = email.trim().length > 0;

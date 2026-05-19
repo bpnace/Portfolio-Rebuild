@@ -329,12 +329,16 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
   const pricingSources = await Promise.all(
     [
       ".env.example",
+      "app/page.tsx",
+      "app/webseitecheck/page.tsx",
       "components/sections/Contact.tsx",
       "components/sections/Pricing.tsx",
       "components/ui/PricingCard.tsx",
       "app/templates/page.tsx",
       "app/sitemap.ts",
       "lib/landing-pages.ts",
+      "lib/pricing-schema.ts",
+      "lib/site-config.ts",
       "lib/site-data.ts",
       "lib/vertical-landing-pages.ts",
       "public/llms.txt",
@@ -359,19 +363,25 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
     "pricingAddOns",
     "secondaryPrice",
     "Wähle deinen Einstieg",
-    "Vorlagen ansehen",
-    'secondaryCtaLabel: "Vorlagen ansehen"',
-    'secondaryCtaHref: "/templates"',
-    "Vorlage aus der Galerie wählen",
+    "Templates anzeigen",
+    'ctaLabel: "Templates anzeigen"',
+    'ctaHref: "/templates"',
+    "Template aus der Galerie wählen",
     "Eigene Farben, Logo und Schriften",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
-    'stripePaymentLink ? `${name} starten` : ctaLabel',
+    'isExternalPaymentLink ? `${name} starten` : ctaLabel',
     "ab 149 €/Monat",
     "priceSpecification",
     'unitText: "Monat"',
+    "Website-Abos ab 29 €/Monat",
+    "getSubscriptionPricingSchemaOffers",
+    "makesOffer",
+    "getWebsiteCheckSchemaOffer(pageUrl)",
+    "Website Check für Neukunden kostet 99 €",
+    "Template Start von Stackwerkhaus ab 29 €/Monat",
   ]) {
     assert.ok(
       combinedPricingSource.includes(expectedSignal),
@@ -392,6 +402,16 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
     "Website-Abo: ab 149",
     "Care: ab 79",
     "Growth: ab 249",
+    ["plus ", "Fest", "preis"].join(""),
+    ["Kleine ", "Fest", "preis-Alternative"].join(""),
+    ["Fest", "preis-Paket"].join(""),
+    ["one", "TimePrice"].join(""),
+    ["one", "TimeLabel"].join(""),
+    ["fixed", "PriceAlternatives"].join(""),
+    ["get", "FixedPriceSchemaOffer"].join(""),
+    ["Rohbau ab ", "799"].join(""),
+    ["Sanierung ab ", "1.499"].join(""),
+    ["Bauwerk ab ", "2.499"].join(""),
     "name: page.schema.offer.name,\n            price: page.schema.offer.price",
   ]) {
     assert.ok(
@@ -411,11 +431,21 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     path.join(root, "components", "ui", "PricingCard.tsx"),
     "utf8",
   );
+  const homeSource = await fs.readFile(path.join(root, "app", "page.tsx"), "utf8");
+  const webseitecheckSource = await fs.readFile(
+    path.join(root, "app", "webseitecheck", "page.tsx"),
+    "utf8",
+  );
   const contactSource = await fs.readFile(
     path.join(root, "components", "sections", "Contact.tsx"),
     "utf8",
   );
   const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+  const pricingSchemaSource = await fs.readFile(
+    path.join(root, "lib", "pricing-schema.ts"),
+    "utf8",
+  );
+  const siteConfigSource = await fs.readFile(path.join(root, "lib", "site-config.ts"), "utf8");
   const templatesSource = await fs.readFile(path.join(root, "app", "templates", "page.tsx"), "utf8");
   const sitemapSource = await fs.readFile(path.join(root, "app", "sitemap.ts"), "utf8");
 
@@ -456,20 +486,28 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     "pricing cards should not duplicate suitable-for copy",
   );
   assert.ok(
-    !pricingCardSource.includes("oneTimePrice") &&
-      !pricingCardSource.includes("oneTimeLabel"),
-    "pricing cards should not render fixed-price alternatives",
+    !pricingCardSource.includes(["one", "TimePrice"].join("")),
+    "pricing cards should not render website entry prices",
   );
   assert.ok(
-    siteDataSource.includes('secondaryCtaLabel: "Vorlagen ansehen"') &&
-      siteDataSource.includes('secondaryCtaHref: "/templates"'),
+    !siteDataSource.includes(["one", "TimePrice"].join("")),
+    "pricing data should not expose website entry prices",
+  );
+  assert.ok(
+    siteDataSource.includes('ctaLabel: "Templates anzeigen"') &&
+      siteDataSource.includes('ctaHref: "/templates"'),
     "Template Start should link to the template gallery page",
   );
+  assert.ok(
+    !siteDataSource.includes('label: "Empfohlen"') &&
+      !pricingCardSource.includes("Empfohlen"),
+    "pricing cards should not render or store recommendation badges",
+  );
   for (const expectedTemplateInclude of [
-    "Vorlage aus der Galerie wählen",
+    "Template aus der Galerie wählen",
+    "keine Erstellungskosten",
     "Eigene Farben, Logo und Schriften",
-    "Einpflege vorhandener Texte und Bilder",
-    "wenige Seiten mit sauberer Struktur",
+    "Website-Pflege inklusive",
   ]) {
     assert.ok(
       siteDataSource.includes(expectedTemplateInclude),
@@ -484,7 +522,7 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     "Praxis & Termin",
     "Projekt & Profil",
     "Vorschau folgt. Hier kommt ein Screenshot der Vorlage rein.",
-    'href="/?angebot=template-start#kontakt"',
+    "template=${encodeURIComponent(template.title)}#kontakt",
   ]) {
     assert.ok(
       templatesSource.includes(expectedTemplatesPageSignal),
@@ -498,31 +536,26 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     "pricing and template page copy should avoid banned Humanizer wording",
   );
 
-  for (const [slug, name, price] of [
-    ["website-check", "Website Check", "99 €"],
-    ["rohbau", "Rohbau", "ab 799 €"],
-    ["sanierung", "Sanierung", "ab 1.499 €"],
-    ["bauwerk", "Bauwerk", "ab 2.499 €"],
-  ]) {
-    assert.match(
-      siteDataSource,
-      new RegExp(`slug: "${slug}"[\\s\\S]*?name: "${name}"[\\s\\S]*?price: "${price}"`),
-      `${name} fixed-price alternative should expose ${price}`,
-    );
-  }
-
   assert.ok(
-    !pricingSource.includes("fixedPriceAlternatives") &&
-      !pricingSource.includes("Festpreise"),
+    !pricingSource.includes(["fixed", "PriceAlternatives"].join("")) &&
+      !pricingSource.includes(["Fest", "preise"].join("")),
     "pricing should keep the main selection focused on subscriptions and add-ons",
+  );
+  assert.ok(
+      siteDataSource.includes('slug: "website-check"') &&
+      siteDataSource.includes('price: "99 €"') &&
+      !siteDataSource.includes(["fixed", "PriceAlternatives"].join("")),
+    "Website Check should remain as a standalone audit offer without website entry alternatives",
   );
   assert.ok(
     contactSource.includes('"website-audit": "website-check"'),
     "legacy website-audit links should resolve to the new Website Check prefill",
   );
   assert.ok(
-    contactSource.includes("buildOfferProjectMessage(selectedPackage)"),
-    "legacy fixed-price paket links should still resolve to contact prefills",
+    contactSource.includes('rohbau: "template-start"') &&
+      contactSource.includes('sanierung: "website-individuell"') &&
+      contactSource.includes('bauwerk: "system-wachstum"'),
+    "legacy package links should resolve to subscription contact prefills",
   );
   assert.ok(
     landingSource.includes("priceSpecification") &&
@@ -531,6 +564,29 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
         "name: page.schema.offer.name,\n            price: page.schema.offer.price",
       ),
     "landing JSON-LD should express offer prices as monthly unit prices",
+  );
+  assert.ok(
+    siteConfigSource.includes("Website-Abos ab 29 €/Monat") &&
+      homeSource.includes("makesOffer: getSubscriptionPricingSchemaOffers()") &&
+      landingSource.includes("makesOffer: getSubscriptionPricingSchemaOffers()"),
+    "home and landing metadata/schema should expose current subscription offer prices",
+  );
+  assert.ok(
+    pricingSchemaSource.includes('priceCurrency: "EUR"') &&
+      pricingSchemaSource.includes('unitText: "Monat"') &&
+      pricingSchemaSource.includes('"@type": "PriceSpecification"'),
+    "shared pricing schema should expose monthly offers and the Website Check price",
+  );
+  assert.ok(
+    templatesSource.includes('getSubscriptionPricingSchemaOffer("template-start", pageUrl)') &&
+      !templatesSource.includes(["get", "FixedPriceSchemaOffer"].join("")) &&
+      templatesSource.includes("Template Start von Stackwerkhaus ab 29 €/Monat"),
+    "/templates metadata/schema should expose only the Template Start subscription price",
+  );
+  assert.ok(
+    webseitecheckSource.includes("getWebsiteCheckSchemaOffer(pageUrl)") &&
+      webseitecheckSource.includes("Website Check für Neukunden kostet 99 €"),
+    "/webseitecheck metadata/schema should expose the 99 € Website Check",
   );
 });
 

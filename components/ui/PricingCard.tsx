@@ -7,30 +7,25 @@ type PricingCardProps = PricingTier;
 export function PricingCard({
   slug,
   name,
-  label,
   monthlyPrice,
   monthlySuffix,
   monthlyNote,
   stripePaymentLink,
   description,
   ctaLabel,
-  secondaryCtaLabel,
-  secondaryCtaHref,
+  ctaHref,
   includes,
   visibleIncludes,
   highlight,
 }: PricingCardProps) {
-  const href = stripePaymentLink || `/?angebot=${encodeURIComponent(slug)}#kontakt`;
-  const ctaText = stripePaymentLink ? `${name} starten` : ctaLabel;
+  const href =
+    ctaHref || stripePaymentLink || `/?angebot=${encodeURIComponent(slug)}#kontakt`;
+  const isExternalPaymentLink = Boolean(stripePaymentLink && !ctaHref);
+  const ctaText = isExternalPaymentLink ? `${name} starten` : ctaLabel;
   const ctaClassName = `link-arrow mt-6 w-full justify-between px-4 py-3 transition-opacity hover:opacity-80 ${
     highlight
       ? "bg-background text-foreground"
       : "bg-foreground text-background opacity-92"
-  }`;
-  const secondaryCtaClassName = `link-arrow mt-3 w-full justify-between border px-4 py-3 transition-opacity hover:opacity-80 ${
-    highlight
-      ? "border-background/22 text-background"
-      : "border-border text-foreground"
   }`;
 
   return (
@@ -49,15 +44,6 @@ export function PricingCard({
             }`}
           >
             {name}
-          </div>
-          <div
-            className={`mt-2 w-fit border px-2 py-1 text-[10px] font-black uppercase leading-none tracking-[0.16em] ${
-              highlight
-                ? "border-background/18 text-background/58"
-                : "border-border text-muted"
-            }`}
-          >
-            {label}
           </div>
         </div>
         <p
@@ -98,7 +84,7 @@ export function PricingCard({
         <div className="tracking-[0.08em]">{monthlyNote}</div>
       </div>
 
-      {stripePaymentLink ? (
+      {isExternalPaymentLink ? (
         <a
           href={href}
           className={ctaClassName}
@@ -114,13 +100,6 @@ export function PricingCard({
           <span aria-hidden>+</span>
         </HashLink>
       )}
-
-      {secondaryCtaHref && secondaryCtaLabel ? (
-        <HashLink href={secondaryCtaHref} className={secondaryCtaClassName}>
-          <LinkRippleText text={secondaryCtaLabel} baseWeight={560} />
-          <span aria-hidden>+</span>
-        </HashLink>
-      ) : null}
 
       <div
         className={`mt-6 grid gap-5 border-t pt-5 text-sm leading-6 ${

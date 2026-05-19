@@ -14,6 +14,7 @@ import { Testimonials } from "@/components/sections/Testimonials";
 import { Ticker } from "@/components/sections/Ticker";
 import { getLatestPosts } from "@/lib/blog";
 import { stringifyJsonLd, toAbsoluteUrl } from "@/lib/json-ld";
+import { getSubscriptionPricingSchemaOffers } from "@/lib/pricing-schema";
 import { getFeaturedProjects } from "@/lib/projects";
 import { siteConfig } from "@/lib/site-config";
 
@@ -71,6 +72,8 @@ const homeStructuredData = {
       url: siteConfig.url,
       email: siteConfig.email,
       image: toAbsoluteUrl(homeImage),
+      priceRange: "ab 29 EUR monatlich",
+      makesOffer: getSubscriptionPricingSchemaOffers(),
       founder: {
         "@type": "Person",
         name: siteConfig.founder,

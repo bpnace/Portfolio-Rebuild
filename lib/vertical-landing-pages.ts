@@ -120,8 +120,8 @@ function createVerticalLandingPage(config: VerticalPageConfig): LandingPage {
         heading: "Preisrahmen",
         summary: config.priceSummary,
         paragraphs: [
-          "Die sichtbaren Preise werden als Abo-Einstieg verstanden. Ein einmaliger Festpreis kann im Angebot als kleine Alternative darunter stehen, bleibt aber nicht der Hauptanker.",
-          "Der Preis hängt vor allem von Seitenumfang, Inhaltsarbeit, Designanspruch, Formularen, Terminlogik, CMS, Tracking, Automatisierung und Abstimmungsaufwand ab. Deshalb ist ein Preisrahmen ehrlicher als ein pauschaler Festpreis ohne Kontext.",
+          "Die sichtbaren Preise werden als Abo-Einstieg verstanden. Sie geben Orientierung für den laufenden Rahmen, nicht für jedes Detail eines individuellen Projekts.",
+          "Der Preis hängt vor allem von Seitenumfang, Inhaltsarbeit, Designanspruch, Formularen, Terminlogik, CMS, Tracking, Automatisierung und Abstimmungsaufwand ab. Deshalb ist ein monatlicher Preisrahmen ehrlicher als eine pauschale Zahl ohne Kontext.",
         ],
         table: {
           caption: `${config.h1}: Preisrahmen`,

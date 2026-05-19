@@ -4,7 +4,7 @@ import { LinkRippleText } from "@/components/ui/LinkRippleText";
 const auditFacts = [
   "99 € für Neukunden",
   "konkrete Einschätzung mit nächsten Schritten",
-  "Anrechnung bei Abo oder Festpreis-Paket",
+  "Anrechnung bei anschließendem Abo",
 ] as const;
 
 type AuditOfferProps = {

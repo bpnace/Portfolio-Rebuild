@@ -137,19 +137,15 @@ export const testimonials = [
 export type PricingTier = {
   slug: string;
   name: string;
-  label: string;
   monthlyPrice: string;
   monthlySuffix: string;
   monthlyNote: string;
-  oneTimePrice?: string;
-  oneTimeLabel?: string;
   stripePaymentLink?: string;
   stripePaymentLinkEnvKey: string;
   minimumTerm?: string;
   description: string;
   ctaLabel: string;
-  secondaryCtaLabel?: string;
-  secondaryCtaHref?: string;
+  ctaHref?: string;
   includes: readonly string[];
   visibleIncludes?: number;
   highlight?: boolean;
@@ -162,7 +158,7 @@ export type PricingAddOn = {
   description: string;
 };
 
-export type FixedPriceAlternative = {
+export type WebsiteCheckOffer = {
   slug: string;
   name: string;
   price: string;
@@ -185,39 +181,32 @@ export const pricingTiers = [
   {
     slug: "template-start",
     name: "Template Start",
-    label: "Schneller Einstieg",
     monthlyPrice: "29",
     monthlySuffix: "€/Monat",
     monthlyNote: "24 Monate Mindestlaufzeit",
-    oneTimePrice: "799 €",
-    oneTimeLabel: "Festpreis ab",
     stripePaymentLink: stripePaymentLinks.templateStart,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
     minimumTerm: "24 Monate",
     description:
       "Für eine klassische, einseitige Webseite aus einem vorbereiteten Gerüst.",
-    ctaLabel: "Start anfragen",
-    secondaryCtaLabel: "Vorlagen ansehen",
-    secondaryCtaHref: "/templates",
+    ctaLabel: "Templates anzeigen",
+    ctaHref: "/templates",
     includes: [
-      "Vorlage aus der Galerie wählen",
-      "Eigene Farben, Logos und Schriften",
-      "Einpflege vorhandener Texte und Bilder",
-      "responsive Umsetzung",
-      "Kontaktformular",
-      "Hosting, SSL und E-Mail-Grundsetup",
+      "keine Erstellungskosten",
+      "Template aus der Galerie",
+      "Website-Pflege",
+      "Google-Optimierung",
+      "Hosting, SSL und E-Mail",
+      "Eigene Farben, Logo und Schriften",
     ],
     visibleIncludes: 8,
   },
   {
     slug: "website-individuell",
     name: "Website Individuell",
-    label: "Empfohlen",
     monthlyPrice: "69",
     monthlySuffix: "€/Monat",
-    monthlyNote: "für individuelle Website mit SEO-Basis",
-    oneTimePrice: "1.499 €",
-    oneTimeLabel: "Festpreis ab",
+    monthlyNote: "12 Monate Mindestlaufzeit",
     stripePaymentLink: stripePaymentLinks.websiteIndividuell,
     stripePaymentLinkEnvKey:
       "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
@@ -225,12 +214,12 @@ export const pricingTiers = [
       "Für Selbstständige und kleine Unternehmen, die eine individuelle Website benötigen.",
     ctaLabel: "Individuell anfragen",
     includes: [
-      "individuelleres Webdesign",
-      "Seitenstruktur",
-      "SEO-Basis und Search Console",
-      "Launch-Setup",
-      "Pflege und kleine Änderungen",
-      "Kontaktformular",
+      "keine Erstellungskosten",
+      "Domain und Hosting",
+      "Website-Pflege",
+      "Google-Optimierung",
+      "Hosting, SSL und E-Mail",
+      "bis zu 6 Seiten",
     ],
     visibleIncludes: 6,
     highlight: true,
@@ -238,48 +227,42 @@ export const pricingTiers = [
   {
     slug: "shop-blog",
     name: "Shop & Blog",
-    label: "Inhalte selbst pflegen",
     monthlyPrice: "89",
     monthlySuffix: "€/Monat",
-    monthlyNote: "für WordPress, Blog oder einfachen Shop",
-    oneTimePrice: "2.499 €",
-    oneTimeLabel: "Festpreis ab",
+    monthlyNote: "6 Monate Mindestlaufzeit",
     stripePaymentLink: stripePaymentLinks.shopBlog,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
     description:
       "Für Websites, die regelmäßig neue Inhalte brauchen oder einen kleinen Shop benötigen. Auf Basis von WordPress für eigene Inhalte.",
     ctaLabel: "Shop anfragen",
     includes: [
-      "eigenes WordPress-Theme",
-      "Blog- oder Shop-Struktur",
-      "Hosting und Pflege",
-      "SEO-Basis",
-      "E-Mail-Grundsetup",
-      "Updates und Backups",
+      "individuelles Design",
+      "Website-Pflege",
+      "Google-Optimierung",
+      "Blog oder Shop mit bis zu 20 Produkten",
+      "Hosting, SSL und E-Mail",
+      "bis zu 6 Seiten",
     ],
     visibleIncludes: 6,
   },
   {
     slug: "system-wachstum",
     name: "System & Wachstum",
-    label: "Abläufe verbinden",
     monthlyPrice: "199",
     monthlySuffix: "€/Monat",
-    monthlyNote: "ab Preis für Ausbau, CRM und Automatisierung",
-    oneTimePrice: "2.499 €",
-    oneTimeLabel: "Projektbasis ab",
+    monthlyNote: "3 Monate Mindestlaufzeit",
     stripePaymentLink: stripePaymentLinks.systemWachstum,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
     description:
       "Für Websites, die mehr als eine Visitenkarte sein sollen. Mit CRM, Automatisierung und Ausbau für schnelleres Wachstum.",
     ctaLabel: "System anfragen",
     includes: [
-      "CRM- und Formularlogik",
-      "n8n, Zapier oder eigene Flows",
-      "SEO- und Content-Ausbau",
-      "neue Landingpages",
-      "Reporting und Priorisierung",
-      "kleine Software-Flows",
+      "individuelles Design",
+      "Website-Pflege",
+      "Google-Optimierung",
+      "CRM-Integration",
+      "Automatisierungen und Workflows",
+      "Hosting, SSL und E-Mail",
     ],
     visibleIncludes: 6,
   },
@@ -325,33 +308,12 @@ export const pricingAddOns = [
   },
 ] satisfies readonly PricingAddOn[];
 
-export const fixedPriceAlternatives = [
-  {
-    slug: "website-check",
-    name: "Website Check",
-    price: "99 €",
-    description:
-      "für Neukunden, wird bei anschließendem Abo oder Festpreis-Paket angerechnet",
-  },
-  {
-    slug: "rohbau",
-    name: "Rohbau",
-    price: "ab 799 €",
-    description: "für kleine Websites, wenn du lieber einmalig startest",
-  },
-  {
-    slug: "sanierung",
-    name: "Sanierung",
-    price: "ab 1.499 €",
-    description: "für Relaunches mit neuer Struktur, Design und SEO-Basis",
-  },
-  {
-    slug: "bauwerk",
-    name: "Bauwerk",
-    price: "ab 2.499 €",
-    description: "für Plattformen, Automatisierung und technische Ausbauten",
-  },
-] satisfies readonly FixedPriceAlternative[];
+export const websiteCheckOffer = {
+  slug: "website-check",
+  name: "Website Check",
+  price: "99 €",
+  description: "wird bei anschließendem Abo angerechnet",
+} satisfies WebsiteCheckOffer;
 
 export type FaqLink = {
   label: string;
@@ -367,7 +329,7 @@ export type Faq = {
 export const faqs: readonly Faq[] = [
   {
     q: "Was kostet eine professionelle Website für ein kleines Unternehmen?",
-    a: "Der template-nahe Einstieg startet ab 29 € pro Monat. Die empfohlene individuelle Website liegt bei 69 € pro Monat. Wenn ein einmaliger Festpreis besser passt, startet Rohbau ab 799 €. Der genaue Umfang hängt von Seitenanzahl, Inhalten und Integrationen ab.",
+    a: "Der template-nahe Einstieg startet ab 29 € pro Monat. Die empfohlene individuelle Website liegt bei 69 € pro Monat. Shop & Blog startet bei 89 € pro Monat, System & Wachstum ab 199 € pro Monat. Der genaue Umfang hängt von Seitenanzahl, Inhalten und Integrationen ab.",
     links: [
       {
         label: "Website erstellen lassen",
