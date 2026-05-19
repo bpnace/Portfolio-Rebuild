@@ -21,7 +21,7 @@ export function PricingCard({
   const href =
     ctaHref || stripePaymentLink || `/?angebot=${encodeURIComponent(slug)}#kontakt`;
   const isExternalPaymentLink = Boolean(stripePaymentLink && !ctaHref);
-  const ctaText = isExternalPaymentLink ? `${name} starten` : ctaLabel;
+  const ctaText = ctaLabel;
   const ctaClassName = `link-arrow mt-6 w-full justify-between px-4 py-3 transition-opacity hover:opacity-80 ${
     highlight
       ? "bg-background text-foreground"

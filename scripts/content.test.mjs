@@ -372,7 +372,7 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
-    'isExternalPaymentLink ? `${name} starten` : ctaLabel',
+    "const ctaText = ctaLabel",
     "ab 149 €/Monat",
     "priceSpecification",
     'unitText: "Monat"',
@@ -522,7 +522,9 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     "Praxis & Termin",
     "Projekt & Profil",
     "Vorschau folgt. Hier kommt ein Screenshot der Vorlage rein.",
-    "template=${encodeURIComponent(template.title)}#kontakt",
+    "templateStartPaymentLink || getTemplateContactHref(template.title)",
+    "Template starten",
+    "Template anfragen",
   ]) {
     assert.ok(
       templatesSource.includes(expectedTemplatesPageSignal),

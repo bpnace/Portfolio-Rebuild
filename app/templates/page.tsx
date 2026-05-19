@@ -3,6 +3,7 @@ import { HashLink } from "@/components/ui/HashLink";
 import { LinkRippleText } from "@/components/ui/LinkRippleText";
 import { stringifyJsonLd } from "@/lib/json-ld";
 import { getSubscriptionPricingSchemaOffer } from "@/lib/pricing-schema";
+import { pricingTiers } from "@/lib/site-data";
 import { siteConfig } from "@/lib/site-config";
 
 const pagePath = "/templates";
@@ -40,6 +41,14 @@ const templateCards = [
       "Für Gründer, Solo-Studios und kleine Marken, die persönlicher auftreten und trotzdem schlank starten wollen.",
   },
 ] as const;
+
+const templateStartPaymentLink =
+  pricingTiers.find((tier) => tier.slug === "template-start")?.stripePaymentLink ??
+  "";
+
+function getTemplateContactHref(templateTitle: string) {
+  return `/?angebot=template-start&template=${encodeURIComponent(templateTitle)}#kontakt`;
+}
 
 export const metadata: Metadata = {
   title: {
@@ -168,38 +177,53 @@ export default function TemplatesPage() {
             ))}
           </ul>
           <div className="mt-10 grid gap-8 md:grid-cols-3">
-            {templateCards.map((template) => (
-              <article
-                key={template.title}
-                className="flex min-h-[30rem] flex-col border-t border-border py-6"
-              >
-                <div className="text-[10px] font-black uppercase tracking-[0.28em] text-muted">
-                  {template.kicker}
-                </div>
-                <div className="mt-5 grid min-h-[12rem] place-items-center border border-border bg-surface text-center">
-                  <p className="max-w-[18ch] px-5 text-sm font-black uppercase leading-6 tracking-[0.18em] text-muted">
-                    Vorschau folgt. Hier kommt ein Screenshot der Vorlage rein.
-                  </p>
-                </div>
-                <div className="mt-6 flex flex-1 flex-col">
-                  <h3 className="text-3xl font-black leading-[0.98] tracking-normal text-foreground">
-                    {template.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-6 text-muted">
-                    {template.description}
-                  </p>
-                  <HashLink
-                    href={
-                      `/?angebot=template-start&template=${encodeURIComponent(template.title)}#kontakt`
-                    }
-                    className="link-arrow mt-auto w-full justify-between border border-border px-4 py-4 text-foreground hover:border-foreground/45"
-                  >
-                    <LinkRippleText text="Template anfragen" baseWeight={560} />
-                    <span aria-hidden>+</span>
-                  </HashLink>
-                </div>
-              </article>
-            ))}
+            {templateCards.map((template) => {
+              const templateHref =
+                templateStartPaymentLink || getTemplateContactHref(template.title);
+
+              return (
+                <article
+                  key={template.title}
+                  className="flex min-h-[30rem] flex-col border-t border-border py-6"
+                >
+                  <div className="text-[10px] font-black uppercase tracking-[0.28em] text-muted">
+                    {template.kicker}
+                  </div>
+                  <div className="mt-5 grid min-h-[12rem] place-items-center border border-border bg-surface text-center">
+                    <p className="max-w-[18ch] px-5 text-sm font-black uppercase leading-6 tracking-[0.18em] text-muted">
+                      Vorschau folgt. Hier kommt ein Screenshot der Vorlage rein.
+                    </p>
+                  </div>
+                  <div className="mt-6 flex flex-1 flex-col">
+                    <h3 className="text-3xl font-black leading-[0.98] tracking-normal text-foreground">
+                      {template.title}
+                    </h3>
+                    <p className="mt-4 text-sm leading-6 text-muted">
+                      {template.description}
+                    </p>
+                    {templateStartPaymentLink ? (
+                      <a
+                        href={templateHref}
+                        className="link-arrow mt-auto w-full justify-between border border-border px-4 py-4 text-foreground hover:border-foreground/45"
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <LinkRippleText text="Template starten" baseWeight={560} />
+                        <span aria-hidden>+</span>
+                      </a>
+                    ) : (
+                      <HashLink
+                        href={templateHref}
+                        className="link-arrow mt-auto w-full justify-between border border-border px-4 py-4 text-foreground hover:border-foreground/45"
+                      >
+                        <LinkRippleText text="Template anfragen" baseWeight={560} />
+                        <span aria-hidden>+</span>
+                      </HashLink>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
 
