@@ -332,6 +332,8 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
       "components/sections/Contact.tsx",
       "components/sections/Pricing.tsx",
       "components/ui/PricingCard.tsx",
+      "app/templates/page.tsx",
+      "app/sitemap.ts",
       "lib/landing-pages.ts",
       "lib/site-data.ts",
       "lib/vertical-landing-pages.ts",
@@ -357,6 +359,11 @@ test("public pricing is subscription-first with Stripe link configuration", asyn
     "pricingAddOns",
     "secondaryPrice",
     "Wähle deinen Einstieg",
+    "Vorlagen ansehen",
+    'secondaryCtaLabel: "Vorlagen ansehen"',
+    'secondaryCtaHref: "/templates"',
+    "Vorlage aus der Galerie wählen",
+    "Eigene Farben, Logo und Schriften",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
     "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
@@ -400,11 +407,17 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
     path.join(root, "components", "sections", "Pricing.tsx"),
     "utf8",
   );
+  const pricingCardSource = await fs.readFile(
+    path.join(root, "components", "ui", "PricingCard.tsx"),
+    "utf8",
+  );
   const contactSource = await fs.readFile(
     path.join(root, "components", "sections", "Contact.tsx"),
     "utf8",
   );
   const landingSource = await fs.readFile(path.join(root, "lib", "landing-pages.ts"), "utf8");
+  const templatesSource = await fs.readFile(path.join(root, "app", "templates", "page.tsx"), "utf8");
+  const sitemapSource = await fs.readFile(path.join(root, "app", "sitemap.ts"), "utf8");
 
   for (const [slug, name, price] of [
     ["template-start", "Template Start", "29"],
@@ -436,6 +449,53 @@ test("pricing data exposes exact public offer rows and monthly schema semantics"
   assert.ok(
     siteDataSource.includes('secondaryPrice: "19 €/Monat einzeln"'),
     "local SEO individual price should be a first-class visible add-on price",
+  );
+  assert.ok(
+    !siteDataSource.includes("suitableFor") &&
+      !pricingSource.includes("Geeignet für"),
+    "pricing cards should not duplicate suitable-for copy",
+  );
+  assert.ok(
+    !pricingCardSource.includes("oneTimePrice") &&
+      !pricingCardSource.includes("oneTimeLabel"),
+    "pricing cards should not render fixed-price alternatives",
+  );
+  assert.ok(
+    siteDataSource.includes('secondaryCtaLabel: "Vorlagen ansehen"') &&
+      siteDataSource.includes('secondaryCtaHref: "/templates"'),
+    "Template Start should link to the template gallery page",
+  );
+  for (const expectedTemplateInclude of [
+    "Vorlage aus der Galerie wählen",
+    "Eigene Farben, Logo und Schriften",
+    "Einpflege vorhandener Texte und Bilder",
+    "wenige Seiten mit sauberer Struktur",
+  ]) {
+    assert.ok(
+      siteDataSource.includes(expectedTemplateInclude),
+      `Template Start missing visible include: ${expectedTemplateInclude}`,
+    );
+  }
+
+  for (const expectedTemplatesPageSignal of [
+    "Vorlagen für den schnellen Einstieg",
+    "Was im Template Start enthalten ist",
+    "Service Start",
+    "Praxis & Termin",
+    "Projekt & Profil",
+    "Vorschau folgt. Hier kommt ein Screenshot der Vorlage rein.",
+    'href="/?angebot=template-start#kontakt"',
+  ]) {
+    assert.ok(
+      templatesSource.includes(expectedTemplatesPageSignal),
+      `/templates missing signal: ${expectedTemplatesPageSignal}`,
+    );
+  }
+  assert.ok(sitemapSource.includes('"/templates"'), "sitemap missing /templates route");
+  assert.doesNotMatch(
+    `${pricingSource}\n${templatesSource}`,
+    /\b(klar|wirklich|dieser|Hebel|ganzheitlich|holistisch|maßgeschneidert|360°|innovativ)\b/i,
+    "pricing and template page copy should avoid banned Humanizer wording",
   );
 
   for (const [slug, name, price] of [
@@ -483,6 +543,7 @@ test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
 
   assert.ok(sitemapSource.includes('"/blog"'), "sitemap missing /blog hub");
   assert.ok(sitemapSource.includes('"/projekte"'), "sitemap missing /projekte hub");
+  assert.ok(sitemapSource.includes('"/templates"'), "sitemap missing /templates hub");
   assert.ok(robotsSource.includes('"/api/"'), "robots policy should disallow API routes");
   assert.equal(
     (await fs.readFile(indexNowKeyPath, "utf8")).trim(),
@@ -492,6 +553,7 @@ test("SEO route inventory exposes crawlable hubs and hides APIs", async () => {
 
   await fs.access(path.join(root, "app", "blog", "page.tsx"));
   await fs.access(path.join(root, "app", "projekte", "page.tsx"));
+  await fs.access(path.join(root, "app", "templates", "page.tsx"));
   await fs.access(path.join(root, "app", "[slug]", "page.tsx"));
 
   assert.ok(analyticsSource.includes("usePathname"), "analytics missing route-change tracking");

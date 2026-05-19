@@ -148,7 +148,8 @@ export type PricingTier = {
   minimumTerm?: string;
   description: string;
   ctaLabel: string;
-  suitableFor: readonly string[];
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
   includes: readonly string[];
   visibleIncludes?: number;
   highlight?: boolean;
@@ -194,24 +195,19 @@ export const pricingTiers = [
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_TEMPLATE_START",
     minimumTerm: "24 Monate",
     description:
-      "Für eine kleine Website, die sauber online gehen soll, ohne direkt ein großes Projekt zu starten.",
+      "Für eine klassische, einseitige Webseite aus einem vorbereiteten Gerüst.",
     ctaLabel: "Start anfragen",
-    suitableFor: [
-      "lokale Dienstleister",
-      "neue Unternehmen",
-      "kleine Websites",
-      "geringe Vorab-Budgets",
-    ],
+    secondaryCtaLabel: "Vorlagen ansehen",
+    secondaryCtaHref: "/templates",
     includes: [
-      "Vorlagen-nahe Gestaltung",
-      "wenige Seiten",
-      "Responsive Umsetzung",
+      "Vorlage aus der Galerie wählen",
+      "Eigene Farben, Logos und Schriften",
+      "Einpflege vorhandener Texte und Bilder",
+      "responsive Umsetzung",
       "Kontaktformular",
       "Hosting, SSL und E-Mail-Grundsetup",
-      "SEO-Grundsetup",
-      "ein kleiner Änderungsbatch pro Monat",
-      "transparentes Exit-Paket",
     ],
+    visibleIncludes: 8,
   },
   {
     slug: "website-individuell",
@@ -226,14 +222,8 @@ export const pricingTiers = [
     stripePaymentLinkEnvKey:
       "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_WEBSITE_INDIVIDUELL",
     description:
-      "Für kleine Unternehmen, deren Angebot schnell verständlich werden muss.",
+      "Für Selbstständige und kleine Unternehmen, die eine individuelle Website benötigen.",
     ctaLabel: "Individuell anfragen",
-    suitableFor: [
-      "Dienstleister",
-      "Gründer",
-      "kleine Unternehmen",
-      "bessere Angebotsstruktur",
-    ],
     includes: [
       "individuelleres Webdesign",
       "Seitenstruktur",
@@ -257,14 +247,8 @@ export const pricingTiers = [
     stripePaymentLink: stripePaymentLinks.shopBlog,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SHOP_BLOG",
     description:
-      "Für Websites, bei denen Inhalte weiterleben sollen, ohne dass ein Pagebuilder alles weichknetet.",
+      "Für Websites, die regelmäßig neue Inhalte brauchen oder einen kleinen Shop benötigen. Auf Basis von WordPress für eigene Inhalte.",
     ctaLabel: "Shop anfragen",
-    suitableFor: [
-      "Blogs",
-      "kleine Shops",
-      "WordPress",
-      "selbst pflegbare Inhalte",
-    ],
     includes: [
       "eigenes WordPress-Theme",
       "Blog- oder Shop-Struktur",
@@ -287,15 +271,8 @@ export const pricingTiers = [
     stripePaymentLink: stripePaymentLinks.systemWachstum,
     stripePaymentLinkEnvKey: "NEXT_PUBLIC_STRIPE_PAYMENT_LINK_SYSTEM_WACHSTUM",
     description:
-      "Für Websites, die nicht beim Formular enden. Leads, Inhalte, CRM und Automationen greifen hier ineinander.",
+      "Für Websites, die mehr als eine Visitenkarte sein sollen. Mit CRM, Automatisierung und Ausbau für schnelleres Wachstum.",
     ctaLabel: "System anfragen",
-    suitableFor: [
-      "Relaunches",
-      "CRM-Anbindung",
-      "Automatisierung",
-      "Landingpages",
-      "Wachstumsprojekte",
-    ],
     includes: [
       "CRM- und Formularlogik",
       "n8n, Zapier oder eigene Flows",

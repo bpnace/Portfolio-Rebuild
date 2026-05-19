@@ -11,12 +11,11 @@ export function PricingCard({
   monthlyPrice,
   monthlySuffix,
   monthlyNote,
-  oneTimePrice,
-  oneTimeLabel,
   stripePaymentLink,
   description,
   ctaLabel,
-  suitableFor,
+  secondaryCtaLabel,
+  secondaryCtaHref,
   includes,
   visibleIncludes,
   highlight,
@@ -27,6 +26,11 @@ export function PricingCard({
     highlight
       ? "bg-background text-foreground"
       : "bg-foreground text-background opacity-92"
+  }`;
+  const secondaryCtaClassName = `link-arrow mt-3 w-full justify-between border px-4 py-3 transition-opacity hover:opacity-80 ${
+    highlight
+      ? "border-background/22 text-background"
+      : "border-border text-foreground"
   }`;
 
   return (
@@ -87,23 +91,11 @@ export function PricingCard({
       </div>
 
       <div
-        className={`mt-3 grid min-h-[3.25rem] content-start gap-1 text-[10px] uppercase leading-5 ${
+        className={`mt-3 text-[10px] uppercase leading-5 ${
           highlight ? "text-background/58" : "text-muted"
         }`}
       >
         <div className="tracking-[0.08em]">{monthlyNote}</div>
-        {oneTimePrice ? (
-          <div className="tracking-[0.08em]">
-            {oneTimeLabel ? <span>{oneTimeLabel} </span> : null}
-            <span
-              className={`font-black ${
-                highlight ? "text-background" : "text-foreground"
-              }`}
-            >
-              {oneTimePrice}
-            </span>
-          </div>
-        ) : null}
       </div>
 
       {stripePaymentLink ? (
@@ -123,6 +115,13 @@ export function PricingCard({
         </HashLink>
       )}
 
+      {secondaryCtaHref && secondaryCtaLabel ? (
+        <HashLink href={secondaryCtaHref} className={secondaryCtaClassName}>
+          <LinkRippleText text={secondaryCtaLabel} baseWeight={560} />
+          <span aria-hidden>+</span>
+        </HashLink>
+      ) : null}
+
       <div
         className={`mt-6 grid gap-5 border-t pt-5 text-sm leading-6 ${
           highlight
@@ -130,23 +129,6 @@ export function PricingCard({
             : "border-border/70 text-muted"
         }`}
       >
-        <div>
-          <div
-            className={`text-[10px] font-black uppercase tracking-[0.24em] ${
-              highlight ? "text-background/54" : "text-foreground/54"
-            }`}
-          >
-            Geeignet für
-          </div>
-          <ul className="mt-3 space-y-2">
-            {suitableFor.slice(0, 3).map((item) => (
-              <li key={item} className="flex gap-3">
-                <span aria-hidden>+</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
         <div>
           <div
             className={`text-[10px] font-black uppercase tracking-[0.24em] ${
